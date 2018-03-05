@@ -1,0 +1,36 @@
+{
+  "name": "terable",
+  "version": "0.0.1",
+  "description": "Functional ES2015 iterable utilities",
+  "keywords": ["iterable", "iterator", "iteration", "functional"],
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Michael Wiencek <mwtuea@gmail.com>",
+  "repository": "github:mwiencek/terable",
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-flow": "6.23.0",
+    "benchmark": "2.1.4",
+    "flow-bin": "0.67.1",
+    "immutable": "4.0.0-rc.9",
+    "jest": "22.4.2",
+    "lodash": "4.17.5"
+  },
+  "scripts": {
+    "bench": "node bench.js",
+    "build": "./build.sh",
+    "test": "jest"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "<rootDir>/src/*.js"
+    ],
+    "coverageDirectory": "coverage",
+    "testPathIgnorePatterns": [
+      "<rootDir>/dist/",
+      "<rootDir>/node_modules/"
+    ]
+  }
+}
