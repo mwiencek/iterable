@@ -48,6 +48,7 @@ Iterator.prototype.next = function () {
   let cursor;
   let done;
   let frame = this.frame;
+  let test = true;
 
   nextResult:
   while (!(done = (cursor = frame.iterator.next()).done) || stack.length) {
@@ -59,23 +60,28 @@ Iterator.prototype.next = function () {
     let value = cursor.value;
 
     for (let step = frame.step, count = pipe.length; step < count; step++) {
-      const action = pipe[count - step - 1];
+      const {type, arg} = pipe[count - step - 1];
+      test = true;
 
-      switch (action.type) {
+      switch (type) {
         case FILTER:
-          if (!action.arg(value)) {
+          test = false;
+        case REJECT:
+          if (!!arg(value) === test) {
             continue nextResult;
           }
           break;
 
         case FILTERP:
-          if (!value[action.arg]) {
+          test = false;
+        case REJECTP:
+          if (!!value[arg] === test) {
             continue nextResult;
           }
           break;
 
         case FLATMAP:
-          value = action.arg(value);
+          value = arg(value);
           step++;
           // Falls through to FLATTEN.
 
@@ -88,27 +94,15 @@ Iterator.prototype.next = function () {
           break;
 
         case MAP:
-          value = action.arg(value);
+          value = arg(value);
           break;
 
         case MAPP:
-          value = value[action.arg];
-          break;
-
-        case REJECT:
-          if (action.arg(value)) {
-            continue nextResult;
-          }
-          break;
-
-        case REJECTP:
-          if (value[action.arg]) {
-            continue nextResult;
-          }
+          value = value[arg];
           break;
 
         case UNIQ:
-          const valueSet = action.arg;
+          const valueSet = arg;
           if (valueSet.has(value)) {
             continue nextResult;
           } else {
