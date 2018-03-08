@@ -231,6 +231,28 @@ test('mapP', () => {
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
 });
 
+test('objects', () => {
+  let count = 0;
+
+  const object = {a: true, b: false, c: true};
+
+  const truth = compose(
+    reduce((accum, k) => {
+      accum[k] = count++;
+      return accum;
+    }, ({}: $Shape<typeof object>)),
+    compact,
+    map(([k, v]) => v ? k : null),
+    Object.entries,
+  );
+
+  expect(truth(object)).toEqual({a: 0, c: 1});
+
+  expect(
+    join('')(compose(Object.keys, truth)(object).sort())
+  ).toBe('ac');
+});
+
 test('reduce', () => {
   expect(
     reduce((accum, value) =>
