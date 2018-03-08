@@ -262,6 +262,18 @@ test('reduce', () => {
   expect(
     reduce((accum, value) => value + accum, '')(['a', 'b', 'c'])
   ).toEqual('cba');
+
+  let index = 1;
+  expect(
+    compose(
+      reduce((accum, value) => accum + (value * (index++)), 0),
+      map(value => value.charCodeAt(0)),
+      flatten,
+      reduce((accum, value) => accum.concat([[value]]), []),
+      flatten, // Should be a no-op.
+      reduce((accum, value) => value + accum, ''),
+    )(['a', 'b', 'c'])
+  ).toBe(586);
 });
 
 test('reject', () => {
