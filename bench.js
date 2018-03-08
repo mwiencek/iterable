@@ -6,6 +6,7 @@ const _flattenDeep = require('lodash/fp/flattenDeep');
 const _flowRight = require('lodash/fp/flowRight');
 const _map = require('lodash/fp/map');
 const _uniq = require('lodash/fp/uniq');
+const R = require('ramda');
 const it = require('./src/index');
 const mediums = require('./src/test/mediums').default;
 
@@ -30,12 +31,25 @@ const getNewIdsLodash = _flowRight(
   _map(x => x.tracks),
 );
 
+const getNewIdsRamda = R.compose(
+  R.uniq,
+  R.filter(Boolean),
+  R.map(x => x.artist.id),
+  R.flatten,
+  R.map(x => x.artistCredit.names),
+  R.flatten,
+  R.map(x => x.tracks),
+);
+
 (new Benchmark.Suite)
   .add('terable', function () {
     getNewIdsIt(mediums);
   })
   .add('lodash/fp', function () {
     getNewIdsLodash(mediums);
+  })
+  .add('ramda', function () {
+    getNewIdsRamda(mediums);
   })
   .on('cycle', function (event) {
     console.log(String(event.target));

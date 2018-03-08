@@ -15,7 +15,8 @@
     "flow-bin": "0.67.1",
     "immutable": "4.0.0-rc.9",
     "jest": "22.4.2",
-    "lodash": "4.17.5"
+    "lodash": "4.17.5",
+    "ramda": "0.25.0"
   },
   "scripts": {
     "bench": "node bench.js",
