@@ -135,8 +135,23 @@ type _Compose =
   & _Compose11
   & _Compose12;
 
-const compose2 = (a, b) => value => a(b(value));
+const cache = Object.create(null);
 
-const compose = ((((...funcs) => funcs.reduce(compose2)): any): _Compose);
+const compose = (((...funcs) => {
+  const count = funcs.length;
+  let _compose = cache[count];
+  if (!_compose) {
+    const args: any = [];
+    let body = 'v';
+    for (let i = 0; i < count; i++) {
+      args.push('f' + String(count - i - 1));
+      body = 'f' + String(i) + '(' + body + ')';
+    }
+    body = 'return function(v){return ' + body + '}';
+    args.push(body);
+    cache[count] = (_compose = new Function(...args));
+  }
+  return _compose(...funcs);
+}: any): _Compose);
 
 export default compose;
