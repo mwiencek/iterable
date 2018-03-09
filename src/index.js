@@ -17,6 +17,7 @@ import flatten from './flatten';
 import groupBy from './groupBy';
 import intersection from './intersection';
 import join from './join';
+import keyBy from './keyBy';
 import map from './map';
 import mapP from './mapP';
 import reduce from './reduce';
@@ -24,6 +25,7 @@ import reject from './reject';
 import rejectP from './rejectP';
 import toArray from './toArray';
 import uniq from './uniq';
+import uniqBy from './uniqBy';
 
 export {
   compact,
@@ -37,6 +39,7 @@ export {
   groupBy,
   intersection,
   join,
+  keyBy,
   map,
   mapP,
   reduce,
@@ -44,4 +47,5 @@ export {
   rejectP,
   toArray,
   uniq,
+  uniqBy,
 };

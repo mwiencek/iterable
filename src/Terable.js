@@ -16,6 +16,7 @@ export const MAPP = 8;
 export const REJECT = 9;
 export const REJECTP = 10;
 export const UNIQ = 11;
+export const UNIQBY = 12;
 
 function Terable(type, arg, source) {
   this.type = type;
@@ -62,8 +63,10 @@ Iterator.prototype.next = function () {
 
     for (let step = frame.step, count = pipe.length; step < count; step++) {
       const {type, arg} = pipe[count - step - 1];
+
       let test = true;
-      let valueSet;
+      let setKey = value;
+      let valueSet = arg;
 
       switch (type) {
         case FILTER:
@@ -98,8 +101,7 @@ Iterator.prototype.next = function () {
         case INTERSECTION:
           test = false;
         case DIFFERENCE:
-          valueSet = arg;
-          if (!!valueSet.has(value) === test) {
+          if (!!valueSet.has(setKey) === test) {
             continue nextResult;
           }
           break;
@@ -112,12 +114,14 @@ Iterator.prototype.next = function () {
           value = value[arg];
           break;
 
+        case UNIQBY:
+          setKey = arg[0](value);
+          valueSet = arg[1];
         case UNIQ:
-          valueSet = arg;
-          if (valueSet.has(value)) {
+          if (valueSet.has(setKey)) {
             continue nextResult;
           } else {
-            valueSet.add(value);
+            valueSet.add(setKey);
           }
           break;
       }

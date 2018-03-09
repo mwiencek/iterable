@@ -18,6 +18,7 @@ import {
   groupBy,
   intersection,
   join,
+  keyBy,
   map,
   mapP,
   reduce,
@@ -25,6 +26,7 @@ import {
   rejectP,
   toArray,
   uniq,
+  uniqBy,
 } from '../index';
 
 import Immutable from 'immutable';
@@ -257,6 +259,22 @@ test('join', () => {
   ).toBe('a - B - c');
 });
 
+test('keyBy', () => {
+  const key1 = Symbol();
+  const key2 = Symbol();
+
+  const item1 = {key: key1, value: 'a'};
+  const item2 = {key: key2, value: 'b'};
+  const item3 = {key: key2, value: 'c'};
+
+  const groups = new Set([item1, item2, item3]);
+
+  expect(toArray(keyBy(x => x.key)(groups))).toEqual([
+    [key1, item1],
+    [key2, item3],
+  ]);
+});
+
 test('map', () => {
   const square = map(x => x ** 2);
 
@@ -367,4 +385,18 @@ test('uniq', () => {
       map(x => !x),
     )([true, true])
   )).toEqual([true]);
+});
+
+test('uniqBy', () => {
+  const items = [
+    {key: 'a', value: 1},
+    {key: 'a', value: 2},
+    {key: 'a', value: 3},
+    {key: 'b', value: 4},
+  ];
+
+  expect(toArray(uniqBy(x => x.key)(items))).toEqual([
+    {key: 'a', value: 1},
+    {key: 'b', value: 4},
+  ]);
 });
