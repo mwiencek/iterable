@@ -1,6 +1,7 @@
 require('babel-register');
 
 const Benchmark = require('benchmark');
+const iterare = require('iterare');
 const _compact = require('lodash/fp/compact');
 const _compose = require('lodash/fp/compose');
 const _flattenDeep = require('lodash/fp/flattenDeep');
@@ -12,40 +13,66 @@ const R = require('ramda');
 const it = require('./src/index');
 const mediums = require('./src/test/mediums').default;
 
+const getArtistId = x => x.artist.id;
+const getArtistCreditNames = x => x.artistCredit.names;
+const getTracks = x => x.tracks;
+
 const getNewIdsIt = it.compose(
   it.toArray,
   it.uniq,
   it.compact,
-  it.map(x => x.artist.id),
+  it.map(getArtistId),
   it.flatten,
-  it.map(x => x.artistCredit.names),
+  it.map(getArtistCreditNames),
   it.flatten,
-  it.map(x => x.tracks),
+  it.map(getTracks),
+);
+
+/*
+ * Iterare has no functional API, no deep flatten, and no uniq (though
+ * converting to a Set is a fair comparison, as terable also uses a Set
+ * internally).
+ */
+const getNewIdsIterare = iterable => Array.from(
+  iterare.iterate(iterable)
+    .map(getTracks)
+    .flatten()
+    .flatten()
+    .map(getArtistCreditNames)
+    .flatten()
+    .flatten()
+    .flatten()
+    .map(getArtistId)
+    .filter(Boolean)
+    .toSet()
 );
 
 const getNewIdsLodash = _flowRight(
   _uniq,
   _compact,
-  _map(x => x.artist.id),
+  _map(getArtistId),
   _flattenDeep,
-  _map(x => x.artistCredit.names),
+  _map(getArtistCreditNames),
   _flattenDeep,
-  _map(x => x.tracks),
+  _map(getTracks),
 );
 
 const getNewIdsRamda = R.compose(
   R.uniq,
   R.filter(Boolean),
-  R.map(x => x.artist.id),
+  R.map(getArtistId),
   R.flatten,
-  R.map(x => x.artistCredit.names),
+  R.map(getArtistCreditNames),
   R.flatten,
-  R.map(x => x.tracks),
+  R.map(getTracks),
 );
 
 (new Benchmark.Suite)
   .add('terable', function () {
     getNewIdsIt(mediums);
+  })
+  .add('iterare', function () {
+    getNewIdsIterare(mediums);
   })
   .add('lodash/fp', function () {
     getNewIdsLodash(mediums);
@@ -80,6 +107,15 @@ const doubleRamda = R.map(double);
       doubleIt,
       doubleIt,
     )(largeList));
+  })
+  .add('iterare', function () {
+    iterare.iterate(largeList)
+      .map(double)
+      .map(double)
+      .map(double)
+      .map(double)
+      .map(double)
+      .reduce(sum, 0);
   })
   .add('lodash/fp', function () {
     _reduce(sum, 0)(_compose(
