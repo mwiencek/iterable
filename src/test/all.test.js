@@ -24,6 +24,7 @@ import {
   reduce,
   reject,
   rejectP,
+  take,
   toArray,
   uniq,
   uniqBy,
@@ -363,6 +364,70 @@ test('rejectP', () => {
   )(mediums);
 
   expect(toArray(newArtists)).toEqual([{id: null}]);
+});
+
+test('take', () => {
+  expect(toArray(take(2)([1, 2, 3]))).toEqual([1, 2]);
+
+  expect(
+    compose(
+      toArray,
+      take(3),
+      flatten,
+    )([1, [[2, 3], [4]], [5]])
+  ).toEqual([1, 2, 3]);
+
+  let calls = 0;
+  let plus1 = map(x => { calls++; return x + 1 });
+  let take0 = take(0);
+  let take1 = take(1);
+  let take3 = take(3);
+  let take4 = take(4);
+  let array = [1, 2, 3];
+
+  compose(toArray, plus1, take0)(array);
+  compose(toArray, plus1, take0, take3)(array);
+  compose(toArray, plus1, take3, take0)(array);
+  compose(toArray, take0, plus1)(array);
+  compose(toArray, take0, plus1, take3)(array);
+  compose(toArray, take0, take3, plus1)(array);
+  compose(toArray, take3, plus1, take0)(array);
+  compose(toArray, take3, take0, plus1)(array);
+
+  expect(calls).toBe(0);
+
+  let result;
+  result = compose(toArray, plus1, take1)(array);
+  expect(result).toEqual([2]);
+  expect(calls).toBe(1);
+
+  result = compose(toArray, plus1, take1, take3)(array);
+  expect(result).toEqual([2]);
+  expect(calls).toBe(2);
+
+  result = compose(toArray, plus1, take4, take1)(array);
+  expect(result).toEqual([2]);
+  expect(calls).toBe(3);
+
+  result = compose(toArray, take1, plus1)(array);
+  expect(result).toEqual([2]);
+  expect(calls).toBe(4);
+
+  result = compose(toArray, take1, plus1, take4)(array);
+  expect(result).toEqual([2]);
+  expect(calls).toBe(5);
+
+  result = compose(toArray, take1, take4, plus1)(array);
+  expect(result).toEqual([2]);
+  expect(calls).toBe(6);
+
+  result = compose(toArray, take4, plus1, take1)(array);
+  expect(result).toEqual([2]);
+  expect(calls).toBe(7);
+
+  result = compose(toArray, take4, take1, plus1)(array);
+  expect(result).toEqual([2]);
+  expect(calls).toBe(8);
 });
 
 test('uniq', () => {

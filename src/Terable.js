@@ -15,8 +15,9 @@ export const MAP = 7;
 export const MAPP = 8;
 export const REJECT = 9;
 export const REJECTP = 10;
-export const UNIQ = 11;
-export const UNIQBY = 12;
+export const TAKE = 11;
+export const UNIQ = 12;
+export const UNIQBY = 13;
 
 function Terable(type, arg, source) {
   this.type = type;
@@ -29,11 +30,19 @@ Terable.prototype[Symbol.iterator] = function () {
 };
 
 function Iterator(iterable) {
+  this.count = 0;
+  this.limit = Infinity;
+
   const pipe = [];
 
   while (iterable instanceof Terable) {
-    if (iterable.type === UNIQ) {
-      iterable.arg.clear();
+    switch (iterable.type) {
+      case TAKE:
+        this.limit = Math.min(iterable.arg, this.limit);
+        break;
+      case UNIQ:
+        iterable.arg.clear();
+        break;
     }
     pipe.push(iterable);
     iterable = iterable.source;
@@ -53,7 +62,10 @@ Iterator.prototype.next = function () {
   let frame = this.frame;
 
   nextResult:
-  while (!(done = (cursor = frame.iterator.next()).done) || stack.length) {
+  while (
+    this.count < this.limit &&
+    (!(done = (cursor = frame.iterator.next()).done) || stack.length)
+  ) {
     if (done) {
       frame = stack.pop();
       continue;
@@ -128,6 +140,7 @@ Iterator.prototype.next = function () {
     }
 
     this.frame = frame;
+    this.count++;
 
     return {value: value, done: false};
   }

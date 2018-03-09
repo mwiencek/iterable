@@ -23,6 +23,7 @@ import mapP from './mapP';
 import reduce from './reduce';
 import reject from './reject';
 import rejectP from './rejectP';
+import take from './take';
 import toArray from './toArray';
 import uniq from './uniq';
 import uniqBy from './uniqBy';
@@ -45,6 +46,7 @@ export {
   reduce,
   reject,
   rejectP,
+  take,
   toArray,
   uniq,
   uniqBy,
