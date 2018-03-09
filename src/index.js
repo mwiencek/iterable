@@ -14,6 +14,7 @@ import filter from './filter';
 import filterP from './filterP';
 import flatMap from './flatMap';
 import flatten from './flatten';
+import groupBy from './groupBy';
 import intersection from './intersection';
 import join from './join';
 import map from './map';
@@ -33,6 +34,7 @@ export {
   filterP,
   flatMap,
   flatten,
+  groupBy,
   intersection,
   join,
   map,
