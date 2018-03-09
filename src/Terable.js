@@ -31,14 +31,14 @@ Terable.prototype[Symbol.iterator] = function () {
 
 function Iterator(iterable) {
   this.count = 0;
-  this.limit = Infinity;
+  this.take = Infinity;
 
   const pipe = [];
 
   while (iterable instanceof Terable) {
     switch (iterable.type) {
       case TAKE:
-        this.limit = Math.min(iterable.arg, this.limit);
+        this.take = Math.min(iterable.arg, this.take);
         break;
       case UNIQ:
         iterable.arg.clear();
@@ -63,7 +63,7 @@ Iterator.prototype.next = function () {
 
   nextResult:
   while (
-    this.count < this.limit &&
+    this.count < this.take &&
     (!(done = (cursor = frame.iterator.next()).done) || stack.length)
   ) {
     if (done) {
