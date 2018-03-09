@@ -377,6 +377,14 @@ test('take', () => {
     )([1, [[2, 3], [4]], [5]])
   ).toEqual([1, 2, 3]);
 
+  expect(
+    compose(
+      toArray,
+      flatten,
+      take(1),
+    )([[[1, 2], [3]], [4], 5])
+  ).toEqual([1, 2, 3]);
+
   let calls = 0;
   let plus1 = map(x => { calls++; return x + 1 });
   let take0 = take(0);
