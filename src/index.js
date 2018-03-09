@@ -8,11 +8,13 @@
 
 import compact from './compact';
 import compose from './compose';
+import difference from './difference';
 import each from './each';
 import filter from './filter';
 import filterP from './filterP';
 import flatMap from './flatMap';
 import flatten from './flatten';
+import intersection from './intersection';
 import join from './join';
 import map from './map';
 import mapP from './mapP';
@@ -25,11 +27,13 @@ import uniq from './uniq';
 export {
   compact,
   compose,
+  difference,
   each,
   filter,
   filterP,
   flatMap,
   flatten,
+  intersection,
   join,
   map,
   mapP,

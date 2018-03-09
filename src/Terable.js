@@ -5,15 +5,17 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export const FILTER = 1;
-export const FILTERP = 2;
-export const FLATMAP = 3;
-export const FLATTEN = 4;
-export const MAP = 5;
-export const MAPP = 6;
-export const REJECT = 7;
-export const REJECTP = 8;
-export const UNIQ = 9;
+export const DIFFERENCE = 1;
+export const FILTER = 2;
+export const FILTERP = 3;
+export const FLATMAP = 4;
+export const FLATTEN = 5;
+export const INTERSECTION = 6;
+export const MAP = 7;
+export const MAPP = 8;
+export const REJECT = 9;
+export const REJECTP = 10;
+export const UNIQ = 11;
 
 function Terable(type, arg, source) {
   this.type = type;
@@ -48,7 +50,6 @@ Iterator.prototype.next = function () {
   let cursor;
   let done;
   let frame = this.frame;
-  let test = true;
 
   nextResult:
   while (!(done = (cursor = frame.iterator.next()).done) || stack.length) {
@@ -61,7 +62,8 @@ Iterator.prototype.next = function () {
 
     for (let step = frame.step, count = pipe.length; step < count; step++) {
       const {type, arg} = pipe[count - step - 1];
-      test = true;
+      let test = true;
+      let valueSet;
 
       switch (type) {
         case FILTER:
@@ -93,6 +95,15 @@ Iterator.prototype.next = function () {
           }
           break;
 
+        case INTERSECTION:
+          test = false;
+        case DIFFERENCE:
+          valueSet = arg;
+          if (!!valueSet.has(value) === test) {
+            continue nextResult;
+          }
+          break;
+
         case MAP:
           value = arg(value);
           break;
@@ -102,7 +113,7 @@ Iterator.prototype.next = function () {
           break;
 
         case UNIQ:
-          const valueSet = arg;
+          valueSet = arg;
           if (valueSet.has(value)) {
             continue nextResult;
           } else {

@@ -9,11 +9,13 @@
 import {
   compact,
   compose,
+  difference,
   each,
   filter,
   filterP,
   flatMap,
   flatten,
+  intersection,
   join,
   map,
   mapP,
@@ -40,6 +42,19 @@ test('compose', () => {
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
   // Shouldn't maintain state between calls.
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
+});
+
+test('difference', () => {
+  expect(
+    toArray(difference([0, 1, 2, 3, 4])([-2, 0, 2, 4, 6]))
+  ).toEqual([-2, 6]);
+
+  const a = Symbol();
+  const b = Symbol();
+
+  expect(
+    toArray(difference(new Set([a]))(new Set([a, b])))
+  ).toEqual([b]);
 });
 
 test('each', () => {
@@ -191,6 +206,12 @@ test('Immutable.js', () => {
       flatMap(x => [x, 1]),
     )([0, 0])
   )).toEqual([1, 1])
+});
+
+test('intersection', () => {
+  expect(
+    toArray(intersection([0, 1, 2, 3, 4])([-2, 0, 2, 4, 6]))
+  ).toEqual([0, 2, 4]);
 });
 
 test('join', () => {
