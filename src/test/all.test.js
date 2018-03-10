@@ -49,9 +49,21 @@ test('compose', () => {
 });
 
 test('difference', () => {
-  expect(
-    toArray(difference([0, 1, 2, 3, 4])([-2, 0, 2, 4, 6]))
-  ).toEqual([-2, 6]);
+  const source = [0, 1, 2, 3, 4];
+  const target = [-2, 0, 2, 4, 6];
+  const _diff = difference(source);
+
+  expect(toArray(_diff(target))).toEqual([-2, 6]);
+  // Shouldn't maintain state between calls.
+  expect(toArray(_diff(target))).toEqual([-2, 6]);
+  source.splice(0, 0, -2);
+  target.push(8);
+  const iterable = _diff(target);
+  expect(toArray(iterable)).toEqual([6, 8]);
+  // Should be able to reuse the iterable.
+  source.push(6);
+  target.push(10);
+  expect(toArray(iterable)).toEqual([8, 10]);
 
   const a = Symbol();
   const b = Symbol();
@@ -240,9 +252,21 @@ test('Immutable.js', () => {
 });
 
 test('intersection', () => {
-  expect(
-    toArray(intersection([0, 1, 2, 3, 4])([-2, 0, 2, 4, 6]))
-  ).toEqual([0, 2, 4]);
+  const source = [0, 1, 2, 3, 4];
+  const target = [-2, 0, 2, 4, 6];
+  const _intersect = intersection(source);
+
+  expect(toArray(_intersect(target))).toEqual([0, 2, 4]);
+  // Shouldn't maintain state between calls.
+  expect(toArray(_intersect(target))).toEqual([0, 2, 4]);
+  source.splice(0, 1);
+  source.push(5, 6);
+  const iterable = _intersect(target);
+  expect(toArray(iterable)).toEqual([2, 4, 6]);
+  // Should be able to reuse the iterable.
+  source.push(8);
+  target.push(8);
+  expect(toArray(iterable)).toEqual([2, 4, 6, 8]);
 });
 
 test('join', () => {
@@ -439,11 +463,15 @@ test('take', () => {
 });
 
 test('uniq', () => {
-  const _uniq = uniq([1, 1, 2, 3, 1]);
+  const source = [1, 1, 2, 3, 1];
+  const _uniq = uniq(source);
 
   expect(toArray(_uniq)).toEqual([1, 2, 3]);
   // Shouldn't maintain state between calls.
   expect(toArray(_uniq)).toEqual([1, 2, 3]);
+  source.push(4, 4);
+  expect(toArray(_uniq)).toEqual([1, 2, 3, 4]);
+
   expect(toArray(
     compose(
       uniq,
