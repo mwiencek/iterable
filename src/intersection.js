@@ -12,6 +12,6 @@ type IntersectionDef<T> = (Iterable<T>) => Iterable<T>;
 
 const intersection = <T>(a: Iterable<T>): IntersectionDef<T> =>
   (b: Iterable<T>): Iterable<T> =>
-    new Terable(INTERSECTION, new Set(a), b);
+    new Terable(INTERSECTION, a, b);
 
 export default intersection;

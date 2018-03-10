@@ -37,6 +37,10 @@ function Iterator(iterable) {
 
   while (iterable instanceof Terable) {
     switch (iterable.type) {
+      case DIFFERENCE:
+      case INTERSECTION:
+        iterable.valueSet = new Set(iterable.arg);
+        break;
       case TAKE:
         this.take = Math.min(iterable.arg, this.take);
         break;
@@ -74,7 +78,8 @@ Iterator.prototype.next = function () {
     let value = cursor.value;
 
     for (let step = frame.step, count = pipe.length; step < count; step++) {
-      const {type, arg} = pipe[count - step - 1];
+      const action = pipe[count - step - 1];
+      const {type, arg} = action;
 
       let test = true;
       let setKey = value;
@@ -113,7 +118,7 @@ Iterator.prototype.next = function () {
         case INTERSECTION:
           test = false;
         case DIFFERENCE:
-          if (!!valueSet.has(setKey) === test) {
+          if (!!action.valueSet.has(setKey) === test) {
             continue nextResult;
           }
           break;
