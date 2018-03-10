@@ -409,6 +409,19 @@ test('take', () => {
     )([[[1, 2], [3]], [4], 5])
   ).toEqual([1, 2, 3]);
 
+  let iteratorCalls = 0;
+  const flattenSpy = function (source) {
+    const iterable = flatten(source);
+    const iterator = iterable[Symbol.iterator];
+    iterable[Symbol.iterator] = function () {
+      iteratorCalls++;
+      return iterator.call(iterable);
+    };
+    return iterable;
+  };
+  expect(compose(toArray, take(0), flattenSpy)([[0]])).toEqual([]);
+  expect(iteratorCalls).toBe(0);
+
   let calls = 0;
   let plus1 = map(x => { calls++; return x + 1 });
   let take0 = take(0);
@@ -417,14 +430,14 @@ test('take', () => {
   let take4 = take(4);
   let array = [1, 2, 3];
 
-  compose(toArray, plus1, take0)(array);
-  compose(toArray, plus1, take0, take3)(array);
-  compose(toArray, plus1, take3, take0)(array);
-  compose(toArray, take0, plus1)(array);
-  compose(toArray, take0, plus1, take3)(array);
-  compose(toArray, take0, take3, plus1)(array);
-  compose(toArray, take3, plus1, take0)(array);
-  compose(toArray, take3, take0, plus1)(array);
+  expect(compose(toArray, plus1, take0)(array)).toEqual([]);
+  expect(compose(toArray, plus1, take0, take3)(array)).toEqual([]);
+  expect(compose(toArray, plus1, take3, take0)(array)).toEqual([]);
+  expect(compose(toArray, take0, plus1)(array)).toEqual([]);
+  expect(compose(toArray, take0, plus1, take3)(array)).toEqual([]);
+  expect(compose(toArray, take0, take3, plus1)(array)).toEqual([]);
+  expect(compose(toArray, take3, plus1, take0)(array)).toEqual([]);
+  expect(compose(toArray, take3, take0, plus1)(array)).toEqual([]);
 
   expect(calls).toBe(0);
 
