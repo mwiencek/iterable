@@ -509,8 +509,33 @@ test('uniqBy', () => {
     {key: 'b', value: 4},
   ];
 
-  expect(toArray(uniqBy(x => x.key)(items))).toEqual([
+  const _uniqBy = uniqBy(x => x.key);
+  expect(toArray(_uniqBy(items))).toEqual([
     {key: 'a', value: 1},
     {key: 'b', value: 4},
+  ]);
+  // Shouldn't maintain state between calls.
+  expect(toArray(_uniqBy(items))).toEqual([
+    {key: 'a', value: 1},
+    {key: 'b', value: 4},
+  ]);
+  items.pop();
+  items.push({key: 'c', value: 5});
+  const iterable = _uniqBy(items);
+  expect(toArray(iterable)).toEqual([
+    {key: 'a', value: 1},
+    {key: 'c', value: 5},
+  ]);
+  // Should be able to reuse the iterable.
+  items.shift();
+  items.shift();
+  items.push(
+    {key: 'c', value: 6},
+    {key: 'd', value: 7},
+  );
+  expect(toArray(iterable)).toEqual([
+    {key: 'a', value: 3},
+    {key: 'c', value: 5},
+    {key: 'd', value: 7},
   ]);
 });

@@ -47,6 +47,9 @@ function Iterator(iterable) {
       case UNIQ:
         iterable.arg.clear();
         break;
+      case UNIQBY:
+        iterable.arg[1].clear();
+        break;
     }
     pipe.push(iterable);
     iterable = iterable.source;
