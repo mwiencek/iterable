@@ -6,6 +6,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
+import {DONE} from './constants';
 import Terable from './Terable';
 
 type DropDef<T> = (Iterable<T>) => Iterable<T>;
@@ -31,7 +32,7 @@ DropIterator.prototype.next = function () {
 
   if (this.done) {
     this.source = null;
-    return {done: true};
+    return DONE;
   }
 
   let source = this.source;

@@ -5,6 +5,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
+import {DONE} from './constants';
+
 export const DIFFERENCE = 1;
 export const FILTER = 2;
 export const FLATMAP = 3;
@@ -140,7 +142,7 @@ Iterator.prototype.next = function () {
     return {value: value, done: false};
   }
 
-  return {done: true};
+  return DONE;
 };
 
 export default Terable;

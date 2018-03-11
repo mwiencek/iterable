@@ -6,6 +6,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
+import {DONE} from './constants';
 import Terable from './Terable';
 
 type TakeDef<T> = (Iterable<T>) => Iterable<T>;
@@ -32,7 +33,7 @@ TakeIterator.prototype.next = function () {
   if (this.done || this.taken === parent.count) {
     this.done = true;
     this.source = null;
-    return {done: true};
+    return DONE;
   }
 
   let source = this.source;
