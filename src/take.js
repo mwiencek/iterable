@@ -10,34 +10,48 @@ import Terable, {TAKE} from './Terable';
 
 type TakeDef<T> = (Iterable<T>) => Iterable<T>;
 
+function TakeIterable(count, source) {
+  this.count = count;
+  this.source = source;
+}
+
+TakeIterable.prototype[Symbol.iterator] = function () {
+  return new TakeIterator(this);
+};
+
+function TakeIterator(parent) {
+  this.parent = parent;
+  this.source = null;
+  this.taken = 0;
+  this.done = false;
+}
+
+TakeIterator.prototype.next = function () {
+  const parent = this.parent;
+
+  if (this.done || this.taken === parent.count) {
+    this.done = true;
+    this.source = null;
+    return {done: true};
+  }
+
+  let source = this.source;
+  if (!source) {
+    // $FlowFixMe - https://github.com/facebook/flow/issues/1163
+    source = (this.source = parent.source[Symbol.iterator]());
+  }
+
+  let cursor;
+  if (this.done = (cursor = source.next()).done) {
+    source = (this.source = null);
+  } else {
+    this.taken++;
+  }
+
+  return cursor;
+};
+
 const take = <T>(count: number): TakeDef<T> =>
-  (iterable: Iterable<T>): Iterable<T> =>
-    ({
-      [Symbol.iterator]: function () {
-        let iterator;
-        let taken = 0;
-        let done = false;
-        return {
-          next: function () {
-            if (done || taken === count) {
-              done = true;
-              iterator = null;
-              return {done: true};
-            }
-            if (!iterator) {
-              // $FlowFixMe - https://github.com/facebook/flow/issues/1163
-              iterator = iterable[Symbol.iterator]();
-            }
-            let cursor;
-            if (done = (cursor = iterator.next()).done) {
-              iterator = null;
-            } else {
-              taken++;
-            }
-            return cursor;
-          },
-        };
-      },
-    });
+  (iterable: Iterable<T>): Iterable<T> => new TakeIterable(count, iterable);
 
 export default take;
