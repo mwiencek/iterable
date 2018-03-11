@@ -85,9 +85,10 @@ test('difference', () => {
   const a = Symbol();
   const b = Symbol();
 
-  expect(
-    toArray(difference(new Set([a]))(new Set([a, b])))
-  ).toEqual([b]);
+  // Set difference
+  const setDiff = difference(new Set([a]))(new Set([a, b]));
+  expect(toArray(setDiff)).toEqual([b]);
+  expect(toArray(new Set(setDiff))).toEqual([b]);
 });
 
 test('each', () => {
