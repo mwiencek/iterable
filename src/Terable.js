@@ -50,7 +50,11 @@ function Iterator(iterable) {
 
   this.pipe = pipe;
   this.stack = [];
-  this.frame = {iterator: iterable[Symbol.iterator](), step: 0};
+  this.frame = {
+    iterable: iterable,
+    iterator: null,
+    step: 0,
+  };
 }
 
 Iterator.prototype.next = function () {
@@ -60,6 +64,11 @@ Iterator.prototype.next = function () {
   let cursor;
   let done;
   let frame = this.frame;
+
+  if (!frame.iterator) {
+    frame.iterator = frame.iterable[Symbol.iterator]();
+    frame.iterable = null;
+  }
 
   nextResult:
   while (!(done = (cursor = frame.iterator.next()).done) || stack.length) {
@@ -103,7 +112,11 @@ Iterator.prototype.next = function () {
         case FLATTEN:
           if (value && typeof value === 'object' && value[Symbol.iterator]) {
             stack.push(frame);
-            frame = {iterator: value[Symbol.iterator](), step: step};
+            frame = {
+              iterable: null,
+              iterator: value[Symbol.iterator](),
+              step: step,
+            };
             continue nextResult;
           }
           break;

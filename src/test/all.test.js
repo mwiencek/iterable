@@ -49,6 +49,9 @@ function spyFactory(util) {
   return spy;
 }
 
+const badProp = x => x.y.z;
+const badMap = map(badProp);
+
 test('compose', () => {
   const newIds = compose(
     uniq,
@@ -98,6 +101,11 @@ test('difference', () => {
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
+  // Lazy iterator creation
+  const lazySpy = spyFactory(difference([{}]));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
+
   const a = Symbol();
   const b = Symbol();
 
@@ -144,6 +152,11 @@ test('filter', () => {
   iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(filter(badProp));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
 
 test('filterP', () => {
@@ -174,6 +187,11 @@ test('filterP', () => {
   expect(iterator.next()).toEqual({value: {id: 5}, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(filterP('x'));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
 
 test('flatMap', () => {
@@ -211,6 +229,11 @@ test('flatMap', () => {
       flatMap(x => String.fromCharCode(x.charCodeAt(0) + 1))('abc')
     )
   ).toEqual('bcd');
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(flatMap(badProp));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
 
 test('flatten', () => {
@@ -235,6 +258,11 @@ test('flatten', () => {
   expect(iterator.next()).toEqual({value: 1, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(flatten);
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 
   expect(
     toArray(
@@ -337,6 +365,11 @@ test('intersection', () => {
   expect(iterator.next()).toEqual({value: 8, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(intersection([{}]));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
 
 test('join', () => {
@@ -385,6 +418,11 @@ test('map', () => {
   expect(iterator.next()).toEqual({value: 1, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(map(badProp));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
 
 test('mapP', () => {
@@ -411,6 +449,11 @@ test('mapP', () => {
   expect(iterator.next()).toEqual({value: 220, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(mapP('y'));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
 
 test('objects', () => {
@@ -456,6 +499,11 @@ test('reduce', () => {
       reduce((accum, value) => value + accum, ''),
     )(['a', 'b', 'c'])
   ).toBe(586);
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(reduce((accum, value) => accum + value, ''));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
 
 test('reject', () => {
@@ -473,6 +521,11 @@ test('reject', () => {
   expect(iterator.next()).toEqual({value: 7, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(reject(badProp));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
 
 test('rejectP', () => {
@@ -484,6 +537,11 @@ test('rejectP', () => {
   expect(iterator.next()).toEqual({value: {prop: NaN}, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(rejectP('y'));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 
   // Composed
   const newArtists = compose(
@@ -509,6 +567,11 @@ test('take', () => {
   expect(iterator.next()).toEqual({value: 2, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(take(1));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 
   expect(
     compose(
@@ -611,6 +674,11 @@ test('uniq', () => {
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
+  // Lazy iterator creation
+  const lazySpy = spyFactory(uniq);
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
+
   // Composed
   expect(toArray(
     compose(
@@ -674,4 +742,9 @@ test('uniqBy', () => {
   expect(iterator.next()).toEqual({value: {key: 'd', value: 7}, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(uniqBy(badProp));
+  badMap(lazySpy([{}]))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
