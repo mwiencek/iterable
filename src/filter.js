@@ -10,7 +10,7 @@ import Terable, {FILTER} from './Terable';
 
 type FilterDef<T> = (Iterable<T>) => Iterable<$Subtype<T>>;
 
-const filter = <T>(test: (T) => boolean): FilterDef<T> =>
+const filter = <T>(test: (T) => mixed): FilterDef<T> =>
   (iterable: Iterable<T>): Iterable<$Subtype<T>> =>
     new Terable(FILTER, test, iterable);
 

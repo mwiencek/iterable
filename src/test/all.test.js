@@ -32,8 +32,8 @@ import mediums from './mediums';
 
 function spyFactory(util) {
   const spy = function (source) {
-    const iterable = util(source);
-    const iterator = iterable[Symbol.iterator];
+    const iterable: any = util(source);
+    const iterator: any = iterable[Symbol.iterator];
 
     iterator[Symbol.iterator] = function () {
       spy.calls++;
@@ -46,7 +46,7 @@ function spyFactory(util) {
   return spy;
 }
 
-const badProp = x => x.y.z;
+const badProp = (x: any) => x.y.z;
 const badMap = map(badProp);
 
 test('compose', () => {
@@ -64,7 +64,7 @@ test('compose', () => {
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
 
   // Manual iteration
-  const iterator = newIds[Symbol.iterator]();
+  const iterator: any = (newIds: any)[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: 1, done: false});
   expect(iterator.next()).toEqual({value: 2, done: false});
   expect(iterator.next()).toEqual({value: 3, done: false});
@@ -92,6 +92,7 @@ test('difference', () => {
   expect(toArray(iterable)).toEqual([8, 10]);
 
   // Manual iteration
+  // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: 8, done: false});
   expect(iterator.next()).toEqual({value: 10, done: false});
@@ -100,6 +101,7 @@ test('difference', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(difference([{}]));
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 
@@ -155,6 +157,7 @@ test('filter', () => {
   expect(toArray(iterable)).toEqual([2]);
 
   // Manual iteration
+  // $FlowFixMe
   let iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: 2, done: false});
   expect(iterator.next()).toEqual({done: true});
@@ -164,12 +167,14 @@ test('filter', () => {
   expect(toArray(iterable)).toEqual([]);
 
   // Manual iteration
+  // $FlowFixMe
   iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
   const lazySpy = spyFactory(filter(badProp));
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -212,6 +217,7 @@ test('flatMap', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(flatMap(badProp));
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -233,6 +239,7 @@ test('flatten', () => {
   expect(toArray(iterable)).toEqual([0, 1]);
 
   // Manual iteration
+  // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: 0, done: false});
   expect(iterator.next()).toEqual({value: 1, done: false});
@@ -241,6 +248,7 @@ test('flatten', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(flatten);
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 
@@ -338,6 +346,7 @@ test('intersection', () => {
   expect(toArray(iterable)).toEqual([2, 4, 6, 8]);
 
   // Manual iteration
+  // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: 2, done: false});
   expect(iterator.next()).toEqual({value: 4, done: false});
@@ -348,6 +357,7 @@ test('intersection', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(intersection([{}]));
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -392,6 +402,7 @@ test('map', () => {
   expect(toArray(iterable)).toEqual([9, 4, 1]);
 
   // Manual iteration
+  // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: 9, done: false});
   expect(iterator.next()).toEqual({value: 4, done: false});
@@ -401,6 +412,7 @@ test('map', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(map(badProp));
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -450,7 +462,10 @@ test('reduce', () => {
   ).toBe(586);
 
   // Lazy iterator creation
-  const lazySpy = spyFactory(reduce((accum, value) => accum + value, ''));
+  const lazySpy = spyFactory(
+    reduce((accum: any, value: any) => accum + value, '')
+  );
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -480,6 +495,7 @@ test('reject', () => {
   expect(toArray(iterable)).toEqual([1, 3, 7]);
 
   // Manual iteration
+  // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: 1, done: false});
   expect(iterator.next()).toEqual({value: 3, done: false});
@@ -489,6 +505,7 @@ test('reject', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(reject(badProp));
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -498,6 +515,7 @@ test('take', () => {
   expect(toArray(iterable)).toEqual([1, 2]);
 
   // Manual iteration
+  // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: 1, done: false});
   expect(iterator.next()).toEqual({value: 2, done: false});
@@ -506,6 +524,7 @@ test('take', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(take(1));
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 
@@ -522,7 +541,11 @@ test('take', () => {
       toArray,
       flatten,
       take(1),
-    )([[[1, 2], [3]], [4], 5])
+    )([
+      ([[1, 2], [3]]: Array<Array<number>>),
+      ([4]: Array<number>),
+      5,
+    ])
   ).toEqual([1, 2, 3]);
 
   expect(
@@ -531,7 +554,10 @@ test('take', () => {
       take(4),
       flatten,
       take(1),
-    )([[[1], [2], [3]], [4]])
+    )([
+      ([[1], [2], [3]]: Array<Array<number>>),
+      ([4]: Array<number>),
+    ])
   ).toEqual([1, 2, 3]);
 
   const flattenSpy = spyFactory(flatten);
@@ -602,6 +628,7 @@ test('uniq', () => {
   expect(toArray(_uniq)).toEqual([1, 2, 3, 4]);
 
   // Manual iteration
+  // $FlowFixMe
   const iterator = _uniq[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: 1, done: false});
   expect(iterator.next()).toEqual({value: 2, done: false});
@@ -612,6 +639,7 @@ test('uniq', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(uniq);
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 
@@ -672,6 +700,7 @@ test('uniqBy', () => {
   ]);
 
   // Manual iteration
+  // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
   expect(iterator.next()).toEqual({value: {key: 'a', value: 3}, done: false});
   expect(iterator.next()).toEqual({value: {key: 'c', value: 5}, done: false});
@@ -681,6 +710,7 @@ test('uniqBy', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(uniqBy(badProp));
+  // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 });

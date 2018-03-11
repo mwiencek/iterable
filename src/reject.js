@@ -10,7 +10,7 @@ import Terable, {REJECT} from './Terable';
 
 type RejectDef<T> = (Iterable<T>) => Iterable<$Subtype<T>>;
 
-const reject = <T>(test: (T) => boolean): RejectDef<T> =>
+const reject = <T>(test: (T) => mixed): RejectDef<T> =>
   (iterable: Iterable<T>): Iterable<$Subtype<T>> =>
     new Terable(REJECT, test, iterable);
 

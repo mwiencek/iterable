@@ -52,6 +52,7 @@ TakeIterator.prototype.next = function () {
 };
 
 const take = <T>(count: number): TakeDef<T> =>
-  (iterable: Iterable<T>): Iterable<T> => new TakeIterable(count, iterable);
+  (iterable: Iterable<T>): Iterable<T> =>
+    (((new TakeIterable(count, iterable)): any): Iterable<T>);
 
 export default take;
