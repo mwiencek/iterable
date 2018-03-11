@@ -19,19 +19,19 @@ const xObjects = [
 const getX = x => x.x;
 
 (new Benchmark.Suite)
-  .add('terable', function () {
+  .add('terable (simple map)', function () {
     it.toArray(it.map(getX)(xObjects));
   })
-  .add('terable (inline function)', function () {
+  .add('terable (simple map, inline function)', function () {
     it.toArray(it.map(x => x.x)(xObjects));
   })
-  .add('iterare', function () {
+  .add('iterare (simple map)', function () {
     it.toArray(iterare.iterate(xObjects).map(getX));
   })
-  .add('lodash/fp', function () {
+  .add('lodash/fp (simple map)', function () {
     _map(getX)(xObjects);
   })
-  .add('ramda', function () {
+  .add('ramda (simple map)', function () {
     R.map(getX)(xObjects);
   })
   .on('cycle', function (event) {

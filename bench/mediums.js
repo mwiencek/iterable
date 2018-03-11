@@ -66,16 +66,16 @@ const getNewIdsRamda = R.compose(
 );
 
 (new Benchmark.Suite)
-  .add('terable', function () {
+  .add('terable (complex chain)', function () {
     getNewIdsIt(mediums);
   })
-  .add('iterare', function () {
+  .add('iterare (complex chain)', function () {
     getNewIdsIterare(mediums);
   })
-  .add('lodash/fp', function () {
+  .add('lodash/fp (complex chain)', function () {
     getNewIdsLodash(mediums);
   })
-  .add('ramda', function () {
+  .add('ramda (complex chain)', function () {
     getNewIdsRamda(mediums);
   })
   .on('cycle', function (event) {

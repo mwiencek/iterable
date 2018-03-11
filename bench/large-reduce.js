@@ -16,7 +16,7 @@ const doubleLodash = _map(double);
 const doubleRamda = R.map(double);
 
 (new Benchmark.Suite)
-  .add('terable', function () {
+  .add('terable (large reduce)', function () {
     it.reduce(sum, 0)(it.compose(
       doubleIt,
       doubleIt,
@@ -25,7 +25,7 @@ const doubleRamda = R.map(double);
       doubleIt,
     )(largeList));
   })
-  .add('iterare', function () {
+  .add('iterare (large reduce)', function () {
     iterare.iterate(largeList)
       .map(double)
       .map(double)
@@ -34,7 +34,7 @@ const doubleRamda = R.map(double);
       .map(double)
       .reduce(sum, 0);
   })
-  .add('lodash/fp', function () {
+  .add('lodash/fp (large reduce)', function () {
     _reduce(sum, 0)(_flowRight(
       doubleLodash,
       doubleLodash,
@@ -43,7 +43,7 @@ const doubleRamda = R.map(double);
       doubleLodash,
     )(largeList));
   })
-  .add('ramda', function () {
+  .add('ramda (large reduce)', function () {
     R.reduce(sum, 0)(R.compose(
       doubleRamda,
       doubleRamda,
