@@ -43,7 +43,7 @@ TakeIterator.prototype.next = function () {
 
   let cursor;
   if (this.done = (cursor = source.next()).done) {
-    source = (this.source = null);
+    this.source = null;
   } else {
     this.taken++;
   }
