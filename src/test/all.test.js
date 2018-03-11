@@ -27,6 +27,7 @@ import {
   uniqBy,
 } from '../index';
 
+import entries from 'object.entries';
 import Immutable from 'immutable';
 import mediums from './mediums';
 
@@ -429,7 +430,7 @@ test('objects', () => {
     }, ({}: $Shape<typeof object>)),
     compact,
     map(([k, v]) => v ? k : null),
-    Object.entries,
+    entries,
   );
 
   expect(truth(object)).toEqual({a: 0, c: 1});
