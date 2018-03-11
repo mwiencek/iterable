@@ -10,6 +10,7 @@ import {
   compact,
   compose,
   difference,
+  drop,
   each,
   filter,
   flatMap,
@@ -113,6 +114,35 @@ test('difference', () => {
   const setDiff = difference(new Set([a]))(new Set([a, b]));
   expect(toArray(setDiff)).toEqual([b]);
   expect(toArray(new Set(setDiff))).toEqual([b]);
+});
+
+test('drop', () => {
+  const array = [1, 2, 3];
+
+  expect(toArray(drop(0)(array))).toEqual([1, 2, 3]);
+  expect(toArray(drop(1)(array))).toEqual([2, 3]);
+  expect(toArray(drop(2)(array))).toEqual([3]);
+
+  expect(toArray(drop(1)(take(2)(array)))).toEqual([2]);
+  expect(toArray(take(1)(drop(2)(array)))).toEqual([3]);
+
+  const nested = [[1, 2, 3], [4]];
+  expect(toArray(flatten(drop(1)(nested)))).toEqual([4]);
+  expect(toArray(drop(1)(flatten(nested)))).toEqual([2, 3, 4]);
+
+  // Manual iteration
+  const iterable = drop(2)(array);
+  // $FlowFixMe
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 3, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
+
+  // Lazy iterator creation
+  const lazySpy = spyFactory(drop(2));
+  // $FlowFixMe
+  badMap(lazySpy(array))[Symbol.iterator]();
+  expect(lazySpy.calls).toBe(0);
 });
 
 test('each', () => {

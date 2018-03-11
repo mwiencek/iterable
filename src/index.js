@@ -9,6 +9,7 @@
 import compact from './compact';
 import compose from './compose';
 import difference from './difference';
+import drop from './drop';
 import each from './each';
 import filter from './filter';
 import flatMap from './flatMap';
@@ -29,6 +30,7 @@ export {
   compact,
   compose,
   difference,
+  drop,
   each,
   filter,
   flatMap,
