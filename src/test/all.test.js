@@ -33,6 +33,22 @@ import {
 import Immutable from 'immutable';
 import mediums from './mediums';
 
+function spyFactory(util) {
+  const spy = function (source) {
+    const iterable = util(source);
+    const iterator = iterable[Symbol.iterator];
+
+    iterator[Symbol.iterator] = function () {
+      spy.calls++;
+      return iterator.call(iterable);
+    };
+
+    return iterator;
+  };
+  spy.calls = 0;
+  return spy;
+}
+
 test('compose', () => {
   const newIds = compose(
     uniq,
@@ -519,18 +535,9 @@ test('take', () => {
     )([[[1], [2], [3]], [4]])
   ).toEqual([1, 2, 3]);
 
-  let iteratorCalls = 0;
-  const flattenSpy = function (source) {
-    const iterable = flatten(source);
-    const iterator = iterable[Symbol.iterator];
-    iterable[Symbol.iterator] = function () {
-      iteratorCalls++;
-      return iterator.call(iterable);
-    };
-    return iterable;
-  };
+  const flattenSpy = spyFactory(flatten);
   expect(compose(toArray, take(0), flattenSpy)([[0]])).toEqual([]);
-  expect(iteratorCalls).toBe(0);
+  expect(flattenSpy.calls).toBe(0);
 
   let calls = 0;
   let plus1 = map(x => { calls++; return x + 1 });
