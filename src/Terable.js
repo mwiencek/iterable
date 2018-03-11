@@ -7,16 +7,13 @@
 
 export const DIFFERENCE = 1;
 export const FILTER = 2;
-export const FILTERP = 3;
-export const FLATMAP = 4;
-export const FLATTEN = 5;
-export const INTERSECTION = 6;
-export const MAP = 7;
-export const MAPP = 8;
-export const REJECT = 9;
-export const REJECTP = 10;
-export const UNIQ = 11;
-export const UNIQBY = 12;
+export const FLATMAP = 3;
+export const FLATTEN = 4;
+export const INTERSECTION = 5;
+export const MAP = 6;
+export const REJECT = 7;
+export const UNIQ = 8;
+export const UNIQBY = 9;
 
 function Terable(type, arg, source) {
   this.type = type;
@@ -96,14 +93,6 @@ Iterator.prototype.next = function () {
           }
           break;
 
-        case FILTERP:
-          test = false;
-        case REJECTP:
-          if (!!value[arg] === test) {
-            continue nextResult;
-          }
-          break;
-
         case FLATMAP:
           value = arg(value);
           step++;
@@ -131,10 +120,6 @@ Iterator.prototype.next = function () {
 
         case MAP:
           value = arg(value);
-          break;
-
-        case MAPP:
-          value = value[arg];
           break;
 
         case UNIQBY:

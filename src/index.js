@@ -11,7 +11,6 @@ import compose from './compose';
 import difference from './difference';
 import each from './each';
 import filter from './filter';
-import filterP from './filterP';
 import flatMap from './flatMap';
 import flatten from './flatten';
 import groupBy from './groupBy';
@@ -19,10 +18,8 @@ import intersection from './intersection';
 import join from './join';
 import keyBy from './keyBy';
 import map from './map';
-import mapP from './mapP';
 import reduce from './reduce';
 import reject from './reject';
-import rejectP from './rejectP';
 import take from './take';
 import toArray from './toArray';
 import uniq from './uniq';
@@ -34,7 +31,6 @@ export {
   difference,
   each,
   filter,
-  filterP,
   flatMap,
   flatten,
   groupBy,
@@ -42,10 +38,8 @@ export {
   join,
   keyBy,
   map,
-  mapP,
   reduce,
   reject,
-  rejectP,
   take,
   toArray,
   uniq,

@@ -19,20 +19,17 @@ const xObjects = [
 const getX = x => x.x;
 
 (new Benchmark.Suite)
-  .add('terable (map)', function () {
+  .add('terable', function () {
     it.toArray(it.map(getX)(xObjects));
   })
-  .add('terable (map with inline function)', function () {
+  .add('terable (inline function)', function () {
     it.toArray(it.map(x => x.x)(xObjects));
-  })
-  .add('terable (mapP)', function () {
-    it.toArray(it.mapP('x')(xObjects));
   })
   .add('iterare', function () {
     it.toArray(iterare.iterate(xObjects).map(getX));
   })
   .add('lodash/fp', function () {
-    _map('x')(xObjects);
+    _map(getX)(xObjects);
   })
   .add('ramda', function () {
     R.map(getX)(xObjects);

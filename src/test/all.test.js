@@ -12,7 +12,6 @@ import {
   difference,
   each,
   filter,
-  filterP,
   flatMap,
   flatten,
   groupBy,
@@ -20,10 +19,8 @@ import {
   join,
   keyBy,
   map,
-  mapP,
   reduce,
   reject,
-  rejectP,
   take,
   toArray,
   uniq,
@@ -134,6 +131,24 @@ test('each', () => {
 });
 
 test('filter', () => {
+  const existingArtists = compose(
+    filter(x => x.id),
+    uniq,
+    map(x => x.artist),
+    flatten,
+    map(x => x.artistCredit.names),
+    flatten,
+    map(x => x.tracks),
+  )(mediums);
+
+  expect(toArray(existingArtists)).toEqual([
+    {id: 1},
+    {id: 2},
+    {id: 3},
+    {id: 4},
+    {id: 5},
+  ]);
+
   const evens = filter(x => x % 2 === 0);
 
   let iterable = evens([1, 2, 3]);
@@ -155,41 +170,6 @@ test('filter', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(filter(badProp));
-  badMap(lazySpy([{}]))[Symbol.iterator]();
-  expect(lazySpy.calls).toBe(0);
-});
-
-test('filterP', () => {
-  const existingArtists = compose(
-    filterP('id'),
-    uniq,
-    mapP('artist'),
-    flatten,
-    map(x => x.artistCredit.names),
-    flatten,
-    map(x => x.tracks),
-  )(mediums);
-
-  expect(toArray(existingArtists)).toEqual([
-    {id: 1},
-    {id: 2},
-    {id: 3},
-    {id: 4},
-    {id: 5},
-  ]);
-
-  // Manual iteration
-  const iterator = existingArtists[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: {id: 1}, done: false});
-  expect(iterator.next()).toEqual({value: {id: 2}, done: false});
-  expect(iterator.next()).toEqual({value: {id: 3}, done: false});
-  expect(iterator.next()).toEqual({value: {id: 4}, done: false});
-  expect(iterator.next()).toEqual({value: {id: 5}, done: false});
-  expect(iterator.next()).toEqual({done: true});
-  expect(iterator.next()).toEqual({done: true});
-
-  // Lazy iterator creation
-  const lazySpy = spyFactory(filterP('x'));
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -425,37 +405,6 @@ test('map', () => {
   expect(lazySpy.calls).toBe(0);
 });
 
-test('mapP', () => {
-  const newIds = compose(
-    uniq,
-    compact,
-    mapP('id'),
-    mapP('artist'),
-    flatten,
-    mapP('names'),
-    mapP('artistCredit'),
-    flatten,
-    mapP('tracks'),
-  )(mediums);
-  expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
-
-  const iterable = mapP('dial')([{dial: 10}, {dial: 10}, {dial: 220}])
-  expect(toArray(iterable)).toEqual([10, 10, 220]);
-
-  // Manual iteration
-  const iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: 10, done: false});
-  expect(iterator.next()).toEqual({value: 10, done: false});
-  expect(iterator.next()).toEqual({value: 220, done: false});
-  expect(iterator.next()).toEqual({done: true});
-  expect(iterator.next()).toEqual({done: true});
-
-  // Lazy iterator creation
-  const lazySpy = spyFactory(mapP('y'));
-  badMap(lazySpy([{}]))[Symbol.iterator]();
-  expect(lazySpy.calls).toBe(0);
-});
-
 test('objects', () => {
   let count = 0;
 
@@ -511,7 +460,23 @@ test('reject', () => {
 
   expect(toArray(odds([1, 2, 3]))).toEqual([1, 3]);
 
-  const iterable = odds(flatten([[1], [3], [7]]));
+  // Composed
+  const newArtists = compose(
+    reject(x => x.id),
+    uniq,
+    map(x => x.artist),
+    flatten,
+    map(x => x.artistCredit.names),
+    flatten,
+    map(x => x.tracks),
+  )(mediums);
+
+  expect(toArray(newArtists)).toEqual([{id: null}]);
+
+  let iterable = reject(x => x.prop)([{prop: 6}, {prop: NaN}]);
+  expect(toArray(iterable)).toEqual([{prop: NaN}]);
+
+  iterable = odds(flatten([[1], [3], [7]]));
   expect(toArray(iterable)).toEqual([1, 3, 7]);
 
   // Manual iteration
@@ -526,35 +491,6 @@ test('reject', () => {
   const lazySpy = spyFactory(reject(badProp));
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
-});
-
-test('rejectP', () => {
-  const iterable = rejectP('prop')([{prop: 6}, {prop: NaN}]);
-  expect(toArray(iterable)).toEqual([{prop: NaN}]);
-
-  // Manual iteration
-  const iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: {prop: NaN}, done: false});
-  expect(iterator.next()).toEqual({done: true});
-  expect(iterator.next()).toEqual({done: true});
-
-  // Lazy iterator creation
-  const lazySpy = spyFactory(rejectP('y'));
-  badMap(lazySpy([{}]))[Symbol.iterator]();
-  expect(lazySpy.calls).toBe(0);
-
-  // Composed
-  const newArtists = compose(
-    rejectP('id'),
-    uniq,
-    mapP('artist'),
-    flatten,
-    map(x => x.artistCredit.names),
-    flatten,
-    map(x => x.tracks),
-  )(mediums);
-
-  expect(toArray(newArtists)).toEqual([{id: null}]);
 });
 
 test('take', () => {
