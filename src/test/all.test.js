@@ -220,7 +220,6 @@ test('Immutable.js', () => {
    * tests that our functions work with external libraries that follow the
    * iterator protocol.
    */
-
   expect(join('+')(Immutable.List(['a', 'b', 'c']))).toBe('a+b+c');
 
   expect(
@@ -407,6 +406,15 @@ test('take', () => {
       flatten,
       take(1),
     )([[[1, 2], [3]], [4], 5])
+  ).toEqual([1, 2, 3]);
+
+  expect(
+    compose(
+      toArray,
+      take(4),
+      flatten,
+      take(1),
+    )([[[1], [2], [3]], [4]])
   ).toEqual([1, 2, 3]);
 
   let iteratorCalls = 0;
