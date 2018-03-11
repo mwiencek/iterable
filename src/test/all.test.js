@@ -46,6 +46,16 @@ test('compose', () => {
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
   // Shouldn't maintain state between calls.
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
+
+  // Manual iteration
+  const iterator = newIds[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 1, done: false});
+  expect(iterator.next()).toEqual({value: 2, done: false});
+  expect(iterator.next()).toEqual({value: 3, done: false});
+  expect(iterator.next()).toEqual({value: 4, done: false});
+  expect(iterator.next()).toEqual({value: 5, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 });
 
 test('difference', () => {
@@ -64,6 +74,13 @@ test('difference', () => {
   source.push(6);
   target.push(10);
   expect(toArray(iterable)).toEqual([8, 10]);
+
+  // Manual iteration
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 8, done: false});
+  expect(iterator.next()).toEqual({value: 10, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 
   const a = Symbol();
   const b = Symbol();
@@ -94,9 +111,22 @@ test('each', () => {
 test('filter', () => {
   const evens = filter(x => x % 2 === 0);
 
-  expect(toArray(evens([1, 2, 3]))).toEqual([2]);
+  let iterable = evens([1, 2, 3]);
+  expect(toArray(iterable)).toEqual([2]);
 
-  expect(toArray(evens(flatten([[1], [3], [7]])))).toEqual([]);
+  // Manual iteration
+  let iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 2, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
+
+  iterable = evens(flatten([[1], [3], [7]]));
+  expect(toArray(iterable)).toEqual([]);
+
+  // Manual iteration
+  iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 });
 
 test('filterP', () => {
@@ -117,6 +147,16 @@ test('filterP', () => {
     {id: 4},
     {id: 5},
   ]);
+
+  // Manual iteration
+  const iterator = existingArtists[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: {id: 1}, done: false});
+  expect(iterator.next()).toEqual({value: {id: 2}, done: false});
+  expect(iterator.next()).toEqual({value: {id: 3}, done: false});
+  expect(iterator.next()).toEqual({value: {id: 4}, done: false});
+  expect(iterator.next()).toEqual({value: {id: 5}, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 });
 
 test('flatMap', () => {
@@ -154,7 +194,6 @@ test('flatMap', () => {
       flatMap(x => String.fromCharCode(x.charCodeAt(0) + 1))('abc')
     )
   ).toEqual('bcd');
-
 });
 
 test('flatten', () => {
@@ -170,9 +209,15 @@ test('flatten', () => {
     toArray(flatten([[]]))
   ).toEqual([]);
 
-  expect(
-    toArray(flatten([[[0], []], 1]))
-  ).toEqual([0, 1]);
+  const iterable = flatten([[[0], []], 1]);
+  expect(toArray(iterable)).toEqual([0, 1]);
+
+  // Manual iteration
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 0, done: false});
+  expect(iterator.next()).toEqual({value: 1, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 
   expect(
     toArray(
@@ -266,6 +311,15 @@ test('intersection', () => {
   source.push(8);
   target.push(8);
   expect(toArray(iterable)).toEqual([2, 4, 6, 8]);
+
+  // Manual iteration
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 2, done: false});
+  expect(iterator.next()).toEqual({value: 4, done: false});
+  expect(iterator.next()).toEqual({value: 6, done: false});
+  expect(iterator.next()).toEqual({value: 8, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 });
 
 test('join', () => {
@@ -304,7 +358,16 @@ test('map', () => {
 
   expect(toArray(square([1, 2, 3]))).toEqual([1, 4, 9]);
 
-  expect(toArray(square(flatten([[3], [2], [1]])))).toEqual([9, 4, 1]);
+  const iterable = square(flatten([[3], [2], [1]]));
+  expect(toArray(iterable)).toEqual([9, 4, 1]);
+
+  // Manual iteration
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 9, done: false});
+  expect(iterator.next()).toEqual({value: 4, done: false});
+  expect(iterator.next()).toEqual({value: 1, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 });
 
 test('mapP', () => {
@@ -320,6 +383,17 @@ test('mapP', () => {
     mapP('tracks'),
   )(mediums);
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
+
+  const iterable = mapP('dial')([{dial: 10}, {dial: 10}, {dial: 220}])
+  expect(toArray(iterable)).toEqual([10, 10, 220]);
+
+  // Manual iteration
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 10, done: false});
+  expect(iterator.next()).toEqual({value: 10, done: false});
+  expect(iterator.next()).toEqual({value: 220, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 });
 
 test('objects', () => {
@@ -372,10 +446,29 @@ test('reject', () => {
 
   expect(toArray(odds([1, 2, 3]))).toEqual([1, 3]);
 
-  expect(toArray(odds(flatten([[1], [3], [7]])))).toEqual([1, 3, 7]);
+  const iterable = odds(flatten([[1], [3], [7]]));
+  expect(toArray(iterable)).toEqual([1, 3, 7]);
+
+  // Manual iteration
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 1, done: false});
+  expect(iterator.next()).toEqual({value: 3, done: false});
+  expect(iterator.next()).toEqual({value: 7, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 });
 
 test('rejectP', () => {
+  const iterable = rejectP('prop')([{prop: 6}, {prop: NaN}]);
+  expect(toArray(iterable)).toEqual([{prop: NaN}]);
+
+  // Manual iteration
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: {prop: NaN}, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
+
+  // Composed
   const newArtists = compose(
     rejectP('id'),
     uniq,
@@ -390,7 +483,15 @@ test('rejectP', () => {
 });
 
 test('take', () => {
-  expect(toArray(take(2)([1, 2, 3]))).toEqual([1, 2]);
+  const iterable = take(2)([1, 2, 3]);
+  expect(toArray(iterable)).toEqual([1, 2]);
+
+  // Manual iteration
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 1, done: false});
+  expect(iterator.next()).toEqual({value: 2, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 
   expect(
     compose(
@@ -493,12 +594,23 @@ test('uniq', () => {
   source.push(4, 4);
   expect(toArray(_uniq)).toEqual([1, 2, 3, 4]);
 
+  // Manual iteration
+  const iterator = _uniq[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: 1, done: false});
+  expect(iterator.next()).toEqual({value: 2, done: false});
+  expect(iterator.next()).toEqual({value: 3, done: false});
+  expect(iterator.next()).toEqual({value: 4, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
+
+  // Composed
   expect(toArray(
     compose(
       uniq,
       uniq,
     )([true, true])
   )).toEqual([true]);
+
   expect(toArray(
     compose(
       map(x => !x),
@@ -546,4 +658,12 @@ test('uniqBy', () => {
     {key: 'c', value: 5},
     {key: 'd', value: 7},
   ]);
+
+  // Manual iteration
+  const iterator = iterable[Symbol.iterator]();
+  expect(iterator.next()).toEqual({value: {key: 'a', value: 3}, done: false});
+  expect(iterator.next()).toEqual({value: {key: 'c', value: 5}, done: false});
+  expect(iterator.next()).toEqual({value: {key: 'd', value: 7}, done: false});
+  expect(iterator.next()).toEqual({done: true});
+  expect(iterator.next()).toEqual({done: true});
 });
