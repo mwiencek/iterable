@@ -6,7 +6,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import Terable, {TAKE} from './Terable';
+import Terable from './Terable';
 
 type TakeDef<T> = (Iterable<T>) => Iterable<T>;
 
