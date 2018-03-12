@@ -39,8 +39,6 @@ function Iterator(iterable) {
         arg.set = new Set(arg.target);
         break;
       case UNIQ:
-        arg.set.clear();
-        break;
       case UNIQBY:
         arg.set.clear();
         break;
