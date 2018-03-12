@@ -15,6 +15,7 @@ import filter from './filter';
 import flatMap from './flatMap';
 import flatten from './flatten';
 import groupBy from './groupBy';
+import head from './head';
 import intersection from './intersection';
 import join from './join';
 import keyBy from './keyBy';
@@ -35,6 +36,7 @@ export {
   flatMap,
   flatten,
   groupBy,
+  head,
   intersection,
   join,
   keyBy,
