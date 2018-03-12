@@ -1,0 +1,4 @@
+// @flow
+
+declare export default function intersection<T>(a: Iterable<T>):
+  (b: Iterable<T>) => Iterable<T>;

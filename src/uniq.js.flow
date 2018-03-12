@@ -1,0 +1,3 @@
+// @flow
+
+declare export default function uniq<T>(iterable: Iterable<T>): Iterable<T>;

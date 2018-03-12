@@ -1,5 +1,4 @@
 /*
- * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -8,8 +7,6 @@
 
 import {DONE} from './constants';
 import Terable from './Terable';
-
-type DropDef<T> = (Iterable<T>) => Iterable<T>;
 
 function DropIterable(count, source) {
   this.count = count;
@@ -37,7 +34,6 @@ DropIterator.prototype.next = function () {
 
   let source = this.source;
   if (!source) {
-    // $FlowFixMe - https://github.com/facebook/flow/issues/1163
     source = (this.source = parent.source[Symbol.iterator]());
   }
 
@@ -55,8 +51,6 @@ DropIterator.prototype.next = function () {
   return cursor;
 };
 
-const drop = <T>(count: number): DropDef<T> =>
-  (iterable: Iterable<T>): Iterable<T> =>
-    (((new DropIterable(count, iterable)): any): Iterable<T>);
+const drop = count => iterable => new DropIterable(count, iterable);
 
 export default drop;

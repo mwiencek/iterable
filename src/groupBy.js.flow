@@ -1,0 +1,4 @@
+// @flow
+
+declare export default function groupBy<T, K>(func: (T) => K):
+  (iterable: Iterable<T>) => Map<K, Array<T>>;

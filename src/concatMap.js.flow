@@ -1,0 +1,5 @@
+// @flow
+
+declare export default function concatMap<T, U>(
+  func: (T) => Iterable<U>
+): (iterable: Iterable<T>) => Iterable<U>;

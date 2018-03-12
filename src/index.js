@@ -1,5 +1,4 @@
 /*
- * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found

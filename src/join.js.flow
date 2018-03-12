@@ -1,0 +1,4 @@
+// @flow
+
+declare export default function join(sep: string):
+  (iterable: Iterable<string>) => string;

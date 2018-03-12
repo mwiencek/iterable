@@ -6,9 +6,14 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 yarn install
 
-mkdir -p dist/src
+pushd src
+babel *.js --out-dir ../dist/
+popd
 
-babel src --out-dir dist/
-
-cp .npmignore LICENSE package.json README.md dist/
-cp src/*.js dist/src/
+cp \
+    .npmignore \
+    LICENSE \
+    package.json \
+    README.md \
+    src/*.js.flow \
+    dist/

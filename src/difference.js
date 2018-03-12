@@ -1,5 +1,4 @@
 /*
- * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -8,10 +7,6 @@
 
 import Terable, {DIFFERENCE} from './Terable';
 
-type DifferenceDef<T> = (Iterable<T>) => Iterable<T>;
-
-const difference = <T>(a: Iterable<T>): DifferenceDef<T> =>
-  (b: Iterable<T>): Iterable<T> =>
-    new Terable(DIFFERENCE, {target: a, set: null}, b);
+const difference = a => b => new Terable(DIFFERENCE, {target: a, set: null}, b);
 
 export default difference;

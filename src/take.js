@@ -1,5 +1,4 @@
 /*
- * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -8,8 +7,6 @@
 
 import {DONE} from './constants';
 import Terable from './Terable';
-
-type TakeDef<T> = (Iterable<T>) => Iterable<T>;
 
 function TakeIterable(count, source) {
   this.count = count;
@@ -38,7 +35,6 @@ TakeIterator.prototype.next = function () {
 
   let source = this.source;
   if (!source) {
-    // $FlowFixMe - https://github.com/facebook/flow/issues/1163
     source = (this.source = parent.source[Symbol.iterator]());
   }
 
@@ -52,8 +48,6 @@ TakeIterator.prototype.next = function () {
   return cursor;
 };
 
-const take = <T>(count: number): TakeDef<T> =>
-  (iterable: Iterable<T>): Iterable<T> =>
-    (((new TakeIterable(count, iterable)): any): Iterable<T>);
+const take = count => iterable => new TakeIterable(count, iterable);
 
 export default take;

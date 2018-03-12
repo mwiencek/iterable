@@ -1,0 +1,4 @@
+// @flow
+
+declare export default function filter<T>(test: (T) => mixed):
+  (iterable: Iterable<T>) => Iterable<$Subtype<T>>;
