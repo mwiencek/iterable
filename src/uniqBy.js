@@ -12,6 +12,6 @@ type UniqByDef<T> = (Iterable<T>) => Iterable<T>;
 
 const uniqBy = <T, U>(func: (T) => U): UniqByDef<T> =>
   (iterable: Iterable<T>): Iterable<T> =>
-    new Terable(UNIQBY, [func, new Set()], iterable);
+    new Terable(UNIQBY, {mapper: func, set: new Set()}, iterable);
 
 export default uniqBy;

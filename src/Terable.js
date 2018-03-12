@@ -31,16 +31,18 @@ function Iterator(iterable) {
   const pipe = [];
 
   while (iterable instanceof Terable) {
-    switch (iterable.type) {
+    const {type, arg} = iterable;
+
+    switch (type) {
       case DIFFERENCE:
       case INTERSECTION:
-        iterable.valueSet = new Set(iterable.arg);
+        arg.set = new Set(arg.target);
         break;
       case UNIQ:
-        iterable.arg.clear();
+        arg.set.clear();
         break;
       case UNIQBY:
-        iterable.arg[1].clear();
+        arg.set.clear();
         break;
     }
     pipe.push(iterable);
@@ -84,7 +86,6 @@ Iterator.prototype.next = function () {
 
       let test = true;
       let setKey = value;
-      let valueSet = arg;
 
       switch (type) {
         case FILTER:
@@ -115,7 +116,7 @@ Iterator.prototype.next = function () {
         case INTERSECTION:
           test = false;
         case DIFFERENCE:
-          if (!!action.valueSet.has(setKey) === test) {
+          if (!!arg.set.has(setKey) === test) {
             continue nextResult;
           }
           break;
@@ -125,13 +126,12 @@ Iterator.prototype.next = function () {
           break;
 
         case UNIQBY:
-          setKey = arg[0](value);
-          valueSet = arg[1];
+          setKey = arg.mapper(value);
         case UNIQ:
-          if (valueSet.has(setKey)) {
+          if (arg.set.has(setKey)) {
             continue nextResult;
           } else {
-            valueSet.add(setKey);
+            arg.set.add(setKey);
           }
           break;
       }

@@ -12,6 +12,6 @@ type DifferenceDef<T> = (Iterable<T>) => Iterable<T>;
 
 const difference = <T>(a: Iterable<T>): DifferenceDef<T> =>
   (b: Iterable<T>): Iterable<T> =>
-    new Terable(DIFFERENCE, a, b);
+    new Terable(DIFFERENCE, {target: a, set: null}, b);
 
 export default difference;

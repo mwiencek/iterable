@@ -9,6 +9,6 @@
 import Terable, {UNIQ} from './Terable';
 
 const uniq = <T>(iterable: Iterable<T>): Iterable<T> =>
-  new Terable(UNIQ, new Set(), iterable);
+  new Terable(UNIQ, {set: new Set()}, iterable);
 
 export default uniq;
