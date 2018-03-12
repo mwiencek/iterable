@@ -12,6 +12,7 @@ import difference from './difference';
 import drop from './drop';
 import each from './each';
 import filter from './filter';
+import find from './find';
 import concat from './concat';
 import concatMap from './concatMap';
 import groupBy from './groupBy';
@@ -33,6 +34,7 @@ export {
   drop,
   each,
   filter,
+  find,
   concat,
   concatMap,
   groupBy,
