@@ -1,6 +1,6 @@
 {
   "name": "terable",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Functional ES2015 iterable utilities",
   "keywords": [
     "iterable",
