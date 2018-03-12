@@ -13,8 +13,8 @@ import {
   drop,
   each,
   filter,
-  flatMap,
-  flatten,
+  concat,
+  concatMap,
   groupBy,
   head,
   intersection,
@@ -32,8 +32,8 @@ import entries from 'object.entries';
 import Immutable from 'immutable';
 import mediums from './mediums';
 
-function spyFactory(util) {
-  const spy = function (source) {
+function spyFactory(util: (Iterable<any>) => any) {
+  const spy = function (source: Iterable<any>) {
     const iterable: any = util(source);
     const iterator: any = iterable[Symbol.iterator];
 
@@ -56,9 +56,9 @@ test('compose', () => {
     uniq,
     compact,
     map(x => x.artist.id),
-    flatten,
+    concat,
     map(x => x.artistCredit.names),
-    flatten,
+    concat,
     map(x => x.tracks),
   )(mediums);
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
@@ -127,8 +127,8 @@ test('drop', () => {
   expect(toArray(take(1)(drop(2)(array)))).toEqual([3]);
 
   const nested = [[1, 2, 3], [4]];
-  expect(toArray(flatten(drop(1)(nested)))).toEqual([4]);
-  expect(toArray(drop(1)(flatten(nested)))).toEqual([2, 3, 4]);
+  expect(toArray(concat(drop(1)(nested)))).toEqual([4]);
+  expect(toArray(drop(1)(concat(nested)))).toEqual([2, 3, 4]);
 
   // Manual iteration
   const iterable = drop(2)(array);
@@ -168,9 +168,9 @@ test('filter', () => {
     filter(x => x.id),
     uniq,
     map(x => x.artist),
-    flatten,
+    concat,
     map(x => x.artistCredit.names),
-    flatten,
+    concat,
     map(x => x.tracks),
   )(mediums);
 
@@ -194,7 +194,7 @@ test('filter', () => {
   iterable = filter(x => !x.prop)([{prop: 6}, {prop: NaN}]);
   expect(toArray(iterable)).toEqual([{prop: NaN}]);
 
-  iterable = odds(flatten([[1], [3], [7]]));
+  iterable = odds(concat([[1], [3], [7]]));
   expect(toArray(iterable)).toEqual([1, 3, 7]);
 
   // Manual iteration
@@ -206,7 +206,7 @@ test('filter', () => {
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
-  iterable = evens(flatten([[1], [3], [7]]));
+  iterable = evens(concat([[1], [3], [7]]));
   expect(toArray(iterable)).toEqual([]);
 
   // Manual iteration
@@ -222,89 +222,86 @@ test('filter', () => {
   expect(lazySpy.calls).toBe(0);
 });
 
-test('flatMap', () => {
+test('concatMap', () => {
   const existingArtists = compose(
     uniq,
     compact,
     map(x => x.artist.id),
-    flatMap(x => flatten(x.artistCredit.names)),
-    flatMap(x => flatten(x.tracks)),
+    concatMap(x => x.artistCredit.names),
+    concatMap(x => x.tracks),
   )(mediums);
 
   expect(toArray(existingArtists)).toEqual([1, 2, 3, 4, 5]);
 
   expect(
-    toArray(flatMap(x => [x, x])([1, 2, 3]))
+    toArray(concatMap(x => [x, x])([1, 2, 3]))
   ).toEqual([1, 1, 2, 2, 3, 3]);
 
   expect(
     toArray(
       compose(
         filter(x => x[0] % 2 === 0),
-        flatMap(x => [[x]]),
-        flatMap(x => [x, x]),
+        concatMap(x => [[x]]),
+        concatMap(x => [x, x]),
         map(x => x + 1)
       )([1, 2, 3])
     )
   ).toEqual([[2], [2], [4], [4]]);
 
   expect(
-    toArray(flatMap(x => x)([1, 2, 3]))
-  ).toEqual([1, 2, 3]);
-
-  expect(
     join('')(
-      flatMap(x => String.fromCharCode(x.charCodeAt(0) + 1))('abc')
+      concatMap(x => {
+        const code = x.charCodeAt(0);
+        return [
+          String.fromCharCode(code),
+          String.fromCharCode(code + 1),
+        ];
+      })('abc')
     )
-  ).toEqual('bcd');
+  ).toEqual('abbccd');
 
   // Lazy iterator creation
-  const lazySpy = spyFactory(flatMap(badProp));
+  const lazySpy = spyFactory(concatMap(badProp));
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 });
 
-test('flatten', () => {
+test('concat', () => {
+  expect(toArray(concat([[1], [2], [3]]))).toEqual([1, 2, 3]);
+
+  expect(toArray(concat([[1], [[2]], [3]]))).toEqual([1, [2], 3]);
+
+  expect(toArray(concat([]))).toEqual([]);
+
   expect(
-    toArray(flatten([]))
+    toArray(concat(['ab', 'cd']))
+  ).toEqual(['a', 'b', 'c', 'd']);
+
+  expect(
+    toArray(concat([[]]))
   ).toEqual([]);
 
-  expect(
-    toArray(flatten([1]))
-  ).toEqual([1]);
-
-  expect(
-    toArray(flatten([[]]))
-  ).toEqual([]);
-
-  const iterable = flatten([[[0], []], 1]);
-  expect(toArray(iterable)).toEqual([0, 1]);
+  const iterable = concat([[[0], []], [1]]);
+  expect(toArray(iterable)).toEqual([[0], [], 1]);
 
   // Manual iteration
   // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: 0, done: false});
+  expect(iterator.next()).toEqual({value: [0], done: false});
+  expect(iterator.next()).toEqual({value: [], done: false});
   expect(iterator.next()).toEqual({value: 1, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
-  const lazySpy = spyFactory(flatten);
+  const lazySpy = spyFactory(concat);
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
 
-  expect(
-    toArray(
-      flatten(
-        [0, [[[1], [[2, 3], 4], [[[5]], 6]], [[[[7], 8, 9]]]]],
-      )
-    )
-  ).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-
-  expect(join('+')(flatten(''))).toEqual('');
-  expect(join('+')(flatten('abc'))).toEqual('a+b+c');
+  expect(join('+')(concat(''))).toEqual('');
+  expect(join('+')(concat('abc'))).toEqual('a+b+c');
 });
 
 test('groupBy', () => {
@@ -361,7 +358,7 @@ test('Immutable.js', () => {
   expect(join('+')(Immutable.List(['a', 'b', 'c']))).toBe('a+b+c');
 
   expect(
-    toArray(flatten(
+    toArray(concat(
       Immutable.OrderedMap([['a', 1], ['b', 2]]).entries()
     ))
   ).toEqual(['a', 1, 'b', 2]);
@@ -383,7 +380,7 @@ test('Immutable.js', () => {
     compose(
       compact,
       Immutable.Seq,
-      flatMap(x => [x, 1]),
+      concatMap(x => [x, 1]),
     )([0, 0])
   )).toEqual([1, 1])
 });
@@ -458,7 +455,7 @@ test('map', () => {
 
   expect(toArray(square([1, 2, 3]))).toEqual([1, 4, 9]);
 
-  const iterable = square(flatten([[3], [2], [1]]));
+  const iterable = square(concat([[3], [2], [1]]));
   expect(toArray(iterable)).toEqual([9, 4, 1]);
 
   // Manual iteration
@@ -514,9 +511,9 @@ test('reduce', () => {
     compose(
       reduce((accum, value) => accum + (value * (index++)), 0),
       map(value => value.charCodeAt(0)),
-      flatten,
+      concat,
       reduce((accum, value) => accum.concat([[value]]), []),
-      flatten, // Should be a no-op.
+      concat, // Should be a no-op.
       reduce((accum, value) => value + accum, ''),
     )(['a', 'b', 'c'])
   ).toBe(586);
@@ -552,19 +549,20 @@ test('take', () => {
     compose(
       toArray,
       take(3),
-      flatten,
-    )([1, [[2, 3], [4]], [5]])
-  ).toEqual([1, 2, 3]);
+      concat,
+    )([[1], [[2, 3], [4]], [5]])
+  ).toEqual([1, [2, 3], [4]]);
 
   expect(
     compose(
       toArray,
-      flatten,
-      take(1),
+      take(3),
+      concat,
+      take(2),
+      concat,
     )([
-      ([[1, 2], [3]]: Array<Array<number>>),
-      ([4]: Array<number>),
-      5,
+      [[1, 2], [3]],
+      [[4, 5], [6]],
     ])
   ).toEqual([1, 2, 3]);
 
@@ -572,17 +570,14 @@ test('take', () => {
     compose(
       toArray,
       take(4),
-      flatten,
-      take(1),
-    )([
-      ([[1], [2], [3]]: Array<Array<number>>),
-      ([4]: Array<number>),
-    ])
+      concat,
+      head,
+    )([[[1], [2], [3]], [[4]]])
   ).toEqual([1, 2, 3]);
 
-  const flattenSpy = spyFactory(flatten);
-  expect(compose(toArray, take(0), flattenSpy)([[0]])).toEqual([]);
-  expect(flattenSpy.calls).toBe(0);
+  const concatSpy = spyFactory(concat);
+  expect(compose(toArray, take(0), concatSpy)([[0]])).toEqual([]);
+  expect(concatSpy.calls).toBe(0);
 
   let calls = 0;
   let plus1 = map(x => { calls++; return x + 1 });

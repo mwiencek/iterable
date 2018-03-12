@@ -15,10 +15,7 @@ type ArtistCreditName = {|
 |};
 
 type ArtistCredit = {|
-  +names:
-    | Array<ArtistCreditName>
-    | Array<Array<ArtistCreditName>>
-    | Array<Array<Array<ArtistCreditName>>>,
+  +names: Array<ArtistCreditName>,
 |};
 
 type Track = {|
@@ -26,9 +23,7 @@ type Track = {|
 |};
 
 type Medium = {|
-  +tracks:
-    | Array<Track>
-    | Array<Array<Track>>,
+  +tracks: Array<Track>,
 |};
 
 const artist1 = {id: 1};
@@ -40,54 +35,54 @@ const artist6 = {id: null};
 
 const mediums: Array<Medium> = [
   {
-    tracks: ([
+    tracks: [
       {
         artistCredit: {
-          names: ([[
+          names: [
             {artist: artist1},
             {artist: artist2},
-          ]]: Array<Array<ArtistCreditName>>),
+          ],
         },
       },
       {
         artistCredit: {
-          names: ([[[
+          names: [
             {artist: artist3},
             {artist: artist4},
-          ]]]: Array<Array<Array<ArtistCreditName>>>),
+          ],
         },
       },
       {
         artistCredit: {
-          names: ([
+          names: [
             {artist: artist5},
             {artist: artist6},
             {artist: artist1},
-          ]: Array<ArtistCreditName>),
+          ],
         },
       },
-    ]: Array<Track>),
+    ],
   },
   {
-    tracks: ([[
+    tracks: [
       {
         artistCredit: {
-          names: ([
+          names: [
             {artist: artist2},
             {artist: artist3},
-          ]: Array<ArtistCreditName>),
+          ],
         },
       },
       {
         artistCredit: {
-          names: ([
+          names: [
             {artist: artist4},
             {artist: artist5},
             {artist: artist6},
-          ]: Array<ArtistCreditName>),
+          ],
         },
       },
-    ]]: Array<Array<Track>>),
+    ],
   },
 ];
 

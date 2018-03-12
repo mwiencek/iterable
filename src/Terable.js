@@ -7,10 +7,10 @@
 
 import {DONE} from './constants';
 
+export const CONCAT = 4;
+export const CONCATMAP = 3;
 export const DIFFERENCE = 1;
 export const FILTER = 2;
-export const FLATMAP = 3;
-export const FLATTEN = 4;
 export const INTERSECTION = 5;
 export const MAP = 6;
 export const UNIQ = 7;
@@ -96,22 +96,17 @@ Iterator.prototype.next = function () {
           }
           break;
 
-        case FLATMAP:
+        case CONCATMAP:
           value = arg(value);
-          step++;
-          // Falls through to FLATTEN.
-
-        case FLATTEN:
-          if (value && typeof value === 'object' && value[Symbol.iterator]) {
-            stack.push(frame);
-            frame = (this.frame = {
-              iterable: null,
-              iterator: value[Symbol.iterator](),
-              step: step,
-            });
-            continue nextResult;
-          }
-          break;
+          // Falls through to CONCAT.
+        case CONCAT:
+          stack.push(frame);
+          frame = (this.frame = {
+            iterable: null,
+            iterator: value[Symbol.iterator](),
+            step: step + 1,
+          });
+          continue nextResult;
 
         case INTERSECTION:
           test = false;

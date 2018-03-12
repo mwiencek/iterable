@@ -3,7 +3,7 @@ require('babel-register');
 const Benchmark = require('benchmark');
 const iterare = require('iterare');
 const _compact = require('lodash/fp/compact');
-const _flattenDeep = require('lodash/fp/flattenDeep');
+const _flatMap = require('lodash/fp/flatMap');
 const _flowRight = require('lodash/fp/flowRight');
 const _map = require('lodash/fp/map');
 const _uniq = require('lodash/fp/uniq');
@@ -20,14 +20,12 @@ const getNewIdsIt = it.compose(
   it.uniq,
   it.compact,
   it.map(getArtistId),
-  it.flatten,
-  it.map(getArtistCreditNames),
-  it.flatten,
-  it.map(getTracks),
+  it.concatMap(getArtistCreditNames),
+  it.concatMap(getTracks),
 );
 
 /*
- * Iterare has no functional API, no deep flatten, and no uniq (though
+ * Iterare has no functional API, no concatMap, and no uniq (though
  * converting to a Set is a fair comparison, as terable also uses a Set
  * internally).
  */
@@ -35,10 +33,7 @@ const getNewIdsIterare = iterable => Array.from(
   iterare.iterate(iterable)
     .map(getTracks)
     .flatten()
-    .flatten()
     .map(getArtistCreditNames)
-    .flatten()
-    .flatten()
     .flatten()
     .map(getArtistId)
     .filter(Boolean)
@@ -49,20 +44,16 @@ const getNewIdsLodash = _flowRight(
   _uniq,
   _compact,
   _map(getArtistId),
-  _flattenDeep,
-  _map(getArtistCreditNames),
-  _flattenDeep,
-  _map(getTracks),
+  _flatMap(getArtistCreditNames),
+  _flatMap(getTracks),
 );
 
 const getNewIdsRamda = R.compose(
   R.uniq,
   R.filter(Boolean),
   R.map(getArtistId),
-  R.flatten,
-  R.map(getArtistCreditNames),
-  R.flatten,
-  R.map(getTracks),
+  R.chain(getArtistCreditNames),
+  R.chain(getTracks),
 );
 
 (new Benchmark.Suite)

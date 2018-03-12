@@ -12,8 +12,8 @@ import difference from './difference';
 import drop from './drop';
 import each from './each';
 import filter from './filter';
-import flatMap from './flatMap';
-import flatten from './flatten';
+import concat from './concat';
+import concatMap from './concatMap';
 import groupBy from './groupBy';
 import head from './head';
 import intersection from './intersection';
@@ -33,8 +33,8 @@ export {
   drop,
   each,
   filter,
-  flatMap,
-  flatten,
+  concat,
+  concatMap,
   groupBy,
   head,
   intersection,
