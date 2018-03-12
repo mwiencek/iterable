@@ -13,9 +13,8 @@ export const FLATMAP = 3;
 export const FLATTEN = 4;
 export const INTERSECTION = 5;
 export const MAP = 6;
-export const REJECT = 7;
-export const UNIQ = 8;
-export const UNIQBY = 9;
+export const UNIQ = 7;
+export const UNIQBY = 8;
 
 function Terable(type, arg, source) {
   this.type = type;
@@ -87,9 +86,7 @@ Iterator.prototype.next = function () {
 
       switch (type) {
         case FILTER:
-          test = false;
-        case REJECT:
-          if (!!arg(value) === test) {
+          if (!arg(value)) {
             continue nextResult;
           }
           break;

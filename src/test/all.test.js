@@ -21,7 +21,6 @@ import {
   keyBy,
   map,
   reduce,
-  reject,
   take,
   toArray,
   uniq,
@@ -183,14 +182,26 @@ test('filter', () => {
   ]);
 
   const evens = filter(x => x % 2 === 0);
+  const odds = filter(x => x % 2 !== 0);
 
   let iterable = evens([1, 2, 3]);
   expect(toArray(iterable)).toEqual([2]);
 
+  iterable = odds([1, 2, 3]);
+  expect(toArray(iterable)).toEqual([1, 3]);
+
+  iterable = filter(x => !x.prop)([{prop: 6}, {prop: NaN}]);
+  expect(toArray(iterable)).toEqual([{prop: NaN}]);
+
+  iterable = odds(flatten([[1], [3], [7]]));
+  expect(toArray(iterable)).toEqual([1, 3, 7]);
+
   // Manual iteration
   // $FlowFixMe
   let iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: 2, done: false});
+  expect(iterator.next()).toEqual({value: 1, done: false});
+  expect(iterator.next()).toEqual({value: 3, done: false});
+  expect(iterator.next()).toEqual({value: 7, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
@@ -496,46 +507,6 @@ test('reduce', () => {
   const lazySpy = spyFactory(
     reduce((accum: any, value: any) => accum + value, '')
   );
-  // $FlowFixMe
-  badMap(lazySpy([{}]))[Symbol.iterator]();
-  expect(lazySpy.calls).toBe(0);
-});
-
-test('reject', () => {
-  const odds = reject(x => x % 2 === 0);
-
-  expect(toArray(odds([1, 2, 3]))).toEqual([1, 3]);
-
-  // Composed
-  const newArtists = compose(
-    reject(x => x.id),
-    uniq,
-    map(x => x.artist),
-    flatten,
-    map(x => x.artistCredit.names),
-    flatten,
-    map(x => x.tracks),
-  )(mediums);
-
-  expect(toArray(newArtists)).toEqual([{id: null}]);
-
-  let iterable = reject(x => x.prop)([{prop: 6}, {prop: NaN}]);
-  expect(toArray(iterable)).toEqual([{prop: NaN}]);
-
-  iterable = odds(flatten([[1], [3], [7]]));
-  expect(toArray(iterable)).toEqual([1, 3, 7]);
-
-  // Manual iteration
-  // $FlowFixMe
-  const iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: 1, done: false});
-  expect(iterator.next()).toEqual({value: 3, done: false});
-  expect(iterator.next()).toEqual({value: 7, done: false});
-  expect(iterator.next()).toEqual({done: true});
-  expect(iterator.next()).toEqual({done: true});
-
-  // Lazy iterator creation
-  const lazySpy = spyFactory(reject(badProp));
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);

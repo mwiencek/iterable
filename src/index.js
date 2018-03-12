@@ -20,7 +20,6 @@ import join from './join';
 import keyBy from './keyBy';
 import map from './map';
 import reduce from './reduce';
-import reject from './reject';
 import take from './take';
 import toArray from './toArray';
 import uniq from './uniq';
@@ -41,7 +40,6 @@ export {
   keyBy,
   map,
   reduce,
-  reject,
   take,
   toArray,
   uniq,
