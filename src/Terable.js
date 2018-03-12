@@ -72,7 +72,7 @@ Iterator.prototype.next = function () {
   nextResult:
   while (!(done = (cursor = frame.iterator.next()).done) || stack.length) {
     if (done) {
-      frame = stack.pop();
+      frame = (this.frame = stack.pop());
       continue;
     }
 
@@ -104,11 +104,11 @@ Iterator.prototype.next = function () {
         case FLATTEN:
           if (value && typeof value === 'object' && value[Symbol.iterator]) {
             stack.push(frame);
-            frame = {
+            frame = (this.frame = {
               iterable: null,
               iterator: value[Symbol.iterator](),
               step: step,
-            };
+            });
             continue nextResult;
           }
           break;
@@ -132,8 +132,6 @@ Iterator.prototype.next = function () {
           break;
       }
     }
-
-    this.frame = frame;
 
     return {value: value, done: false};
   }
