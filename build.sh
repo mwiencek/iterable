@@ -10,5 +10,5 @@ mkdir -p dist/src
 
 babel src --out-dir dist/
 
-cp .npmignore LICENSE package.json dist/
+cp .npmignore LICENSE package.json README.md dist/
 cp src/*.js dist/src/
