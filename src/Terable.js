@@ -58,6 +58,7 @@ function Iterator(iterable) {
 Iterator.prototype.next = function () {
   const stack = this.stack;
   const pipe = this.pipe;
+  const pipeLength = pipe.length;
 
   let cursor;
   let done;
@@ -77,8 +78,8 @@ Iterator.prototype.next = function () {
 
     let value = cursor.value;
 
-    for (let step = frame.step, count = pipe.length; step < count; step++) {
-      const action = pipe[count - step - 1];
+    for (let step = frame.step; step < pipeLength; step++) {
+      const action = pipe[pipeLength - step - 1];
       const {type, arg} = action;
 
       let test = true;
