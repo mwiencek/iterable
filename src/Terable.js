@@ -85,6 +85,10 @@ Iterator.prototype.next = function () {
       let setKey = value;
 
       switch (type) {
+        case MAP:
+          value = arg(value);
+          break;
+
         case FILTER:
           if (!arg(value)) {
             continue nextResult;
@@ -114,10 +118,6 @@ Iterator.prototype.next = function () {
           if (!!arg.set.has(setKey) === test) {
             continue nextResult;
           }
-          break;
-
-        case MAP:
-          value = arg(value);
           break;
 
         case UNIQBY:
