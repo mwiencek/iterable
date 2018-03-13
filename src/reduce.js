@@ -5,13 +5,20 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-const reduce = (func, accum) => iterable => {
+const makeReduce = (func, accum) => iterable => {
   const iterator = iterable[Symbol.iterator]();
   let cursor;
   while (!(cursor = iterator.next()).done) {
     accum = func(accum, cursor.value);
   }
   return accum;
+};
+
+const reduce = (func, ...args) => {
+  if (args.length) {
+    return makeReduce(func, args[0]);
+  }
+  return accum => makeReduce(func, accum);
 };
 
 export default reduce;

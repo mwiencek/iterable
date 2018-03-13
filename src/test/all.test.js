@@ -537,9 +537,12 @@ test('reduce', () => {
       Object.assign({}, accum, {[value]: true}), {})('abc')
   ).toEqual({a: true, b: true, c: true});
 
-  expect(
-    reduce((accum, value) => value + accum, '')(['a', 'b', 'c'])
-  ).toEqual('cba');
+  const reverseStr = (accum, value) => value + accum;
+  const abcs = ['a', 'b', 'c'];
+
+  expect(reduce(reverseStr, '')(abcs)).toEqual('cba');
+  // Curried
+  expect(reduce(reverseStr)('')(abcs)).toEqual('cba');
 
   let index = 1;
   expect(
@@ -550,7 +553,7 @@ test('reduce', () => {
       reduce((accum, value) => accum.concat([[value]]), []),
       concat, // Should be a no-op.
       reduce((accum, value) => value + accum, ''),
-    )(['a', 'b', 'c'])
+    )(abcs)
   ).toBe(586);
 
   // Lazy iterator creation

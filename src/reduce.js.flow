@@ -1,4 +1,12 @@
 // @flow
 
-declare export default function reduce<T, U>(func: (U, T) => U, accum: U):
-  (iterable: Iterable<T>) => U;
+declare function reduce<T, U>(
+  func: (U, T) => U,
+): (accum: U) => (iterable: Iterable<T>) => U;
+
+declare function reduce<T, U>(
+  func: (U, T) => U,
+  accum: U,
+): (iterable: Iterable<T>) => U;
+
+declare export default typeof reduce;
