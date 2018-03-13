@@ -5,7 +5,7 @@ Terable is a wonderful library for using [ES2015 iterables](https://developer.mo
 The functions it provides are comparable to a subset of lodash, but:
 
  * They accept iterables as input, and return iterables back (where appropriate)
- * They're always lazy (extremely lazy in fact), and have a functional API similar to [lodash/fp](https://github.com/lodash/lodash/wiki/FP-Guide) (no method chaining!)
+ * They're lazy where possible (extremely lazy in fact), and have a functional API similar to [lodash/fp](https://github.com/lodash/lodash/wiki/FP-Guide) (no method chaining!)
  * They're optimized to reduce the number of iterators and avoid creating intermediary data structures when composed together
  * [Flow](https://flow.org/) types are built-in
 
