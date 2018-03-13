@@ -5,6 +5,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
+import all from './all';
+import any from './any';
 import compact from './compact';
 import compose from './compose';
 import difference from './difference';
@@ -28,6 +30,8 @@ import uniq from './uniq';
 import uniqBy from './uniqBy';
 
 export {
+  all,
+  any,
   compact,
   compose,
   difference,
