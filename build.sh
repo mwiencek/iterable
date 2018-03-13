@@ -7,7 +7,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 yarn install
 
 pushd src
-babel *.js --out-dir ../dist/
+babel *.js util/*.js --out-dir ../dist/
 popd
 
 cp \

@@ -5,7 +5,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import boolFold from './boolFold';
+import boolFold from './util/boolFold';
 
 const any = boolFold(true);
 
