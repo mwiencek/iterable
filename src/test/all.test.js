@@ -25,6 +25,7 @@ import {
   reduce,
   take,
   toArray,
+  toObject,
   uniq,
   uniqBy,
 } from '../index';
@@ -370,11 +371,9 @@ test('Immutable.js', () => {
    */
   expect(join('+')(Immutable.List(['a', 'b', 'c']))).toBe('a+b+c');
 
-  expect(
-    toArray(concat(
-      Immutable.OrderedMap([['a', 1], ['b', 2]]).entries()
-    ))
-  ).toEqual(['a', 1, 'b', 2]);
+  const immutMap = Immutable.OrderedMap([['a', 1], ['b', 2]]);
+  expect(toArray(concat(immutMap.entries()))).toEqual(['a', 1, 'b', 2]);
+  expect(toObject(immutMap)).toEqual({a: 1, b: 2});
 
   expect(
     join(' ')(uniq(
@@ -643,6 +642,23 @@ test('take', () => {
   result = compose(toArray, take4, take1, plus1)(array);
   expect(result).toEqual([2]);
   expect(calls).toBe(8);
+});
+
+test('toObject', () => {
+  const foo = Symbol();
+  const bar = NaN;
+  const baz = {};
+
+  const source = [[foo, 'foo'], [bar, 'bar'], [baz, 'baz']];
+
+  expect(toObject(source)).toEqual({
+    // $FlowFixMe
+    [foo]: 'foo',
+    'NaN': 'bar',
+    '[object Object]': 'baz',
+  });
+
+  expect(toObject(new Map([['a', 'b']]))).toEqual({a: 'b'});
 });
 
 test('uniq', () => {

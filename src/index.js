@@ -23,6 +23,7 @@ import map from './map';
 import reduce from './reduce';
 import take from './take';
 import toArray from './toArray';
+import toObject from './toObject';
 import uniq from './uniq';
 import uniqBy from './uniqBy';
 
@@ -45,6 +46,7 @@ export {
   reduce,
   take,
   toArray,
+  toObject,
   uniq,
   uniqBy,
 };
