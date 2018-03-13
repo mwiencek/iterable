@@ -18,7 +18,7 @@ import concat from './concat';
 import concatMap from './concatMap';
 import groupBy from './groupBy';
 import head from './head';
-import intersection from './intersection';
+import intersect from './intersect';
 import join from './join';
 import keyBy from './keyBy';
 import map from './map';
@@ -43,7 +43,7 @@ export {
   concatMap,
   groupBy,
   head,
-  intersection,
+  intersect,
   join,
   keyBy,
   map,

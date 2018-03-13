@@ -5,8 +5,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import Terable, {INTERSECTION} from './Terable';
+import Terable, {INTERSECT} from './Terable';
 
-const intersection = a => b => new Terable(INTERSECTION, {target: a, set: null}, b);
+const intersect = a => b => new Terable(INTERSECT, {target: a, set: null}, b);
 
-export default intersection;
+export default intersect;

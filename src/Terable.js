@@ -11,7 +11,7 @@ export const CONCAT = 4;
 export const CONCATMAP = 3;
 export const DIFFERENCE = 1;
 export const FILTER = 2;
-export const INTERSECTION = 5;
+export const INTERSECT = 5;
 export const MAP = 6;
 export const UNIQ = 7;
 export const UNIQBY = 8;
@@ -34,7 +34,7 @@ function Iterator(iterable) {
 
     switch (type) {
       case DIFFERENCE:
-      case INTERSECTION:
+      case INTERSECT:
         arg.set = new Set(arg.target);
         break;
       case UNIQ:
@@ -108,7 +108,7 @@ Iterator.prototype.next = function () {
           });
           continue nextResult;
 
-        case INTERSECTION:
+        case INTERSECT:
           test = false;
         case DIFFERENCE:
           if (!!arg.set.has(setKey) === test) {

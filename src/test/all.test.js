@@ -20,7 +20,7 @@ import {
   concatMap,
   groupBy,
   head,
-  intersection,
+  intersect,
   join,
   keyBy,
   map,
@@ -420,10 +420,10 @@ test('Immutable.js', () => {
   )).toEqual([1, 1])
 });
 
-test('intersection', () => {
+test('intersect', () => {
   const source = [0, 1, 2, 3, 4];
   const target = [-2, 0, 2, 4, 6];
-  const _intersect = intersection(source);
+  const _intersect = intersect(source);
 
   expect(toArray(_intersect(target))).toEqual([0, 2, 4]);
   // Shouldn't maintain state between calls.
@@ -448,7 +448,7 @@ test('intersection', () => {
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
-  const lazySpy = spyFactory(intersection([{}]));
+  const lazySpy = spyFactory(intersect([{}]));
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
