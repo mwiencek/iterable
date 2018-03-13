@@ -9,20 +9,20 @@ import all from './all';
 import any from './any';
 import compact from './compact';
 import compose from './compose';
+import concat from './concat';
+import concatMap from './concatMap';
 import difference from './difference';
 import drop from './drop';
 import each from './each';
 import filter from './filter';
 import find from './find';
-import concat from './concat';
-import concatMap from './concatMap';
+import foldl from './foldl';
 import groupBy from './groupBy';
 import head from './head';
 import intersect from './intersect';
 import join from './join';
 import keyBy from './keyBy';
 import map from './map';
-import reduce from './reduce';
 import take from './take';
 import toArray from './toArray';
 import toObject from './toObject';
@@ -34,20 +34,20 @@ export {
   any,
   compact,
   compose,
+  concat,
+  concatMap,
   difference,
   drop,
   each,
   filter,
   find,
-  concat,
-  concatMap,
+  foldl,
   groupBy,
   head,
   intersect,
   join,
   keyBy,
   map,
-  reduce,
   take,
   toArray,
   toObject,

@@ -11,20 +11,20 @@ import {
   any,
   compact,
   compose,
+  concat,
+  concatMap,
   difference,
   drop,
   each,
   filter,
   find,
-  concat,
-  concatMap,
+  foldl,
   groupBy,
   head,
   intersect,
   join,
   keyBy,
   map,
-  reduce,
   take,
   toArray,
   toObject,
@@ -515,7 +515,7 @@ test('objects', () => {
   const object = {a: true, b: false, c: true};
 
   const truth = compose(
-    reduce((accum, k) => {
+    foldl((accum, k) => {
       accum[k] = count++;
       return accum;
     }, ({}: $Shape<typeof object>)),
@@ -531,34 +531,34 @@ test('objects', () => {
   ).toBe('ac');
 });
 
-test('reduce', () => {
+test('foldl', () => {
   expect(
-    reduce((accum, value) =>
+    foldl((accum, value) =>
       Object.assign({}, accum, {[value]: true}), {})('abc')
   ).toEqual({a: true, b: true, c: true});
 
   const reverseStr = (accum, value) => value + accum;
   const abcs = ['a', 'b', 'c'];
 
-  expect(reduce(reverseStr, '')(abcs)).toEqual('cba');
+  expect(foldl(reverseStr, '')(abcs)).toEqual('cba');
   // Curried
-  expect(reduce(reverseStr)('')(abcs)).toEqual('cba');
+  expect(foldl(reverseStr)('')(abcs)).toEqual('cba');
 
   let index = 1;
   expect(
     compose(
-      reduce((accum, value) => accum + (value * (index++)), 0),
+      foldl((accum, value) => accum + (value * (index++)), 0),
       map(value => value.charCodeAt(0)),
       concat,
-      reduce((accum, value) => accum.concat([[value]]), []),
+      foldl((accum, value) => accum.concat([[value]]), []),
       concat, // Should be a no-op.
-      reduce((accum, value) => value + accum, ''),
+      foldl((accum, value) => value + accum, ''),
     )(abcs)
   ).toBe(586);
 
   // Lazy iterator creation
   const lazySpy = spyFactory(
-    reduce((accum: any, value: any) => accum + value, '')
+    foldl((accum: any, value: any) => accum + value, '')
   );
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();

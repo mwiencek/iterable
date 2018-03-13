@@ -5,7 +5,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-const makeReduce = (func, accum) => iterable => {
+const makeFold = (func, accum) => iterable => {
   const iterator = iterable[Symbol.iterator]();
   let cursor;
   while (!(cursor = iterator.next()).done) {
@@ -14,11 +14,11 @@ const makeReduce = (func, accum) => iterable => {
   return accum;
 };
 
-const reduce = (func, ...args) => {
+const foldl = (func, ...args) => {
   if (args.length) {
-    return makeReduce(func, args[0]);
+    return makeFold(func, args[0]);
   }
-  return accum => makeReduce(func, accum);
+  return accum => makeFold(func, accum);
 };
 
-export default reduce;
+export default foldl;

@@ -1,12 +1,12 @@
 // @flow
 
-declare function reduce<T, U>(
+declare function foldl<T, U>(
   func: (U, T) => U,
 ): (accum: U) => (iterable: Iterable<T>) => U;
 
-declare function reduce<T, U>(
+declare function foldl<T, U>(
   func: (U, T) => U,
   accum: U,
 ): (iterable: Iterable<T>) => U;
 
-declare export default typeof reduce;
+declare export default typeof foldl;

@@ -17,7 +17,7 @@ const doubleRamda = R.map(double);
 
 (new Benchmark.Suite)
   .add('terable (large reduce)', function () {
-    it.reduce(sum, 0)(it.compose(
+    it.foldl(sum, 0)(it.compose(
       doubleIt,
       doubleIt,
       doubleIt,
