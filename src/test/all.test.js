@@ -25,6 +25,8 @@ import {
   join,
   keyBy,
   map,
+  sort,
+  sortBy,
   take,
   toArray,
   toObject,
@@ -54,6 +56,19 @@ function spyFactory(util: (Iterable<any>) => any) {
 
 const badProp = (x: any) => x.y.z;
 const badMap = map(badProp);
+
+const items2sort = [
+  {value: 7, index: 0},
+  {value: 7, index: 1},
+  {value: 0, index: 2},
+  {value: 5, index: 3},
+  {value: 0, index: 4},
+  {value: 7, index: 5},
+  {value: 1, index: 6},
+  {value: 7, index: 7},
+  {value: 2, index: 8},
+  {value: 3, index: 9},
+];
 
 test('all', () => {
   const array = [1, 2, 3];
@@ -563,6 +578,52 @@ test('foldl', () => {
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
+});
+
+test('sort', () => {
+  expect(toArray(sort([9, 1, 7, 2, 0]))).toEqual([0, 1, 2, 7, 9]);
+
+  expect(
+    compose(
+      toArray,
+      sort,
+      map(x => parseInt(x, 10)),
+    )(['10', '9', '11', '8'])
+  ).toEqual([8, 9, 10, 11]);
+});
+
+test('sortBy', () => {
+  expect(toArray(sortBy(x => x.value)(items2sort))).toEqual([
+    {value: 0, index: 2},
+    {value: 0, index: 4},
+    {value: 1, index: 6},
+    {value: 2, index: 8},
+    {value: 3, index: 9},
+    {value: 5, index: 3},
+    {value: 7, index: 0},
+    {value: 7, index: 1},
+    {value: 7, index: 5},
+    {value: 7, index: 7},
+  ]);
+
+  expect(
+    toArray(
+      sortBy(x => x.value)(
+        map(x => ({value: -x.value, index: x.index}))(items2sort)
+      )
+    )
+  ).toEqual([
+    {value: -7, index: 0},
+    {value: -7, index: 1},
+    {value: -7, index: 5},
+    {value: -7, index: 7},
+    {value: -5, index: 3},
+    {value: -3, index: 9},
+    {value: -2, index: 8},
+    {value: -1, index: 6},
+    {value: -0, index: 2},
+    {value: -0, index: 4},
+  ]);
 });
 
 test('take', () => {

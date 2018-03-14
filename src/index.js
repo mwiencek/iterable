@@ -23,6 +23,8 @@ import intersect from './intersect';
 import join from './join';
 import keyBy from './keyBy';
 import map from './map';
+import sort from './sort';
+import sortBy from './sortBy';
 import take from './take';
 import toArray from './toArray';
 import toObject from './toObject';
@@ -48,6 +50,8 @@ export {
   join,
   keyBy,
   map,
+  sort,
+  sortBy,
   take,
   toArray,
   toObject,
