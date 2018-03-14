@@ -5,9 +5,10 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-const makeFold = (func, accum) => iterable => {
+const makeFold = (func, initial) => iterable => {
   const iterator = iterable[Symbol.iterator]();
   let cursor;
+  let accum = initial;
   while (!(cursor = iterator.next()).done) {
     accum = func(accum, cursor.value);
   }
@@ -18,7 +19,7 @@ const foldl = (func, ...args) => {
   if (args.length) {
     return makeFold(func, args[0]);
   }
-  return accum => makeFold(func, accum);
+  return initial => makeFold(func, initial);
 };
 
 export default foldl;

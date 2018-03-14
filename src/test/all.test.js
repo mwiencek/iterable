@@ -599,7 +599,11 @@ test('foldl', () => {
 
   expect(foldl(reverseStr, '')(abcs)).toEqual('cba');
   // Curried
-  expect(foldl(reverseStr)('')(abcs)).toEqual('cba');
+  const curried = foldl(reverseStr)('');
+  expect(curried(abcs)).toEqual('cba');
+
+  // Shouldn't maintain state between calls.
+  expect(curried(abcs)).toEqual('cba');
 
   let index = 1;
   expect(
