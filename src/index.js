@@ -11,6 +11,7 @@ import compact from './compact';
 import compose from './compose';
 import concat from './concat';
 import concatMap from './concatMap';
+import countBy from './countBy';
 import difference from './difference';
 import drop from './drop';
 import each from './each';
@@ -38,6 +39,7 @@ export {
   compose,
   concat,
   concatMap,
+  countBy,
   difference,
   drop,
   each,
