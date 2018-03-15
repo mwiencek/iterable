@@ -6,10 +6,8 @@
  */
 
 const each = func => iterable => {
-  const iterator = iterable[Symbol.iterator]();
-  let cursor;
-  while (!(cursor = iterator.next()).done) {
-    func(cursor.value);
+  for (const value of iterable) {
+    func(value);
   }
 };
 

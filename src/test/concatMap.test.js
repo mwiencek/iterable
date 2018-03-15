@@ -9,7 +9,13 @@ import {
   uniq,
 } from '../';
 import mediums from './mediums';
-import {spyFactory, badMap, badProp} from './util';
+import {
+  badMap,
+  badProp,
+  closeable,
+  spyFactory,
+  throws,
+} from './util';
 
 test('concatMap', () => {
   const existingArtists = compose(
@@ -54,4 +60,22 @@ test('concatMap', () => {
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
+});
+
+test('IteratorClose', () => {
+  let c = closeable(1);
+  expect(() => {
+    for (const x of concatMap(throws)(c)) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
+
+  for (const x of concatMap(x => [x, x * 2])(c)) {
+    break;
+  }
+  expect(c.closeCalls).toBe(2);
+
+  for (const x of concatMap(x => compact([x, x * 2]))(c)) {
+    break;
+  }
+  expect(c.closeCalls).toBe(3);
 });

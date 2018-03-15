@@ -6,11 +6,8 @@
  */
 
 const groupBy = func => iterable => {
-  const iterator = iterable[Symbol.iterator]();
-  let cursor;
   let groups = new Map();
-  while (!(cursor = iterator.next()).done) {
-    const value = cursor.value;
+  for (const value of iterable) {
     const key = func(value);
     let values = groups.get(key);
     if (values) {

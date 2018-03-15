@@ -4,7 +4,7 @@ import {
   toArray,
   uniq,
 } from '../';
-import {spyFactory, badMap} from './util';
+import {closeable, badMap, spyFactory} from './util';
 
 test('uniq', () => {
   const source = [1, 1, 2, 3, 1];
@@ -48,4 +48,12 @@ test('uniq', () => {
       map(x => !x),
     )([true, true])
   )).toEqual([true]);
+});
+
+test('IteratorClose', () => {
+  const c = closeable();
+  for (const x of uniq(c)) {
+    break;
+  }
+  expect(c.closeCalls).toBe(1);
 });

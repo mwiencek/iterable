@@ -6,11 +6,9 @@
  */
 
 const countBy = func => iterable => {
-  const iterator = iterable[Symbol.iterator]();
-  let cursor;
   let groups = new Map();
-  while (!(cursor = iterator.next()).done) {
-    const key = func(cursor.value);
+  for (const value of iterable) {
+    const key = func(value);
     groups.set(key, (groups.get(key) || 0) + 1);
   }
   return groups;

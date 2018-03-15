@@ -6,7 +6,12 @@ import {
   take,
   toArray,
 } from '../';
-import {spyFactory, badMap} from './util';
+import {
+  badMap,
+  closeable,
+  spyFactory,
+  throws,
+} from './util';
 
 test('take', () => {
   const iterable = take(2)([1, 2, 3]);
@@ -111,4 +116,18 @@ test('take', () => {
   result = compose(toArray, take4, take1, plus1)(array);
   expect(result).toEqual([2]);
   expect(calls).toBe(8);
+});
+
+test('IteratorClose', () => {
+  expect(() => {
+    for (const x of take(1)([1])) {
+      break;
+    }
+  }).not.toThrow();
+
+  const c = closeable();
+  for (const x of take(1)(c)) {
+    break;
+  }
+  expect(c.closeCalls).toBe(1);
 });

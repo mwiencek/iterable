@@ -7,6 +7,7 @@ import {
   uniq,
 } from '../';
 import mediums from './mediums';
+import {closeable, throws} from './util';
 
 test('compose', () => {
   const newIds = compose(
@@ -31,4 +32,16 @@ test('compose', () => {
   expect(iterator.next()).toEqual({value: 5, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
+});
+
+test('IteratorClose', () => {
+  const c = closeable();
+  expect(() => {
+    for (const x of compose(map(throws), map(throws))(c)) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
+  for (const x of compose(map(x => x), map(x => x))(c)) {
+    break;
+  }
+  expect(c.closeCalls).toBe(2);
 });

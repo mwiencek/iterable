@@ -4,7 +4,12 @@ import {
   take,
   toArray,
 } from '../';
-import {spyFactory, badMap} from './util';
+import {
+  badMap,
+  closeable,
+  spyFactory,
+  throws,
+} from './util';
 
 test('drop', () => {
   const array = [1, 2, 3];
@@ -33,4 +38,18 @@ test('drop', () => {
   // $FlowFixMe
   badMap(lazySpy(array))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
+});
+
+test('IteratorClose', () => {
+  expect(() => {
+    for (const x of drop(1)([1, 2, 3])) {
+      break;
+    }
+  }).not.toThrow();
+
+  const c = closeable();
+  for (const x of drop(1)(c)) {
+    break;
+  }
+  expect(c.closeCalls).toBe(1);
 });

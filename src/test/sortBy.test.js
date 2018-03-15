@@ -1,6 +1,7 @@
 import {
   map,
   sortBy,
+  take,
   toArray,
 } from '../';
 

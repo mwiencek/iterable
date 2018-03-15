@@ -6,10 +6,8 @@
  */
 
 const boolFold = truth => test => iterable => {
-  const iterator = iterable[Symbol.iterator]();
-  let cursor;
-  while (!(cursor = iterator.next()).done) {
-    if (!!test(cursor.value) === truth) {
+  for (const value of iterable) {
+    if (!!test(value) === truth) {
       return truth;
     }
   }

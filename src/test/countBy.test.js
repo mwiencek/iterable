@@ -5,6 +5,10 @@ import {
   toArray,
   toObject,
 } from '../';
+import {
+  closeable,
+  throws,
+} from './util';
 
 test('countBy', () => {
   const key1 = Symbol();
@@ -45,4 +49,12 @@ test('countBy', () => {
     '2': 2,
     '3': 1,
   });
+});
+
+test('IteratorClose', () => {
+  const c = closeable();
+  expect(() => {
+    for (const x of countBy(throws)(c)) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
 });

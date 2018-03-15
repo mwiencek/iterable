@@ -2,7 +2,13 @@ import {
   uniqBy,
   toArray,
 } from '../';
-import {spyFactory, badMap, badProp} from './util';
+import {
+  badMap,
+  badProp,
+  closeable,
+  spyFactory,
+  throws,
+} from './util';
 
 test('uniqBy', () => {
   const items = [
@@ -56,4 +62,16 @@ test('uniqBy', () => {
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
+});
+
+test('IteratorClose', () => {
+  const c = closeable();
+  expect(() => {
+    toArray(uniqBy(throws)(c));
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
+  for (const x of uniqBy(x => x)(c)) {
+    break;
+  }
+  expect(c.closeCalls).toBe(2);
 });

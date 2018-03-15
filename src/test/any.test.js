@@ -4,6 +4,7 @@ import {
   map,
   take,
 } from '../';
+import {closeable, throws} from './util';
 
 test('any', () => {
   const array = [1, 2, 3];
@@ -14,4 +15,12 @@ test('any', () => {
   expect(any(x => x > 0)(map(x => -x)(array))).toBe(false);
   expect(any(x => x === 0)(drop(1)(map(x => x - 1)(array)))).toBe(false);
   expect(any(x => x === 0)(take(1)(map(x => x - 1)(array)))).toBe(true);
+});
+
+test('IteratorClose', () => {
+  const c = closeable(true);
+  expect(() => {
+    any(throws)(c);
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
 });

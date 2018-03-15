@@ -3,6 +3,10 @@ import {
   filter,
   uniq,
 } from '../';
+import {
+  closeable,
+  throws,
+} from './util';
 
 test('each', () => {
   let count1 = 0;
@@ -20,4 +24,12 @@ test('each', () => {
   );
   expect(count1).toBe(2);
   expect(count2).toBe(5);
+});
+
+test('IteratorClose', () => {
+  const c = closeable();
+  expect(() => {
+    for (const x of each(throws)(c)) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
 });

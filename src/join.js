@@ -6,14 +6,12 @@
  */
 
 const join = sep => iterable => {
-  const iterator = iterable[Symbol.iterator]();
   let joined = '';
-  let cursor;
-  while (!(cursor = iterator.next()).done) {
+  for (const value of iterable) {
     if (joined) {
       joined += sep;
     }
-    joined += cursor.value;
+    joined += value;
   }
   return joined;
 };

@@ -3,6 +3,7 @@ import {
   filter,
   join,
   map,
+  take,
 } from '../';
 
 test('join', () => {

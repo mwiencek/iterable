@@ -67,67 +67,107 @@ Iterator.prototype.next = function () {
     frame.iterable = null;
   }
 
-  nextResult:
-  while (!(done = (cursor = frame.iterator.next()).done) || stack.length) {
-    if (done) {
-      frame = (this.frame = stack.pop());
-      continue;
+  // Reproduce Babel's for...of semantics.
+  let _iteratorNormalCompletion = true;
+  let _didIteratorError = false;
+  let _iteratorError = undefined;
+
+  try {
+    nextResult:
+    while ((_iteratorNormalCompletion = true) &&
+            (!(_iteratorNormalCompletion = (cursor = frame.iterator.next()).done)
+            || stack.length)) {
+      done = _iteratorNormalCompletion;
+
+      if (done) {
+        frame = (this.frame = stack.pop());
+        continue;
+      }
+
+      let value = cursor.value;
+
+      for (let step = frame.step; step < pipeLength; step++) {
+        const action = pipe[pipeLength - step - 1];
+        const {type, arg} = action;
+
+        let test = true;
+        let setKey = value;
+
+        switch (type) {
+          case MAP:
+            value = arg(value);
+            break;
+
+          case FILTER:
+            if (!arg(value)) {
+              continue nextResult;
+            }
+            break;
+
+          case CONCATMAP:
+            value = arg(value);
+            // Falls through to CONCAT.
+          case CONCAT:
+            stack.push(frame);
+            frame = (this.frame = {
+              iterable: null,
+              iterator: value[Symbol.iterator](),
+              step: step + 1,
+            });
+            continue nextResult;
+
+          case DIFFERENCE:
+            if (!!arg.set.has(setKey) === test) {
+              continue nextResult;
+            }
+            break;
+
+          case UNIQBY:
+            setKey = arg.mapper(value);
+          case UNIQ:
+            if (arg.set.has(setKey)) {
+              continue nextResult;
+            } else {
+              arg.set.add(setKey);
+            }
+            break;
+        }
+      }
+
+      _iteratorNormalCompletion = true;
+      return {value: value, done: false};
     }
-
-    let value = cursor.value;
-
-    for (let step = frame.step; step < pipeLength; step++) {
-      const action = pipe[pipeLength - step - 1];
-      const {type, arg} = action;
-
-      let test = true;
-      let setKey = value;
-
-      switch (type) {
-        case MAP:
-          value = arg(value);
-          break;
-
-        case FILTER:
-          if (!arg(value)) {
-            continue nextResult;
-          }
-          break;
-
-        case CONCATMAP:
-          value = arg(value);
-          // Falls through to CONCAT.
-        case CONCAT:
-          stack.push(frame);
-          frame = (this.frame = {
-            iterable: null,
-            iterator: value[Symbol.iterator](),
-            step: step + 1,
-          });
-          continue nextResult;
-
-        case DIFFERENCE:
-          if (!!arg.set.has(setKey) === test) {
-            continue nextResult;
-          }
-          break;
-
-        case UNIQBY:
-          setKey = arg.mapper(value);
-        case UNIQ:
-          if (arg.set.has(setKey)) {
-            continue nextResult;
-          } else {
-            arg.set.add(setKey);
-          }
-          break;
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion) {
+        this.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
       }
     }
-
-    return {value: value, done: false};
   }
 
   return DONE;
+};
+
+Iterator.prototype.return = function () {
+  let iterator = this.frame.iterator;
+  if (iterator.return) {
+    iterator.return();
+  }
+  const stack = this.stack;
+  for (let i = 0; i < stack.length; i++) {
+    iterator = stack[i].iterator;
+    if (iterator.return) {
+      iterator.return();
+    }
+  }
+  return {};
 };
 
 export default Terable;

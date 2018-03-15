@@ -2,6 +2,10 @@ import {
   keyBy,
   toArray,
 } from '../';
+import {
+  closeable,
+  throws,
+} from './util';
 
 test('keyBy', () => {
   const key1 = Symbol();
@@ -17,4 +21,12 @@ test('keyBy', () => {
     [key1, item1],
     [key2, item3],
   ]);
+});
+
+test('IteratorClose', () => {
+  const c = closeable();
+  expect(() => {
+    for (const x of keyBy(throws)(c)) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
 });

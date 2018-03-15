@@ -4,7 +4,12 @@ import {
   foldl,
   map,
 } from '../';
-import {spyFactory, badMap} from './util';
+import {
+  closeable,
+  badMap,
+  spyFactory,
+  throws,
+} from './util';
 
 test('foldl', () => {
   expect(
@@ -42,4 +47,12 @@ test('foldl', () => {
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
+});
+
+test('IteratorClose', () => {
+  const c = closeable();
+  expect(() => {
+    for (const x of foldl(throws, null)(c)) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
 });

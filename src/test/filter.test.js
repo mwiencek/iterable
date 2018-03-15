@@ -7,7 +7,13 @@ import {
   uniq,
 } from '../';
 import mediums from './mediums';
-import {spyFactory, badMap, badProp} from './util';
+import {
+  badMap,
+  badProp,
+  closeable,
+  spyFactory,
+  throws,
+} from './util';
 
 test('filter', () => {
   const existingArtists = compose(
@@ -66,4 +72,17 @@ test('filter', () => {
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
+});
+
+test('IteratorClose', () => {
+  const c = closeable();
+  expect(() => {
+    for (const x of filter(throws)(c)) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
+
+  for (const x of filter(x => true)(c)) {
+    break;
+  }
+  expect(c.closeCalls).toBe(2);
 });

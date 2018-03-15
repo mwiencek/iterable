@@ -2,6 +2,7 @@ import {
   compose,
   map,
   sort,
+  take,
   toArray,
 } from '../';
 

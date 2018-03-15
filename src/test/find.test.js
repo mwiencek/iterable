@@ -1,6 +1,11 @@
 import {
   find,
+  map,
 } from '../';
+import {
+  closeable,
+  throws,
+} from './util';
 
 test('find', () => {
   const haystack = [
@@ -12,4 +17,20 @@ test('find', () => {
   expect(find(x => x.b > 5)(haystack).a).toBe(3);
   expect(find(x => x > 'a')('abc')).toBe('b');
   expect(find(Array.isArray)(new Set([1, [2], 3]))).toEqual([2]);
+});
+
+test('IteratorClose', () => {
+  const c = closeable(1);
+  expect(() => {
+    for (const x of find(throws)(c)) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
+
+  const c2 = closeable(map(x => x + 9)(c));
+  for (const x of find(x => true)(c2)) {
+    expect(x).toBe(10);
+    break;
+  }
+  expect(c.closeCalls).toBe(2);
+  expect(c2.closeCalls).toBe(1);
 });

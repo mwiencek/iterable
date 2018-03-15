@@ -16,6 +16,24 @@ export function spyFactory(util: (Iterable<any>) => any) {
   return spy;
 }
 
+export function closeable(value = null) {
+  let iterations = 0;
+  const iterable = {
+    [Symbol.iterator]: function () {
+      return {
+        next: () => ({value: value, done: false}),
+        return: () => { iterable.closeCalls++ },
+      };
+    },
+    closeCalls: 0,
+  };
+  return iterable;
+};
+
+export function throws() {
+  throw new Error();
+}
+
 const badProp = (x: any) => x.y.z;
 
 const badMap = map(badProp);

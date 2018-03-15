@@ -5,6 +5,10 @@ import {
   map,
   toArray,
 } from '../';
+import {
+  closeable,
+  throws,
+} from './util';
 
 test('groupBy', () => {
   const key1 = {type: 'x'};
@@ -31,4 +35,12 @@ test('groupBy', () => {
       grouper,
     )(groups)
   ).toBe('x: a, d / y: b, c');
+});
+
+test('IteratorClose', () => {
+  const c = closeable();
+  expect(() => {
+    for (const x of groupBy(throws)(c)) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
 });

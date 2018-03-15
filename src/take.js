@@ -48,6 +48,14 @@ TakeIterator.prototype.next = function () {
   return cursor;
 };
 
+TakeIterator.prototype.return = function () {
+  const source = this.source;
+  if (source.return) {
+    source.return();
+  }
+  this.source = null;
+};
+
 const take = count => iterable => new TakeIterable(count, iterable);
 
 export default take;

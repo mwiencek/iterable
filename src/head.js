@@ -6,11 +6,10 @@
  */
 
 const head = iterable => {
-  const cursor = (iterable[Symbol.iterator]()).next();
-  if (cursor.done) {
-    throw new Error('head: empty list');
+  for (const value of iterable) {
+    return value;
   }
-  return cursor.value;
+  throw new Error('head: empty list');
 };
 
 export default head;

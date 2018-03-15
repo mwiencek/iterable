@@ -6,11 +6,8 @@
  */
 
 const toObject = entries => {
-  const iterator = entries[Symbol.iterator]();
   const object = Object.create(null);
-  let cursor;
-  while (!(cursor = iterator.next()).done) {
-    const [key, value] = cursor.value;
+  for (const [key, value] of entries) {
     object[key] = value;
   }
   return object;

@@ -51,6 +51,14 @@ DropIterator.prototype.next = function () {
   return cursor;
 };
 
+DropIterator.prototype.return = function () {
+  const source = this.source;
+  if (source.return) {
+    source.return();
+  }
+  this.source = null;
+};
+
 const drop = count => iterable => new DropIterable(count, iterable);
 
 export default drop;

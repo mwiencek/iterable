@@ -6,11 +6,9 @@
  */
 
 const toArray = iterable => {
-  const iterator = iterable[Symbol.iterator]();
   const array = [];
-  let cursor;
-  while (!(cursor = iterator.next()).done) {
-    array.push(cursor.value);
+  for (const value of iterable) {
+    array.push(value);
   }
   return array;
 };

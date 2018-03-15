@@ -1,9 +1,15 @@
 import {
   concat,
   join,
+  map,
   toArray,
 } from '../';
-import {spyFactory, badMap} from './util';
+import {
+  badMap,
+  closeable,
+  spyFactory,
+  throws,
+} from './util';
 
 test('concat', () => {
   expect(toArray(concat([[1], [2], [3]]))).toEqual([1, 2, 3]);
@@ -40,4 +46,22 @@ test('concat', () => {
 
   expect(join('+')(concat(''))).toEqual('');
   expect(join('+')(concat('abc'))).toEqual('a+b+c');
+});
+
+test('IteratorClose', () => {
+  let c = closeable(1);
+  expect(() => {
+    for (const x of concat([map(throws)(c)])) {}
+  }).toThrow();
+  expect(c.closeCalls).toBe(1);
+
+  for (const x of concat([map(x => x)(c)])) {
+    break;
+  }
+  expect(c.closeCalls).toBe(2);
+
+  for (const x of concat(map(x => [x])(c))) {
+    break;
+  }
+  expect(c.closeCalls).toBe(3);
 });

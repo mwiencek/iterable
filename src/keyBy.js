@@ -6,11 +6,8 @@
  */
 
 const keyBy = func => iterable => {
-  const iterator = iterable[Symbol.iterator]();
-  let cursor;
   let keyed = new Map();
-  while (!(cursor = iterator.next()).done) {
-    const value = cursor.value;
+  for (const value of iterable) {
     keyed.set(func(value), value);
   }
   return keyed;

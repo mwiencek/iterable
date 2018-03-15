@@ -6,11 +6,9 @@
  */
 
 const makeFold = (func, initial) => iterable => {
-  const iterator = iterable[Symbol.iterator]();
-  let cursor;
   let accum = initial;
-  while (!(cursor = iterator.next()).done) {
-    accum = func(accum, cursor.value);
+  for (const value of iterable) {
+    accum = func(accum, value);
   }
   return accum;
 };
