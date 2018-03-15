@@ -2,7 +2,6 @@ import {
   difference,
   toArray,
 } from '../';
-import {spyFactory, badMap} from './util';
 
 test('difference', () => {
   const setA = [0, 1, 2, 3, 4];
