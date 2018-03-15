@@ -1,4 +1,5 @@
 // @flow
 
-declare export default function difference<T>(a: Iterable<T>):
-  (b: Iterable<T>) => Iterable<T>;
+declare export default function difference<T>(
+  sets: Iterable<Iterable<T>>,
+): Set<T>;

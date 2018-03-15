@@ -9,7 +9,6 @@ import {DONE} from './constants';
 
 export const CONCAT = 4;
 export const CONCATMAP = 3;
-export const DIFFERENCE = 1;
 export const FILTER = 2;
 export const MAP = 6;
 export const UNIQ = 7;
@@ -32,9 +31,6 @@ function Iterator(iterable) {
     const {type, arg} = iterable;
 
     switch (type) {
-      case DIFFERENCE:
-        arg.set = new Set(arg.target);
-        break;
       case UNIQ:
       case UNIQBY:
         arg.set.clear();
@@ -90,7 +86,6 @@ Iterator.prototype.next = function () {
         const action = pipe[pipeLength - step - 1];
         const {type, arg} = action;
 
-        let test = true;
         let setKey = value;
 
         switch (type) {
@@ -115,12 +110,6 @@ Iterator.prototype.next = function () {
               step: step + 1,
             });
             continue nextResult;
-
-          case DIFFERENCE:
-            if (!!arg.set.has(setKey) === test) {
-              continue nextResult;
-            }
-            break;
 
           case UNIQBY:
             setKey = arg.mapper(value);

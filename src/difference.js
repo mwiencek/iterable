@@ -5,8 +5,18 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import Terable, {DIFFERENCE} from './Terable';
-
-const difference = a => b => new Terable(DIFFERENCE, {target: a, set: null}, b);
+const difference = sets => {
+  let result;
+  for (const subset of sets) {
+    if (!result) {
+      result = new Set(subset);
+    } else {
+      for (const value of subset) {
+        result.delete(value);
+      }
+    }
+  }
+  return result || (new Set());
+};
 
 export default difference;
