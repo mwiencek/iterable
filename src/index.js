@@ -29,6 +29,7 @@ import sortBy from './sortBy';
 import take from './take';
 import toArray from './toArray';
 import toObject from './toObject';
+import union from './union';
 import uniq from './uniq';
 import uniqBy from './uniqBy';
 
@@ -57,6 +58,7 @@ export {
   take,
   toArray,
   toObject,
+  union,
   uniq,
   uniqBy,
 };
