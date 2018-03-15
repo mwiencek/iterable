@@ -478,37 +478,22 @@ test('Immutable.js', () => {
 });
 
 test('intersect', () => {
-  const source = [0, 1, 2, 3, 4];
-  const target = [-2, 0, 2, 4, 6];
-  const _intersect = intersect(source);
+  const source = [0, 1, 2, 3, 4, 4];
+  const target = [-2, -2, 0, 2, 4, 6];
 
-  expect(toArray(_intersect(target))).toEqual([0, 2, 4]);
+  expect(toArray(intersect([source, target]))).toEqual([0, 2, 4]);
   // Shouldn't maintain state between calls.
-  expect(toArray(_intersect(target))).toEqual([0, 2, 4]);
   source.splice(0, 1);
   source.push(5, 6);
-  const iterable = _intersect(target);
-  expect(toArray(iterable)).toEqual([2, 4, 6]);
-  // Should be able to reuse the iterable.
-  source.push(8);
-  target.push(8);
-  expect(toArray(iterable)).toEqual([2, 4, 6, 8]);
+  const set = intersect([source, target]);
+  expect(toArray(set)).toEqual([2, 4, 6]);
 
-  // Manual iteration
-  // $FlowFixMe
-  const iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: 2, done: false});
-  expect(iterator.next()).toEqual({value: 4, done: false});
-  expect(iterator.next()).toEqual({value: 6, done: false});
-  expect(iterator.next()).toEqual({value: 8, done: false});
-  expect(iterator.next()).toEqual({done: true});
-  expect(iterator.next()).toEqual({done: true});
+  expect(toArray(intersect(
+    map(x => [x - 1, x, x + 1])([1, 2, 3])
+  ))).toEqual([2]);
 
-  // Lazy iterator creation
-  const lazySpy = spyFactory(intersect([{}]));
-  // $FlowFixMe
-  badMap(lazySpy([{}]))[Symbol.iterator]();
-  expect(lazySpy.calls).toBe(0);
+  expect(toArray(intersect([]))).toEqual([]);
+  expect(toArray(intersect([[], []]))).toEqual([]);
 });
 
 test('join', () => {

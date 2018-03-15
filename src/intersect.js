@@ -5,8 +5,29 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import Terable, {INTERSECT} from './Terable';
-
-const intersect = a => b => new Terable(INTERSECT, {target: a, set: null}, b);
+const intersect = sets => {
+  let valueSets = new Map();
+  let setCount = 0;
+  for (const subset of sets) {
+    setCount++;
+    for (const value of subset) {
+      let setsWithValue = valueSets.get(value);
+      if (setsWithValue) {
+        if (setsWithValue[setsWithValue.length - 1] !== setCount) {
+          setsWithValue.push(setCount);
+        }
+      } else {
+        valueSets.set(value, [setCount]);
+      }
+    }
+  }
+  const result = new Set();
+  for ([value, setsWithValue] of valueSets) {
+    if (setsWithValue.length === setCount) {
+      result.add(value);
+    }
+  }
+  return result;
+};
 
 export default intersect;
