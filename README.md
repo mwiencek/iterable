@@ -17,7 +17,7 @@ As an alternative, you may also want to look into [iterare](https://github.com/f
 
 TODO
 
-In the meantime, you can [look at the tests for examples](https://github.com/mwiencek/terable/blob/master/src/test/all.test.js).
+In the meantime, you can [look at the tests for examples](https://github.com/mwiencek/terable/blob/master/src/test).
 
 ## Benchmarks
 
