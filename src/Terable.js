@@ -28,7 +28,6 @@ function Iterator(iterable) {
   const pipe = [];
 
   const stack = [{
-    iterable: null,
     iterator: null,
     step: 0,
   }];
@@ -40,7 +39,6 @@ function Iterator(iterable) {
       case CONCAT:
       case CONCATMAP:
         stack.push({
-          iterable: null,
           iterator: null,
           step: 0,
         });
@@ -54,8 +52,7 @@ function Iterator(iterable) {
     iterable = iterable.source;
   }
 
-  stack[0].iterable = iterable;
-
+  this.source = iterable;
   this.pipe = pipe;
   this.stack = stack;
   this.level = 0;
@@ -69,9 +66,9 @@ Iterator.prototype.next = function () {
   let cursor;
   let frame = stack[this.level];
 
-  if (!frame.iterator) {
-    frame.iterator = frame.iterable[Symbol.iterator]();
-    frame.iterable = null;
+  if (this.source !== null) {
+    frame.iterator = this.source[Symbol.iterator]();
+    this.source = null;
   }
 
   // Reproduce Babel's for...of semantics.
