@@ -55,7 +55,6 @@ Iterator.prototype.next = function () {
   const pipeLength = pipe.length;
 
   let cursor;
-  let done;
   let frame = this.frame;
 
   if (!frame.iterator) {
@@ -73,9 +72,7 @@ Iterator.prototype.next = function () {
     while ((_iteratorNormalCompletion = true) &&
             (!(_iteratorNormalCompletion = (cursor = frame.iterator.next()).done)
             || stack.length)) {
-      done = _iteratorNormalCompletion;
-
-      if (done) {
+      if (_iteratorNormalCompletion) {
         frame = (this.frame = stack.pop());
         continue;
       }
