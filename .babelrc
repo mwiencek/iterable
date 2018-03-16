@@ -9,5 +9,8 @@
       }
     }],
     "flow"
+  ],
+  "plugins": [
+    "babel-plugin-transform-async-generator-functions"
   ]
 }

@@ -14,6 +14,7 @@
   "repository": "github:mwiencek/terable",
   "devDependencies": {
     "babel-cli": "6.26.0",
+    "babel-plugin-transform-async-generator-functions": "6.24.1",
     "babel-preset-env": "1.6.1",
     "babel-preset-flow": "6.23.0",
     "benchmark": "2.1.4",
