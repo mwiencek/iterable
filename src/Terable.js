@@ -17,6 +17,28 @@ export const UNIQBY = 8;
 
 const returnDone = () => DONE;
 
+/*
+ * Pipe example:
+ *
+ * compose(
+ *   concat,    //   type: CONCAT
+ *              //    arg: null
+ *              // source: take(2)(concat(take(1)(iterable)))
+ *
+ *   take(2),   //   type: TAKE
+ *              //    arg: 2
+ *              // source: concat(take(1)(iterable))
+ *
+ *   concat,    //   type: CONCAT
+ *              //    arg: null
+ *              // source: take(1)(iterable)
+ *
+ *   take(1),   //   type: TAKE
+ *              //    arg: 1
+ *              // source: iterable
+ * )(iterable);
+ */
+
 function Terable(type, arg, source) {
   this.type = type;
   this.arg = arg;
