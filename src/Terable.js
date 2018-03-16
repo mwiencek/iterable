@@ -27,10 +27,24 @@ Terable.prototype[Symbol.iterator] = function () {
 function Iterator(iterable) {
   const pipe = [];
 
+  const stack = [{
+    iterable: null,
+    iterator: null,
+    step: 0,
+  }];
+
   while (iterable instanceof Terable) {
     const {type, arg} = iterable;
 
     switch (type) {
+      case CONCAT:
+      case CONCATMAP:
+        stack.push({
+          iterable: null,
+          iterator: null,
+          step: 0,
+        });
+        break;
       case UNIQ:
       case UNIQBY:
         arg.set.clear();
@@ -40,13 +54,11 @@ function Iterator(iterable) {
     iterable = iterable.source;
   }
 
+  stack[0].iterable = iterable;
+
   this.pipe = pipe;
-  this.stack = [];
-  this.frame = {
-    iterable: iterable,
-    iterator: null,
-    step: 0,
-  };
+  this.stack = stack;
+  this.level = 0;
 }
 
 Iterator.prototype.next = function () {
@@ -55,7 +67,7 @@ Iterator.prototype.next = function () {
   const pipeLength = pipe.length;
 
   let cursor;
-  let frame = this.frame;
+  let frame = stack[this.level];
 
   if (!frame.iterator) {
     frame.iterator = frame.iterable[Symbol.iterator]();
@@ -71,9 +83,9 @@ Iterator.prototype.next = function () {
     nextResult:
     while ((_iteratorNormalCompletion = true) &&
             (!(_iteratorNormalCompletion = (cursor = frame.iterator.next()).done)
-            || stack.length)) {
+            || this.level)) {
       if (_iteratorNormalCompletion) {
-        frame = (this.frame = stack.pop());
+        frame = stack[--this.level];
         continue;
       }
 
@@ -100,12 +112,9 @@ Iterator.prototype.next = function () {
             value = arg(value);
             // Falls through to CONCAT.
           case CONCAT:
-            stack.push(frame);
-            frame = (this.frame = {
-              iterable: null,
-              iterator: value[Symbol.iterator](),
-              step: step + 1,
-            });
+            frame = stack[++this.level];
+            frame.iterator = value[Symbol.iterator]();
+            frame.step = step + 1;
             continue nextResult;
 
           case UNIQBY:
@@ -142,13 +151,9 @@ Iterator.prototype.next = function () {
 };
 
 Iterator.prototype.return = function () {
-  let iterator = this.frame.iterator;
-  if (iterator.return) {
-    iterator.return();
-  }
   const stack = this.stack;
-  for (let i = 0; i < stack.length; i++) {
-    iterator = stack[i].iterator;
+  for (let i = this.level; i >= 0; i--) {
+    const iterator = stack[i].iterator;
     if (iterator.return) {
       iterator.return();
     }
