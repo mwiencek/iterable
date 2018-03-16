@@ -73,6 +73,7 @@ function Iterator(iterable) {
       case TAKE:
         if (arg <= 0) {
           this.next = returnDone;
+          return;
         }
         break;
       case UNIQ:
