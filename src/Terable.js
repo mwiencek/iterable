@@ -11,8 +11,11 @@ export const CONCAT = 4;
 export const CONCATMAP = 3;
 export const FILTER = 2;
 export const MAP = 6;
+export const TAKE = 1;
 export const UNIQ = 7;
 export const UNIQBY = 8;
+
+const returnDone = () => DONE;
 
 function Terable(type, arg, source) {
   this.type = type;
@@ -30,6 +33,7 @@ function Iterator(iterable) {
   const stack = [{
     iterator: null,
     step: 0,
+    take: Infinity,
   }];
 
   while (iterable instanceof Terable) {
@@ -41,7 +45,13 @@ function Iterator(iterable) {
         stack.push({
           iterator: null,
           step: 0,
+          take: Infinity,
         });
+        break;
+      case TAKE:
+        if (arg <= 0) {
+          this.next = returnDone;
+        }
         break;
       case UNIQ:
       case UNIQBY:
@@ -65,6 +75,7 @@ Iterator.prototype.next = function () {
 
   let cursor;
   let frame = stack[this.level];
+  let didTakeMax;
 
   if (this.source !== null) {
     frame.iterator = this.source[Symbol.iterator]();
@@ -79,8 +90,8 @@ Iterator.prototype.next = function () {
   try {
     nextResult:
     while ((_iteratorNormalCompletion = true) &&
-            (!(_iteratorNormalCompletion = (cursor = frame.iterator.next()).done)
-            || this.level)) {
+            !(didTakeMax = frame.take === 0) &&
+            (!(_iteratorNormalCompletion = (cursor = frame.iterator.next()).done) || this.level)) {
       if (_iteratorNormalCompletion) {
         frame = stack[--this.level];
         continue;
@@ -114,6 +125,10 @@ Iterator.prototype.next = function () {
             frame.step = step + 1;
             continue nextResult;
 
+          case TAKE:
+            frame.take = Math.min(frame.take, arg);
+            break;
+
           case UNIQBY:
             setKey = arg.mapper(value);
           case UNIQ:
@@ -127,6 +142,7 @@ Iterator.prototype.next = function () {
       }
 
       _iteratorNormalCompletion = true;
+      --frame.take;
       return {value: value, done: false};
     }
   } catch (err) {
@@ -134,7 +150,7 @@ Iterator.prototype.next = function () {
     _iteratorError = err;
   } finally {
     try {
-      if (!_iteratorNormalCompletion) {
+      if (!_iteratorNormalCompletion || didTakeMax) {
         this.return();
       }
     } finally {

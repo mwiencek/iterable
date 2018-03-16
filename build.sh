@@ -9,7 +9,7 @@ yarn install
 mkdir -p dist/src
 
 pushd src
-babel *.js util/*.js --out-dir ../dist/
+BABEL_ENV=dist babel *.js util/*.js --out-dir ../dist/
 popd
 
 cp \

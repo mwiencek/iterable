@@ -18,13 +18,25 @@ export function spyFactory(util: (Iterable<any>) => any) {
   return spy;
 }
 
-export function closeable(value: mixed = null) {
+export function closeable(
+  value: mixed = null,
+  maxIterations: number = Infinity,
+) {
   let iterations = 0;
   const iterable = {
     [Symbol.iterator]: function () {
       return {
-        next: () => ({value: value, done: false}),
-        return: () => { iterable.closeCalls++ },
+        next: () => {
+          if (iterations >= maxIterations) {
+            return {done: true};
+          }
+          iterations++;
+          return {value: value, done: false};
+        },
+        return: () => {
+          iterations = 0;
+          iterable.closeCalls++;
+        },
       };
     },
     closeCalls: 0,

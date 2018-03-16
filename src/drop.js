@@ -57,6 +57,7 @@ DropIterator.prototype.return = function () {
     source.return();
   }
   this.source = null;
+  return {};
 };
 
 const drop = count => iterable => new DropIterable(count, iterable);

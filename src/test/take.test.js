@@ -127,9 +127,16 @@ test('IteratorClose', () => {
     }
   }).not.toThrow();
 
-  const c = closeable();
+  let c = closeable();
   for (const x of take(1)(c)) {
     break;
   }
+  expect(c.closeCalls).toBe(1);
+
+  c = closeable(1, 1);
+  for (const x of take(1)(c)) {}
+  expect(c.closeCalls).toBe(1);
+
+  for (const x of take(2)(c)) {}
   expect(c.closeCalls).toBe(1);
 });
