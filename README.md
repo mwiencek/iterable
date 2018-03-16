@@ -26,33 +26,45 @@ You can take these with a grain of salt. I used the benchmarks specifically to m
 The main takeaway from these is that Terable isn't half-bad.
 
 ```bash
+michael@Michaels-MacBook-Pro-2 ~/c/terable> node --version
+v9.6.1
 michael@Michaels-MacBook-Pro-2 ~/c/terable> for f in (ls bench); node "bench/$f"; echo; end
-terable (large reduce) x 46,701 ops/sec ±1.31% (93 runs sampled)
-iterare (large reduce) x 20,772 ops/sec ±1.12% (92 runs sampled)
-lodash/fp (large reduce) x 12,468 ops/sec ±0.86% (90 runs sampled)
-ramda (large reduce) x 8,497 ops/sec ±1.90% (82 runs sampled)
+terable (intersect) x 228,850 ops/sec ±1.10% (91 runs sampled)
+lodash (intersect) x 456,587 ops/sec ±0.62% (90 runs sampled)
+ramda (intersect) x 13,551 ops/sec ±1.24% (89 runs sampled)
+Fastest is lodash (intersect)
+
+terable (large reduce) x 37,087 ops/sec ±1.20% (91 runs sampled)
+iterare (large reduce) x 19,947 ops/sec ±0.67% (90 runs sampled)
+lodash/fp (large reduce) x 12,430 ops/sec ±1.36% (83 runs sampled)
+ramda (large reduce) x 8,725 ops/sec ±2.25% (84 runs sampled)
 Fastest is terable (large reduce)
 
-terable (complex chain) x 1,003,418 ops/sec ±1.07% (91 runs sampled)
-iterare (complex chain) x 531,901 ops/sec ±0.67% (89 runs sampled)
-lodash/fp (complex chain) x 527,213 ops/sec ±1.11% (91 runs sampled)
-ramda (complex chain) x 173,405 ops/sec ±1.29% (85 runs sampled)
+terable (complex chain) x 1,000,144 ops/sec ±1.70% (91 runs sampled)
+iterare (complex chain) x 507,666 ops/sec ±1.51% (84 runs sampled)
+lodash/fp (complex chain) x 524,060 ops/sec ±1.24% (90 runs sampled)
+ramda (complex chain) x 172,599 ops/sec ±0.82% (89 runs sampled)
 Fastest is terable (complex chain)
 
-terable (simple map) x 5,112,881 ops/sec ±1.26% (91 runs sampled)
-terable (simple map, inline function) x 2,910,657 ops/sec ±0.91% (90 runs sampled)
-iterare (simple map) x 6,077,576 ops/sec ±1.30% (95 runs sampled)
-lodash/fp (simple map) x 328,324 ops/sec ±0.45% (87 runs sampled)
-ramda (simple map) x 1,577,195 ops/sec ±1.38% (89 runs sampled)
+terable (simple map) x 3,884,002 ops/sec ±1.29% (94 runs sampled)
+terable (simple map, inline function) x 2,266,839 ops/sec ±0.56% (91 runs sampled)
+iterare (simple map) x 5,922,709 ops/sec ±1.62% (92 runs sampled)
+lodash/fp (simple map) x 326,457 ops/sec ±0.71% (87 runs sampled)
+ramda (simple map) x 1,578,584 ops/sec ±1.35% (91 runs sampled)
 Fastest is iterare (simple map)
 
-terable (take before map) x 6,117,701 ops/sec ±1.58% (90 runs sampled)
-terable (take after map) x 3,859,973 ops/sec ±0.55% (94 runs sampled)
-iterare (take before map) x 6,758,529 ops/sec ±1.17% (93 runs sampled)
-iterare (take after map) x 6,636,016 ops/sec ±0.82% (94 runs sampled)
-lodash/fp (take before map) x 173,003 ops/sec ±1.55% (87 runs sampled)
-lodash/fp (take after map) x 163,014 ops/sec ±0.59% (86 runs sampled)
-ramda (take before map) x 796,197 ops/sec ±1.71% (88 runs sampled)
-ramda (take after map) x 719,621 ops/sec ±0.62% (86 runs sampled)
+terable (sortBy) x 327,428 ops/sec ±1.26% (88 runs sampled)
+lodash/fp (sortBy) x 219,689 ops/sec ±0.52% (89 runs sampled)
+ramda (sortBy) x 310,816 ops/sec ±1.22% (91 runs sampled)
+Fastest is terable (sortBy)
+
+terable (take before map) x 5,165,748 ops/sec ±1.39% (93 runs sampled)
+terable (take after map) x 3,713,791 ops/sec ±0.43% (91 runs sampled)
+iterare (take before map) x 7,833,968 ops/sec ±2.18% (88 runs sampled)
+iterare (take after map) x 5,976,025 ops/sec ±0.55% (93 runs sampled)
+lodash/fp (take before map) x 167,707 ops/sec ±1.44% (89 runs sampled)
+lodash/fp (take after map) x 151,440 ops/sec ±0.72% (90 runs sampled)
+ramda (take before map) x 755,783 ops/sec ±1.09% (91 runs sampled)
+ramda (take after map) x 718,602 ops/sec ±0.42% (90 runs sampled)
 Fastest is iterare (take before map)
 ```
