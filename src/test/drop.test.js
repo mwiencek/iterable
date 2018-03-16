@@ -1,6 +1,7 @@
 // @flow
 
 import {
+  compose,
   concat,
   drop,
   take,
@@ -26,6 +27,15 @@ test('drop', () => {
   const nested = [[1, 2, 3], [4]];
   expect(toArray(concat(drop(1)(nested)))).toEqual([4]);
   expect(toArray(drop(1)(concat(nested)))).toEqual([2, 3, 4]);
+
+  expect(
+    compose(
+      toArray,
+      drop(1),
+      drop(1),
+      drop(1),
+    )([1, 2, 3, 4])
+  ).toEqual([4]);
 
   // Manual iteration
   const iterable = drop(2)(array);
