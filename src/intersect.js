@@ -22,7 +22,7 @@ const intersect = sets => {
     }
   }
   const result = new Set();
-  for ([value, setsWithValue] of valueSets) {
+  for (const [value, setsWithValue] of valueSets) {
     if (setsWithValue.length === setCount) {
       result.add(value);
     }
