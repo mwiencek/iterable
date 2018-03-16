@@ -1,3 +1,5 @@
+// @flow
+
 import {map} from '../';
 
 export function spyFactory(util: (Iterable<any>) => any) {
@@ -16,7 +18,7 @@ export function spyFactory(util: (Iterable<any>) => any) {
   return spy;
 }
 
-export function closeable(value = null) {
+export function closeable(value: mixed = null) {
   let iterations = 0;
   const iterable = {
     [Symbol.iterator]: function () {

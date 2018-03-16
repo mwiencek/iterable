@@ -1,26 +1,33 @@
+// @flow
+
+function makeIterator() {
+  let counter = 3;
+  return {
+    '@@asyncIterator': makeIterator,
+    next: function () {
+      const _counter = counter;
+      counter--;
+      return new Promise((resolve, reject) => {
+        setTimeout(function () {
+          if (_counter) {
+            resolve({value: _counter, done: false});
+          } else {
+            resolve({done: true});
+          }
+        }, 100);
+      });
+    },
+    return: function () {
+      counter = 0;
+      asyncIterable.closeCalls++;
+    },
+  };
+}
+
 const asyncIterable = {
-  [Symbol.iterator]: function () {
-    let counter = 3;
-    return {
-      next: function () {
-        const _counter = counter;
-        counter--;
-        if (_counter > 0) {
-          return new Promise((resolve, reject) => {
-            setTimeout(function () {
-              resolve({value: _counter, done: false});
-            }, 100);
-          });
-        } else {
-          return {done: true};
-        }
-      },
-      return: function () {
-        counter = 0;
-        asyncIterable.closeCalls++;
-      },
-    };
-  },
+  // $FlowFixMe
+  [Symbol.iterator]: makeIterator,
+  '@@asyncIterator': makeIterator,
   closeCalls: 0,
 };
 

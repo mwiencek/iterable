@@ -1,3 +1,5 @@
+// @flow
+
 import Immutable from 'immutable';
 import {
   compact,

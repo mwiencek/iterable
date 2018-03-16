@@ -1,3 +1,5 @@
+// @flow
+
 import {toObject} from '../';
 
 test('toObject', () => {

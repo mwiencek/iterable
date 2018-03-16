@@ -1,3 +1,5 @@
+// @flow
+
 import {
   map,
   sortBy,
