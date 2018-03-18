@@ -123,12 +123,12 @@ Iterator.prototype.next = function () {
       let value = cursor.value;
 
       for (let step = frame.step; step < pipeLength; step++) {
-        const action = pipe[pipeLength - step - 1];
-        const arg = action.arg;
+        const iterable = pipe[pipeLength - step - 1];
+        const arg = iterable.arg;
 
         let setKey = value;
 
-        switch (action.type) {
+        switch (iterable.type) {
           case MAP:
             value = arg(value);
             break;
