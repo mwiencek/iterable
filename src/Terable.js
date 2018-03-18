@@ -59,9 +59,9 @@ function Iterator(iterable) {
   }];
 
   while (iterable instanceof Terable) {
-    const {type, arg} = iterable;
+    const arg = iterable.arg;
 
-    switch (type) {
+    switch (iterable.type) {
       case CONCAT:
       case CONCATMAP:
         stack.push({
@@ -124,11 +124,11 @@ Iterator.prototype.next = function () {
 
       for (let step = frame.step; step < pipeLength; step++) {
         const action = pipe[pipeLength - step - 1];
-        const {type, arg} = action;
+        const arg = action.arg;
 
         let setKey = value;
 
-        switch (type) {
+        switch (action.type) {
           case MAP:
             value = arg(value);
             break;
