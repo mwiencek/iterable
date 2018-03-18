@@ -92,25 +92,25 @@ function Iterator(iterable) {
 }
 
 Iterator.prototype.next = function () {
-  const stack = this.stack;
-  const pipe = this.pipe;
-  const pipeLength = pipe.length;
-
-  let cursor;
-  let frame = stack[this.level];
-  let didTakeMax;
-
-  if (this.source !== null) {
-    frame.iterator = this.source[Symbol.iterator]();
-    this.source = null;
-  }
-
   // Reproduce Babel's for...of semantics.
   let _iteratorNormalCompletion = true;
   let _didIteratorError = false;
   let _iteratorError = undefined;
+  let didTakeMax;
 
   try {
+    const pipe = this.pipe;
+    const stack = this.stack;
+    const pipeLength = pipe.length;
+
+    let cursor;
+    let frame = stack[this.level];
+
+    if (this.source !== null) {
+      frame.iterator = this.source[Symbol.iterator]();
+      this.source = null;
+    }
+
     nextResult:
     while ((_iteratorNormalCompletion = true) &&
             !(didTakeMax = frame.take === 0) &&
