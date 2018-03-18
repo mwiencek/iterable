@@ -15,6 +15,8 @@ export const TAKE = 1;
 export const UNIQ = 7;
 export const UNIQBY = 8;
 
+const NO_VALUE = Symbol();
+
 const returnDone = () => DONE;
 
 /*
@@ -94,8 +96,7 @@ function Iterator(iterable) {
 Iterator.prototype.next = function () {
   // Reproduce Babel's for...of semantics.
   let iteratorNormalCompletion = true;
-  let didIteratorError = false;
-  let iteratorError = undefined;
+  let iteratorError = NO_VALUE;
   let didTakeMax;
 
   try {
@@ -169,7 +170,6 @@ Iterator.prototype.next = function () {
       return {value: value, done: false};
     }
   } catch (err) {
-    didIteratorError = true;
     iteratorError = err;
   } finally {
     try {
@@ -177,7 +177,7 @@ Iterator.prototype.next = function () {
         this.return();
       }
     } finally {
-      if (didIteratorError) {
+      if (iteratorError !== NO_VALUE) {
         throw iteratorError;
       }
     }
