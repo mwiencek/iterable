@@ -93,9 +93,9 @@ function Iterator(iterable) {
 
 Iterator.prototype.next = function () {
   // Reproduce Babel's for...of semantics.
-  let _iteratorNormalCompletion = true;
-  let _didIteratorError = false;
-  let _iteratorError = undefined;
+  let iteratorNormalCompletion = true;
+  let didIteratorError = false;
+  let iteratorError = undefined;
   let didTakeMax;
 
   try {
@@ -112,10 +112,10 @@ Iterator.prototype.next = function () {
     }
 
     nextResult:
-    while ((_iteratorNormalCompletion = true) &&
+    while ((iteratorNormalCompletion = true) &&
             !(didTakeMax = frame.take === 0) &&
-            (!(_iteratorNormalCompletion = (cursor = frame.iterator.next()).done) || this.level)) {
-      if (_iteratorNormalCompletion) {
+            (!(iteratorNormalCompletion = (cursor = frame.iterator.next()).done) || this.level)) {
+      if (iteratorNormalCompletion) {
         frame = stack[--this.level];
         continue;
       }
@@ -164,21 +164,21 @@ Iterator.prototype.next = function () {
         }
       }
 
-      _iteratorNormalCompletion = true;
+      iteratorNormalCompletion = true;
       --frame.take;
       return {value: value, done: false};
     }
   } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
+    didIteratorError = true;
+    iteratorError = err;
   } finally {
     try {
-      if (!_iteratorNormalCompletion || didTakeMax) {
+      if (!iteratorNormalCompletion || didTakeMax) {
         this.return();
       }
     } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
+      if (didIteratorError) {
+        throw iteratorError;
       }
     }
   }
