@@ -88,3 +88,18 @@ test('IteratorClose', () => {
   }
   expect(c.closeCalls).toBe(2);
 });
+
+test('iterator is an iterable', () => {
+  const it = filter(x => true)([1, 2])[Symbol.iterator]();
+
+  expect(it[Symbol.iterator]()).toBe(it);
+
+  for (const x of it) {
+    expect(x).toBe(1);
+    break;
+  }
+
+  for (const x of it) {
+    expect(x).toBe(2);
+  }
+});

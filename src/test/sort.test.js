@@ -19,3 +19,18 @@ test('sort', () => {
     )(['10', '9', '11', '8'])
   ).toEqual([8, 9, 10, 11]);
 });
+
+test('iterator is an iterable', () => {
+  const it = sort([2, 1])[Symbol.iterator]();
+
+  expect(it[Symbol.iterator]()).toBe(it);
+
+  for (const x of it) {
+    expect(x).toBe(1);
+    break;
+  }
+
+  for (const x of it) {
+    expect(x).toBe(2);
+  }
+});

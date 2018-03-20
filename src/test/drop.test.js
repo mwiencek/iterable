@@ -65,3 +65,18 @@ test('IteratorClose', () => {
   }
   expect(c.closeCalls).toBe(1);
 });
+
+test('iterator is an iterable', () => {
+  const it = drop(1)([1, 2, 3])[Symbol.iterator]();
+
+  expect(it[Symbol.iterator]()).toBe(it);
+
+  for (const x of it) {
+    expect(x).toBe(2);
+    break;
+  }
+
+  for (const x of it) {
+    expect(x).toBe(3);
+  }
+});

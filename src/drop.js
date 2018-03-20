@@ -24,6 +24,10 @@ function DropIterator(parent) {
   this.done = false;
 }
 
+DropIterator.prototype[Symbol.iterator] = function () {
+  return this;
+};
+
 DropIterator.prototype.next = function () {
   const parent = this.parent;
 
@@ -56,7 +60,6 @@ DropIterator.prototype.return = function () {
   if (source.return) {
     source.return();
   }
-  this.source = null;
   return {};
 };
 

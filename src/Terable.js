@@ -93,6 +93,10 @@ function Iterator(iterable) {
   this.level = 0;
 }
 
+Iterator.prototype[Symbol.iterator] = function () {
+  return this;
+};
+
 Iterator.prototype.next = function () {
   // Reproduce Babel's for...of semantics.
   let iteratorNormalCompletion = true;
