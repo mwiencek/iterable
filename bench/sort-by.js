@@ -1,4 +1,4 @@
-require('babel-register');
+require('@babel/register');
 
 const Benchmark = require('benchmark');
 const _sortBy = require('lodash/fp/sortBy');

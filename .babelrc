@@ -3,15 +3,15 @@
     "node_modules"
   ],
   "presets": [
-    ["env", {
+    ["@babel/preset-env", {
       "targets": {
         "ie": "11",
         "node": "6"
       }
     }],
-    "flow"
+    "@babel/preset-flow"
   ],
   "plugins": [
-    "babel-plugin-transform-async-generator-functions"
+    "@babel/plugin-transform-async-to-generator"
   ]
 }

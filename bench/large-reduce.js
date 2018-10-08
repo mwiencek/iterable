@@ -1,4 +1,4 @@
-require('babel-register');
+require('@babel/register');
 
 const Benchmark = require('benchmark');
 const iterare = require('iterare');
