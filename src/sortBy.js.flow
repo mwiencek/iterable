@@ -1,4 +1,4 @@
 // @flow
 
 declare export default function sortBy<T>(func: (T) => mixed):
-  (iterable: Iterable<T>) => Iterable<T>;
+  (iterable: Iterable<T>) => Iterator<T>;

@@ -1,4 +1,4 @@
 // @flow
 
 declare export default function map<T, U>(func: (T) => U):
-  (iterable: Iterable<T>) => Iterable<U>;
+  (iterable: Iterable<T>) => Iterator<U>;

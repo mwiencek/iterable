@@ -3,4 +3,4 @@
 type Falsy = false | null | void | 0 | '';
 
 declare export default function compact<T>(iterable: Iterable<T | Falsy>):
-  Iterable<T>;
+  Iterator<T>;

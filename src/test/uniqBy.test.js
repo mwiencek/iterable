@@ -37,27 +37,19 @@ test('uniqBy', () => {
     {key: 'a', value: 1},
     {key: 'c', value: 5},
   ]);
-  // Should be able to reuse the iterable.
   items.shift();
   items.shift();
   items.push(
     {key: 'c', value: 6},
     {key: 'd', value: 7},
   );
-  expect(toArray(iterable)).toEqual([
+  // Iterator is done
+  expect(iterable.next()).toEqual({done: true});
+  expect(toArray(_uniqBy(items))).toEqual([
     {key: 'a', value: 3},
     {key: 'c', value: 5},
     {key: 'd', value: 7},
   ]);
-
-  // Manual iteration
-  // $FlowFixMe
-  const iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: {key: 'a', value: 3}, done: false});
-  expect(iterator.next()).toEqual({value: {key: 'c', value: 5}, done: false});
-  expect(iterator.next()).toEqual({value: {key: 'd', value: 7}, done: false});
-  expect(iterator.next()).toEqual({done: true});
-  expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
   const lazySpy = spyFactory(uniqBy(badProp));

@@ -5,8 +5,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import Terable, {UNIQ} from './Terable';
+import makeTerable, {UNIQ} from './Terable';
 
-const uniq = iterable => new Terable(UNIQ, {set: new Set()}, iterable);
+const uniq = iterable => makeTerable(UNIQ, {set: new Set()}, iterable);
 
 export default uniq;

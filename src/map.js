@@ -5,8 +5,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import Terable, {MAP} from './Terable';
+import makeTerable, {MAP} from './Terable';
 
-const map = func => iterable => new Terable(MAP, func, iterable);
+const map = func => iterable => makeTerable(MAP, func, iterable);
 
 export default map;

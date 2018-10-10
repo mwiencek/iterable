@@ -5,8 +5,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import Terable, {TAKE} from './Terable';
+import makeTerable, {TAKE} from './Terable';
 
-const take = count => iterable => new Terable(TAKE, count, iterable);
+const take = count => iterable => makeTerable(TAKE, count, iterable);
 
 export default take;

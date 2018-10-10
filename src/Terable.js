@@ -15,7 +15,10 @@ export const UNIQBY = 8;
 
 const NO_VALUE = Symbol();
 
-const returnDone = () => DONE;
+const EMPTY_ITERATOR = Object.freeze({
+  [Symbol.iterator]: () => EMPTY_ITERATOR,
+  next: () => DONE,
+});
 
 /*
  * Pipe example:
@@ -43,50 +46,34 @@ const returnDone = () => DONE;
  * )(iterable);
  */
 
-function Terable(type, arg, source) {
-  this.type = type;
-  this.arg = arg;
-  this.source = source;
-}
-
-Terable.prototype[Symbol.iterator] = function () {
-  return new Iterator(this);
-};
-
-function Iterator(iterable) {
-  const pipe = [];
-
-  while (iterable instanceof Terable) {
-    const arg = iterable.arg;
-
-    switch (iterable.type) {
-      case TAKE:
-        if (arg <= 0) {
-          this.next = returnDone;
-          return;
-        }
-        break;
-      case UNIQ:
-      case UNIQBY:
-        arg.set.clear();
-        break;
-    }
-    pipe.push(iterable);
-    iterable = iterable.source;
+export default function makeTerable(type, arg, source) {
+  if (type === TAKE && arg <= 0) {
+    return EMPTY_ITERATOR;
   }
 
-  this.source = iterable;
-  this.iterator = null;
-  this.pipe = pipe;
+  let ret;
+  if (source instanceof Terable) {
+    ret = source;
+    ret.pipe.push({arg, type});
+  } else {
+    ret = new Terable(type, arg, source);
+  }
+
+  return ret;
+}
+
+function Terable(type, arg, source) {
+  this.pipe = [{arg, type}];
+  this.source = source;
   this.step = 0;
   this.take = Infinity;
 }
 
-Iterator.prototype[Symbol.iterator] = function () {
+Terable.prototype[Symbol.iterator] = function () {
   return this;
 };
 
-Iterator.prototype.next = function () {
+Terable.prototype.next = function () {
   // Reproduce Babel's for...of semantics.
   let iteratorNormalCompletion = true;
   let iteratorError = NO_VALUE;
@@ -110,12 +97,10 @@ Iterator.prototype.next = function () {
       let value = cursor.value;
 
       for (let step = this.step; step < pipeLength; step++) {
-        const iterable = pipe[pipeLength - step - 1];
-        const arg = iterable.arg;
+        const action = pipe[step];
+        const arg = action.arg;
 
-        let setKey = value;
-
-        switch (iterable.type) {
+        switch (action.type) {
           case MAP:
             value = arg(value);
             break;
@@ -130,9 +115,9 @@ Iterator.prototype.next = function () {
             this.take = Math.min(this.take, arg);
             break;
 
-          case UNIQBY:
-            setKey = arg.mapper(value);
           case UNIQ:
+          case UNIQBY:
+            let setKey = action.type === UNIQ ? value : arg.mapper(value);
             if (arg.set.has(setKey)) {
               continue nextResult;
             } else {
@@ -163,12 +148,10 @@ Iterator.prototype.next = function () {
   return DONE;
 };
 
-Iterator.prototype.return = function () {
+Terable.prototype.return = function () {
   const iterator = this.iterator;
   if (iterator.return) {
     iterator.return();
   }
   return {};
 };
-
-export default Terable;

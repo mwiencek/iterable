@@ -19,12 +19,9 @@ test('take', () => {
   const iterable = take(2)([1, 2, 3]);
   expect(toArray(iterable)).toEqual([1, 2]);
 
-  // Manual iteration
+  // Iterator is done
   // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: 1, done: false});
-  expect(iterator.next()).toEqual({value: 2, done: false});
-  expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
