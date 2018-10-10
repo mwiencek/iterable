@@ -36,6 +36,7 @@ export function closeable(
         return: () => {
           iterations = 0;
           iterable.closeCalls++;
+          return {};
         },
       };
     },
