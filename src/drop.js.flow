@@ -1,4 +1,0 @@
-// @flow
-
-declare export default function drop<T>(count: number):
-  (iterable: Iterable<T>) => Iterator<T>;

@@ -1,4 +1,5 @@
 /*
+ * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -7,6 +8,8 @@
 
 import makeTerable, {DROP} from './Terable';
 
-const drop = count => iterable => makeTerable(DROP, count, iterable);
-
-export default drop;
+export default function drop<T>(count: number): (Iterable<T>) => Iterator<T> {
+  return function (iterable: Iterable<T>): Iterator<T> {
+    return makeTerable(DROP, count, iterable);
+  };
+}

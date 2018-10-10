@@ -14,14 +14,16 @@ test('objects', () => {
 
   const object = {a: true, b: false, c: true};
 
+  type K = $Keys<typeof object>;
+
   const truth = compose(
-    foldl((accum, k) => {
+    foldl<K, {[K]: number}>((accum, k) => {
       accum[k] = count++;
       return accum;
-    }, ({}: $Shape<typeof object>)),
+    })({}),
     compact,
     map(([k, v]) => v ? k : null),
-    entries,
+    ((entries: any): typeof Object.entries),
   );
 
   expect(truth(object)).toEqual({a: 0, c: 1});

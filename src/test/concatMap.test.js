@@ -11,6 +11,11 @@ import {
   uniq,
 } from '../';
 import mediums from './mediums';
+import type {
+  ArtistCreditName,
+  Medium,
+  Track,
+} from './mediums';
 import {
   badMap,
   badProp,
@@ -23,9 +28,9 @@ test('concatMap', () => {
   const existingArtists = compose(
     uniq,
     compact,
-    map(x => x.artist.id),
-    concatMap(x => x.artistCredit.names),
-    concatMap(x => x.tracks),
+    map<ArtistCreditName, number | null>(x => x.artist.id),
+    concatMap<Track, ArtistCreditName>(x => x.artistCredit.names),
+    concatMap<Medium, Track>(x => x.tracks),
   )(mediums);
 
   expect(toArray(existingArtists)).toEqual([1, 2, 3, 4, 5]);
@@ -37,7 +42,7 @@ test('concatMap', () => {
   expect(
     toArray(
       compose(
-        filter(x => x[0] % 2 === 0),
+        filter((x: [number]) => x[0] % 2 === 0),
         concatMap(x => [[x]]),
         concatMap(x => [x, x]),
         map(x => x + 1)
@@ -87,6 +92,7 @@ test('IteratorClose', () => {
 test('iterator is an iterable', () => {
   const it = concatMap(x => [x + 1])([1, 2]);
 
+  // $FlowFixMe
   expect(it[Symbol.iterator]()).toBe(it);
 
   for (const x of it) {

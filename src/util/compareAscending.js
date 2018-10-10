@@ -1,4 +1,6 @@
 /*
+ * @flow
+ *
  * This file contains source code from the Lodash project
  * (https://lodash.com/), with some trivial modifications to integrate it
  * with Terable.
@@ -71,7 +73,7 @@ function isSymbol(value) {
   return type == 'symbol' || (type == 'object' && value != null && toString.call(value) == '[object Symbol]')
 }
 
-function compareAscending(value, other) {
+function compareAscending(value: any, other: any): -1 | 0 | 1 {
   if (value !== other) {
     const valIsDefined = value !== undefined
     const valIsNull = value === null
@@ -83,7 +85,7 @@ function compareAscending(value, other) {
     const othIsReflexive = other === other
     const othIsSymbol = isSymbol(other)
 
-    const val = typeof value == 'string'
+    const val: any = typeof value == 'string'
       ? value.localeCompare(other)
       : value > other
 

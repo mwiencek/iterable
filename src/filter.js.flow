@@ -1,4 +1,0 @@
-// @flow
-
-declare export default function filter<T, U>(test: (T) => mixed):
-  (iterable: Iterable<T>) => Iterator<U>;

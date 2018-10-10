@@ -92,7 +92,7 @@ test('take', () => {
   expect(concatSpy.calls).toBe(0);
 
   let calls = 0;
-  let plus1 = map(x => { calls++; return x + 1 });
+  let plus1 = map<number, number>(x => { calls++; return x + 1 });
   let take0 = take(0);
   let take1 = take(1);
   let take3 = take(3);
@@ -166,6 +166,7 @@ test('IteratorClose', () => {
 });
 
 test('iterator is an iterable', () => {
+  // $FlowFixMe
   const it = take(2)([1, 2, 3])[Symbol.iterator]();
 
   expect(it[Symbol.iterator]()).toBe(it);

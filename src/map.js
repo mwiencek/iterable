@@ -1,4 +1,5 @@
 /*
+ * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -7,6 +8,8 @@
 
 import makeTerable, {MAP} from './Terable';
 
-const map = func => iterable => makeTerable(MAP, func, iterable);
-
-export default map;
+export default function map<T, U>(func: (T) => U): (Iterable<T>) => Iterator<U> {
+  return function (iterable: Iterable<T>): Iterator<U> {
+    return makeTerable(MAP, func, iterable);
+  };
+}

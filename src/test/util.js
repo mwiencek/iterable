@@ -18,10 +18,10 @@ export function spyFactory(util: (Iterable<any>) => any) {
   return spy;
 }
 
-export function closeable(
-  value: mixed = null,
+export function closeable<T>(
+  value: T | null = null,
   maxIterations: number = Infinity,
-) {
+): Iterable<T> & {closeCalls: number} {
   let iterations = 0;
   const iterable = {
     [Symbol.iterator]: function () {
@@ -42,7 +42,7 @@ export function closeable(
     },
     closeCalls: 0,
   };
-  return iterable;
+  return ((iterable: any): Iterable<T> & {closeCalls: number});
 };
 
 export function throws() {

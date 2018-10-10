@@ -1,4 +1,5 @@
 /*
+ * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -7,6 +8,6 @@
 
 import concat from './concat';
 
-const union = sets => new Set(concat(sets));
-
-export default union;
+export default function union<T>(sets: Iterable<Iterable<T>>): Set<T> {
+  return new Set(concat(sets))
+}

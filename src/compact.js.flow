@@ -1,6 +1,0 @@
-// @flow
-
-type Falsy = false | null | void | 0 | '';
-
-declare export default function compact<T>(iterable: Iterable<T | Falsy>):
-  Iterator<T>;

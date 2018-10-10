@@ -13,17 +13,20 @@ import {
 } from './util';
 
 test('groupBy', () => {
-  const key1 = {type: 'x'};
-  const key2 = {type: 'y'};
+  type KeyT = {|+type: string|};
+  type ItemT = {|+key: KeyT, +value: string|};
 
-  const item1 = {key: key1, value: 'a'};
-  const item2 = {key: key2, value: 'b'};
-  const item3 = {key: key2, value: 'c'};
-  const item4 = {key: key1, value: 'd'};
+  const key1: KeyT = {type: 'x'};
+  const key2: KeyT = {type: 'y'};
+
+  const item1: ItemT = {key: key1, value: 'a'};
+  const item2: ItemT = {key: key2, value: 'b'};
+  const item3: ItemT = {key: key2, value: 'c'};
+  const item4: ItemT = {key: key1, value: 'd'};
 
   const groups = new Set([item1, item2, item3, item4]);
-  const grouper = groupBy(x => x.key);
-  const joinValues = compose(join(', '), map(x => x.value));
+  const grouper = groupBy<ItemT, KeyT>(x => x.key);
+  const joinValues = compose(join(', '), map<ItemT, string>(x => x.value));
 
   expect(toArray(grouper(groups).entries())).toEqual([
     [key1, [item1, item4]],

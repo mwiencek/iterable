@@ -1,4 +1,0 @@
-// @flow
-
-declare export default function uniqBy<T, U>(func: (T) => U):
-  (iterable: Iterable<T>) => Iterator<T>;

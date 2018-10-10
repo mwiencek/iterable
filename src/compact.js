@@ -1,4 +1,5 @@
 /*
+ * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -7,6 +8,8 @@
 
 import filter from './filter';
 
-const compact = filter(Boolean);
+type Falsy = false | null | void | 0 | '';
+
+const compact = filter<Falsy, *>(Boolean);
 
 export default compact;

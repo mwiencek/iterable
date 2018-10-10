@@ -1,4 +1,5 @@
 /*
+ * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -7,7 +8,7 @@
 
 import sortBy from './sortBy';
 
-const identity = x => x;
+const identity = <T>(x: T): T => x;
 
 const sort = sortBy(identity);
 

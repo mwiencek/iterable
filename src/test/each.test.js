@@ -31,7 +31,7 @@ test('each', () => {
 test('IteratorClose', () => {
   const c = closeable();
   expect(() => {
-    for (const x of each(throws)(c)) {}
+    for (const x of (each(throws)(c): any)) {}
   }).toThrow();
   expect(c.closeCalls).toBe(1);
 });

@@ -1,5 +1,0 @@
-// @flow
-
-declare export default function concat<T>(
-  iterable: Iterable<Iterable<T>>
-): Generator<T, void, void>;

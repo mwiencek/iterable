@@ -6,23 +6,23 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-type Artist = {|
+export type Artist = {|
   +id: number | null,
 |};
 
-type ArtistCreditName = {|
+export type ArtistCreditName = {|
   +artist: Artist,
 |};
 
-type ArtistCredit = {|
+export type ArtistCredit = {|
   +names: Array<ArtistCreditName>,
 |};
 
-type Track = {|
+export type Track = {|
   +artistCredit: ArtistCredit,
 |};
 
-type Medium = {|
+export type Medium = {|
   +tracks: Array<Track>,
 |};
 

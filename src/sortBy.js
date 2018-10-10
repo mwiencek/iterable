@@ -1,4 +1,5 @@
 /*
+ * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -14,10 +15,12 @@ const cmp = (a, b) => {
   return result ? result : (a[0] - b[0]);
 };
 
-const sortBy = func => iterable => {
+function doSortBy<T, K>(func: (T) => K, iterable: Iterable<T>): Iterator<T> {
   const array = Array.isArray(iterable) ? iterable : toArray(iterable);
   const size = array.length;
-  const keys = new Array(size);
+
+  type KP = [number, K];
+  const keys: Array<KP> = new Array(size);
 
   for (let i = 0; i < size; i++) {
     keys[i] = [i, func(array[i])];
@@ -25,7 +28,11 @@ const sortBy = func => iterable => {
 
   keys.sort(cmp);
 
-  return map(x => array[x[0]])(keys);
-};
+  return map<KP, T>((x: KP) => array[x[0]])(keys);
+}
 
-export default sortBy;
+export default function sortBy<T, K>(func: (T) => K): (Iterable<T>) => Iterator<T> {
+  return function (iterable: Iterable<T>): Iterator<T> {
+    return doSortBy<T, K>(func, iterable);
+  };
+}

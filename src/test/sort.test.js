@@ -21,6 +21,7 @@ test('sort', () => {
 });
 
 test('iterator is an iterable', () => {
+  // $FlowFixMe
   const it = sort([2, 1])[Symbol.iterator]();
 
   expect(it[Symbol.iterator]()).toBe(it);

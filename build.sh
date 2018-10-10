@@ -6,10 +6,11 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 yarn install
 
-mkdir -p dist/src
+mkdir -p dist/{js/util,util}
 
 pushd src
-babel *.js util/*.js --out-dir ../dist/
+../node_modules/.bin/babel *.js --out-dir ../dist/js/
+../node_modules/.bin/babel util/*.js --out-dir ../dist/js/util/
 popd
 
 cp \
@@ -17,7 +18,6 @@ cp \
     LICENSE \
     package.json \
     README.md \
-    src/*.js.flow \
+    src/*.js \
     dist/
-cp src/*.js dist/src/
-cp src/*.js.flow dist/src/
+cp src/util/*.js dist/util/

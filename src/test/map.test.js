@@ -46,6 +46,7 @@ test('IteratorClose', () => {
 });
 
 test('iterator is an iterable', () => {
+  // $FlowFixMe
   const it = map(x => x + 1)([1, 2])[Symbol.iterator]();
 
   expect(it[Symbol.iterator]()).toBe(it);

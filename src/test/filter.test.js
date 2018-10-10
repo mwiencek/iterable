@@ -45,7 +45,7 @@ test('filter', () => {
   iterable = odds([1, 2, 3]);
   expect(toArray(iterable)).toEqual([1, 3]);
 
-  iterable = filter(x => !x.prop)([{prop: 6}, {prop: NaN}]);
+  iterable = filter(x => !x.prop)([{prop: 6}, {prop: (NaN: number)}]);
   expect(toArray(iterable)).toEqual([{prop: NaN}]);
 
   iterable = odds(concat([[1], [3], [7]]));
@@ -86,6 +86,7 @@ test('IteratorClose', () => {
 });
 
 test('iterator is an iterable', () => {
+  // $FlowFixMe
   const it = filter(x => true)([1, 2])[Symbol.iterator]();
 
   expect(it[Symbol.iterator]()).toBe(it);

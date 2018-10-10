@@ -1,4 +1,5 @@
 /*
+ * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -7,7 +8,7 @@
 
 const cache = Object.create(null);
 
-const compose = (...funcs) => {
+const compose: $Compose = ((...funcs) => {
   const count = funcs.length;
   let _compose = cache[count];
   if (!_compose) {
@@ -19,9 +20,9 @@ const compose = (...funcs) => {
     }
     body = 'return function(v){return ' + body + '}';
     args.push(body);
-    cache[count] = (_compose = new Function(...args));
+    cache[count] = (_compose = new Function(...(args: any)));
   }
   return _compose(...funcs);
-};
+}: any);
 
 export default compose;

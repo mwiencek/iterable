@@ -51,6 +51,7 @@ test('IteratorClose', () => {
 });
 
 test('iterator is an iterable', () => {
+  // $FlowFixMe
   const it = uniq([1, 1, 2, 2])[Symbol.iterator]();
 
   expect(it[Symbol.iterator]()).toBe(it);

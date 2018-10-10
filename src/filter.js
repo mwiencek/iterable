@@ -1,4 +1,5 @@
 /*
+ * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -7,6 +8,8 @@
 
 import makeTerable, {FILTER} from './Terable';
 
-const filter = test => iterable => makeTerable(FILTER, test, iterable);
-
-export default filter;
+export default function filter<T, U>(test: (T | U) => mixed): Iterable<T | U> => Iterator<U> {
+  return function (iterable: Iterable<T | U>): Iterator<U> {
+    return makeTerable(FILTER, test, iterable);
+  };
+}

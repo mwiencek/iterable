@@ -16,13 +16,13 @@ import {
 test('foldl', () => {
   expect(
     foldl((accum, value) =>
-      Object.assign({}, accum, {[value]: true}), {})('abc')
+      Object.assign({}, accum, {[value]: true}))({})('abc')
   ).toEqual({a: true, b: true, c: true});
 
   const reverseStr = (accum, value) => value + accum;
   const abcs = ['a', 'b', 'c'];
 
-  expect(foldl(reverseStr, '')(abcs)).toEqual('cba');
+  expect(foldl(reverseStr)('')(abcs)).toEqual('cba');
   // Curried
   const curried = foldl(reverseStr)('');
   expect(curried(abcs)).toEqual('cba');
@@ -33,18 +33,18 @@ test('foldl', () => {
   let index = 1;
   expect(
     compose(
-      foldl((accum, value) => accum + (value * (index++)), 0),
+      foldl((accum, value) => accum + (value * (index++)))(0),
       map(value => value.charCodeAt(0)),
       concat,
-      foldl((accum, value) => accum.concat([[value]]), []),
+      foldl<string, Array<[string]>>((accum, value) => accum.concat([[value]]))([]),
       concat, // Should be a no-op.
-      foldl((accum, value) => value + accum, ''),
+      foldl<string, string>((accum, value) => value + accum)(''),
     )(abcs)
   ).toBe(586);
 
   // Lazy iterator creation
   const lazySpy = spyFactory(
-    foldl((accum: any, value: any) => accum + value, '')
+    foldl((accum: any, value: any) => accum + value)('')
   );
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
@@ -54,7 +54,7 @@ test('foldl', () => {
 test('IteratorClose', () => {
   const c = closeable();
   expect(() => {
-    for (const x of foldl(throws, null)(c)) {}
+    for (const x of (foldl(throws)(null)(c): any)) {}
   }).toThrow();
   expect(c.closeCalls).toBe(1);
 });

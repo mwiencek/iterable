@@ -65,6 +65,7 @@ test('IteratorClose', () => {
 });
 
 test('iterator is an iterable', () => {
+  // $FlowFixMe
   const it = concat([[1], [2]])[Symbol.iterator]();
 
   expect(it[Symbol.iterator]()).toBe(it);

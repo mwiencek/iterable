@@ -1,4 +1,0 @@
-// @flow
-
-declare export default function keyBy<T, K>(func: (T) => K):
-  (iterable: Iterable<T>) => Map<K, T>;
