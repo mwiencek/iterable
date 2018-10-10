@@ -2,4 +2,4 @@
 
 declare export default function concat<T>(
   iterable: Iterable<Iterable<T>>
-): Iterable<T>;
+): Generator<T, void, void>;

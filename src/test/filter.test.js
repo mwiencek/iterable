@@ -51,13 +51,9 @@ test('filter', () => {
   iterable = odds(concat([[1], [3], [7]]));
   expect(toArray(iterable)).toEqual([1, 3, 7]);
 
-  // Manual iteration
+  // Iterator is done
   // $FlowFixMe
   let iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: 1, done: false});
-  expect(iterator.next()).toEqual({value: 3, done: false});
-  expect(iterator.next()).toEqual({value: 7, done: false});
-  expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
   iterable = evens(concat([[1], [3], [7]]));

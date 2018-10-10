@@ -7,8 +7,6 @@
 
 import {DONE} from './constants';
 
-export const CONCAT = 4;
-export const CONCATMAP = 3;
 export const FILTER = 2;
 export const MAP = 6;
 export const TAKE = 1;
@@ -23,19 +21,23 @@ const returnDone = () => DONE;
  * Pipe example:
  *
  * compose(
- *   concat,    //   type: CONCAT
- *              //    arg: null
- *              // source: take(2)(concat(take(1)(iterable)))
+ *   filter(x => x > 10),
+ *              //   type: FILTER
+ *              //    arg: x => x > 10
+ *              // source: take(2)(map(x => x + 1)(take(1)(iterable)))
  *
- *   take(2),   //   type: TAKE
+ *   take(2),
+ *              //   type: TAKE
  *              //    arg: 2
- *              // source: concat(take(1)(iterable))
+ *              // source: map(x => x + 1)(take(1)(iterable))
  *
- *   concat,    //   type: CONCAT
- *              //    arg: null
+ *   map(x => x + 1),
+ *              //   type: MAP
+ *              //    arg: x => x + 1
  *              // source: take(1)(iterable)
  *
- *   take(1),   //   type: TAKE
+ *   take(1),
+ *              //   type: TAKE
  *              //    arg: 1
  *              // source: iterable
  * )(iterable);
@@ -54,24 +56,10 @@ Terable.prototype[Symbol.iterator] = function () {
 function Iterator(iterable) {
   const pipe = [];
 
-  const stack = [{
-    iterator: null,
-    step: 0,
-    take: Infinity,
-  }];
-
   while (iterable instanceof Terable) {
     const arg = iterable.arg;
 
     switch (iterable.type) {
-      case CONCAT:
-      case CONCATMAP:
-        stack.push({
-          iterator: null,
-          step: 0,
-          take: Infinity,
-        });
-        break;
       case TAKE:
         if (arg <= 0) {
           this.next = returnDone;
@@ -88,9 +76,10 @@ function Iterator(iterable) {
   }
 
   this.source = iterable;
+  this.iterator = null;
   this.pipe = pipe;
-  this.stack = stack;
-  this.level = 0;
+  this.step = 0;
+  this.take = Infinity;
 }
 
 Iterator.prototype[Symbol.iterator] = function () {
@@ -105,29 +94,22 @@ Iterator.prototype.next = function () {
 
   try {
     const pipe = this.pipe;
-    const stack = this.stack;
     const pipeLength = pipe.length;
 
     let cursor;
-    let frame = stack[this.level];
 
-    if (this.source !== null) {
-      frame.iterator = this.source[Symbol.iterator]();
+    if (!this.iterator) {
+      this.iterator = this.source[Symbol.iterator]();
       this.source = null;
     }
 
     nextResult:
     while ((iteratorNormalCompletion = true) &&
-            !(didTakeMax = frame.take === 0) &&
-            (!(iteratorNormalCompletion = (cursor = frame.iterator.next()).done) || this.level)) {
-      if (iteratorNormalCompletion) {
-        frame = stack[--this.level];
-        continue;
-      }
-
+            !(didTakeMax = this.take === 0) &&
+            (!(iteratorNormalCompletion = (cursor = this.iterator.next()).done))) {
       let value = cursor.value;
 
-      for (let step = frame.step; step < pipeLength; step++) {
+      for (let step = this.step; step < pipeLength; step++) {
         const iterable = pipe[pipeLength - step - 1];
         const arg = iterable.arg;
 
@@ -144,17 +126,8 @@ Iterator.prototype.next = function () {
             }
             break;
 
-          case CONCATMAP:
-            value = arg(value);
-            // Falls through to CONCAT.
-          case CONCAT:
-            frame = stack[++this.level];
-            frame.iterator = value[Symbol.iterator]();
-            frame.step = step + 1;
-            continue nextResult;
-
           case TAKE:
-            frame.take = Math.min(frame.take, arg);
+            this.take = Math.min(this.take, arg);
             break;
 
           case UNIQBY:
@@ -170,7 +143,7 @@ Iterator.prototype.next = function () {
       }
 
       iteratorNormalCompletion = true;
-      --frame.take;
+      --this.take;
       return {value: value, done: false};
     }
   } catch (err) {
@@ -191,12 +164,9 @@ Iterator.prototype.next = function () {
 };
 
 Iterator.prototype.return = function () {
-  const stack = this.stack;
-  for (let i = this.level; i >= 0; i--) {
-    const iterator = stack[i].iterator;
-    if (iterator.return) {
-      iterator.return();
-    }
+  const iterator = this.iterator;
+  if (iterator.return) {
+    iterator.return();
   }
   return {};
 };

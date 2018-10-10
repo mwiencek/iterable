@@ -5,8 +5,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import Terable, {CONCAT} from './Terable';
-
-const concat = iterable => new Terable(CONCAT, null, iterable);
-
-export default concat;
+export default function* concat(iterable) {
+  for (const value of iterable) {
+    yield* value;
+  }
+}

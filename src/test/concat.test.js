@@ -31,13 +31,9 @@ test('concat', () => {
   const iterable = concat([[[0], []], [1]]);
   expect(toArray(iterable)).toEqual([[0], [], 1]);
 
-  // Manual iteration
+  // Iterator is done
   // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
-  expect(iterator.next()).toEqual({value: [0], done: false});
-  expect(iterator.next()).toEqual({value: [], done: false});
-  expect(iterator.next()).toEqual({value: 1, done: false});
-  expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation

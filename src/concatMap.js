@@ -5,8 +5,10 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import Terable, {CONCATMAP} from './Terable';
-
-const concatMap = func => iterable => new Terable(CONCATMAP, func, iterable);
-
-export default concatMap;
+export default function concatMap(func) {
+  return function* (iterable) {
+    for (const value of iterable) {
+      yield* func(value);
+    }
+  }
+}
