@@ -14,13 +14,11 @@ test('objects', () => {
 
   const object = {a: true, b: false, c: true};
 
-  type K = $Keys<typeof object>;
-
   const truth = compose(
-    foldl<K, {[K]: number}>((accum, k) => {
+    foldl((accum, k) => {
       accum[k] = count++;
       return accum;
-    })({}),
+    })({a: 0, c: 0}),
     compact,
     map(([k, v]) => v ? k : null),
     ((entries: any): typeof Object.entries),
