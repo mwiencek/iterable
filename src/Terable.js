@@ -67,10 +67,57 @@ function Terable(action) {
   this.iterator = null;
   this.step = 0;
   this.done = false;
+  this.didTakeMax = false;
 }
 
 Terable.prototype[Symbol.iterator] = function () {
   return this;
+};
+
+Terable.prototype.pipeValue = function (value) {
+  const pipe = this.pipe;
+  const pipeLength = pipe.length;
+
+  for (let step = this.step; step < pipeLength; step++) {
+    const action = pipe[step];
+    const arg = action.arg;
+
+    switch (action.type) {
+      case MAP:
+        value = arg(value);
+        break;
+
+      case FILTER:
+        if (!arg(value)) {
+          return NO_VALUE;
+        }
+        break;
+
+      case TAKE:
+        // Note: action.arg can't be <= 0, due to the check in makeTerable.
+        this.didTakeMax = (--action.arg === 0) || this.didTakeMax;
+        break;
+
+      case DROP:
+        if (arg > 0) {
+          action.arg--;
+          return NO_VALUE;
+        }
+        break;
+
+      case UNIQ:
+      case UNIQBY:
+        const setKey = action.type === UNIQ ? value : arg.mapper(value);
+        if (arg.set.has(setKey)) {
+          return NO_VALUE;
+        } else {
+          arg.set.add(setKey);
+        }
+        break;
+    }
+  }
+
+  return value;
 };
 
 Terable.prototype.next = function () {
@@ -81,64 +128,21 @@ Terable.prototype.next = function () {
   // Reproduce Babel's for...of semantics.
   let iteratorNormalCompletion = true;
   let iteratorError = NO_VALUE;
-  let didTakeMax;
 
   try {
-    const pipe = this.pipe;
-    const pipeLength = pipe.length;
-
-    let cursor;
-
     if (!this.iterator) {
       this.iterator = this.action.source[Symbol.iterator]();
       this.action.source = null;
     }
 
-    nextResult:
+    let cursor;
     while ((iteratorNormalCompletion = true) &&
-            !didTakeMax &&
+            !this.didTakeMax &&
             (!(iteratorNormalCompletion = (cursor = this.iterator.next()).done))) {
-      let value = cursor.value;
-
-      for (let step = this.step; step < pipeLength; step++) {
-        const action = pipe[step];
-        const arg = action.arg;
-
-        switch (action.type) {
-          case MAP:
-            value = arg(value);
-            break;
-
-          case FILTER:
-            if (!arg(value)) {
-              continue nextResult;
-            }
-            break;
-
-          case TAKE:
-            // Note: action.arg can't be <= 0, due to the check in makeTerable.
-            didTakeMax = (--action.arg === 0) || didTakeMax;
-            break;
-
-          case DROP:
-            if (arg > 0) {
-              action.arg--;
-              continue nextResult;
-            }
-            break;
-
-          case UNIQ:
-          case UNIQBY:
-            let setKey = action.type === UNIQ ? value : arg.mapper(value);
-            if (arg.set.has(setKey)) {
-              continue nextResult;
-            } else {
-              arg.set.add(setKey);
-            }
-            break;
-        }
+      const value = this.pipeValue(cursor.value);
+      if (value === NO_VALUE) {
+        continue;
       }
-
       iteratorNormalCompletion = true;
       return {value: value, done: false};
     }
@@ -146,7 +150,7 @@ Terable.prototype.next = function () {
     iteratorError = err;
   } finally {
     try {
-      if (!iteratorNormalCompletion || didTakeMax) {
+      if (!iteratorNormalCompletion || this.didTakeMax) {
         this.return();
       }
     } finally {
