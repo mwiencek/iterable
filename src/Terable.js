@@ -47,22 +47,23 @@ const EMPTY_ITERATOR = Object.freeze({
  * )(iterable);
  */
 
-export default function makeTerable(type, arg, source) {
-  if (type === TAKE && arg <= 0) {
+export default function makeTerable(action) {
+  if (action.type === TAKE && action.arg <= 0) {
     return EMPTY_ITERATOR;
   }
 
+  const source = action.source;
   if (source instanceof Terable) {
-    source.pipe.push({arg, type});
+    source.pipe.push(action);
     return source;
   }
 
-  return new Terable(type, arg, source);
+  return new Terable(action);
 }
 
-function Terable(type, arg, source) {
-  this.pipe = [{arg, type}];
-  this.source = source;
+function Terable(action) {
+  this.pipe = [action];
+  this.action = action;
   this.iterator = null;
   this.step = 0;
   this.done = false;
@@ -89,8 +90,8 @@ Terable.prototype.next = function () {
     let cursor;
 
     if (!this.iterator) {
-      this.iterator = this.source[Symbol.iterator]();
-      this.source = null;
+      this.iterator = this.action.source[Symbol.iterator]();
+      this.action.source = null;
     }
 
     nextResult:

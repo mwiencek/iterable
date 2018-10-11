@@ -10,6 +10,6 @@ import makeTerable, {TAKE} from './Terable';
 
 export default function take(count: number) {
   return function <T>(iterable: Iterable<T>): Iterator<T> {
-    return makeTerable(TAKE, count, iterable);
+    return makeTerable({type: TAKE, arg: count, source: iterable});
   };
 }

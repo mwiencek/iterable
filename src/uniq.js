@@ -9,5 +9,5 @@
 import makeTerable, {UNIQ} from './Terable';
 
 export default function uniq<T>(iterable: Iterable<T>): Iterator<T> {
-  return makeTerable(UNIQ, {set: new Set()}, iterable);
+  return makeTerable({type: UNIQ, arg: {set: new Set()}, source: iterable});
 }

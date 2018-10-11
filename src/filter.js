@@ -10,6 +10,6 @@ import makeTerable, {FILTER} from './Terable';
 
 export default function filter<T, U>(test: (T | U) => mixed): Iterable<T | U> => Iterator<U> {
   return function (iterable: Iterable<T | U>): Iterator<U> {
-    return makeTerable(FILTER, test, iterable);
+    return makeTerable({type: FILTER, arg: test, source: iterable});
   };
 }

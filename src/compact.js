@@ -9,5 +9,5 @@
 import makeTerable, {FILTER} from './Terable';
 
 export default function compact<T>(iterable: Iterable<T>): Iterator<$NonMaybeType<T>> {
-  return makeTerable(FILTER, Boolean, iterable);
+  return makeTerable({type: FILTER, arg: Boolean, source: iterable});
 }

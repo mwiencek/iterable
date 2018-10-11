@@ -10,6 +10,6 @@ import makeTerable, {MAP} from './Terable';
 
 export default function map<T, U>(func: (T) => U): (Iterable<T>) => Iterator<U> {
   return function (iterable: Iterable<T>): Iterator<U> {
-    return makeTerable(MAP, func, iterable);
+    return makeTerable({type: MAP, arg: func, source: iterable});
   };
 }
