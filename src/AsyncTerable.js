@@ -35,8 +35,9 @@ AsyncTerable.prototype.next = async function () {
 
   try {
     if (!this.iterator) {
-      this.iterator = this.action.source[Symbol.iterator]();
-      this.action.source = null;
+      const head = this.pipe[0];
+      this.iterator = head.source[Symbol.iterator]();
+      head.source = null;
     }
 
     let cursor;

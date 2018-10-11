@@ -45,7 +45,6 @@ import {
 
 export function Terable(action) {
   this.pipe = [action];
-  this.action = action;
   this.iterator = null;
   this.done = false;
 }
@@ -114,8 +113,9 @@ Terable.prototype.next = function () {
 
   try {
     if (!this.iterator) {
-      this.iterator = this.action.source[Symbol.iterator]();
-      this.action.source = null;
+      const head = this.pipe[0];
+      this.iterator = head.source[Symbol.iterator]();
+      head.source = null;
     }
 
     let cursor;
@@ -150,7 +150,6 @@ Terable.prototype.next = function () {
 
 Terable.prototype._destroy = function () {
   this.pipe = null;
-  this.action = null;
   this.done = true;
   this.iterator = null;
 };
