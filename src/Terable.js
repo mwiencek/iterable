@@ -7,6 +7,7 @@
 
 import {DONE} from './constants';
 
+export const DROP = 3;
 export const FILTER = 2;
 export const MAP = 6;
 export const TAKE = 1;
@@ -66,7 +67,7 @@ function Terable(type, arg, source) {
   this.pipe = [{arg, type}];
   this.source = source;
   this.step = 0;
-  this.take = Infinity;
+  this.done = false;
 }
 
 Terable.prototype[Symbol.iterator] = function () {
@@ -74,6 +75,10 @@ Terable.prototype[Symbol.iterator] = function () {
 };
 
 Terable.prototype.next = function () {
+  if (this.done) {
+    return DONE;
+  }
+
   // Reproduce Babel's for...of semantics.
   let iteratorNormalCompletion = true;
   let iteratorError = NO_VALUE;
@@ -92,7 +97,7 @@ Terable.prototype.next = function () {
 
     nextResult:
     while ((iteratorNormalCompletion = true) &&
-            !(didTakeMax = this.take === 0) &&
+            !didTakeMax &&
             (!(iteratorNormalCompletion = (cursor = this.iterator.next()).done))) {
       let value = cursor.value;
 
@@ -112,7 +117,15 @@ Terable.prototype.next = function () {
             break;
 
           case TAKE:
-            this.take = Math.min(this.take, arg);
+            // Note: action.arg can't be <= 0, due to the check in makeTerable.
+            didTakeMax = (--action.arg === 0) || didTakeMax;
+            break;
+
+          case DROP:
+            if (arg > 0) {
+              action.arg--;
+              continue nextResult;
+            }
             break;
 
           case UNIQ:
@@ -128,7 +141,6 @@ Terable.prototype.next = function () {
       }
 
       iteratorNormalCompletion = true;
-      --this.take;
       return {value: value, done: false};
     }
   } catch (err) {
@@ -149,9 +161,12 @@ Terable.prototype.next = function () {
 };
 
 Terable.prototype.return = function () {
-  const iterator = this.iterator;
-  if (iterator.return) {
-    iterator.return();
+  if (!this.done) {
+    this.done = true;
+    const iterator = this.iterator;
+    if (iterator.return) {
+      iterator.return();
+    }
   }
   return {};
 };

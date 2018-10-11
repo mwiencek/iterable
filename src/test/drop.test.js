@@ -3,6 +3,7 @@
 import {
   compose,
   concat,
+  filter,
   drop,
   take,
   toArray,
@@ -17,12 +18,41 @@ import {
 test('drop', () => {
   const array = [1, 2, 3];
 
+  expect(toArray(drop(-1)(array))).toEqual([1, 2, 3]);
   expect(toArray(drop(0)(array))).toEqual([1, 2, 3]);
   expect(toArray(drop(1)(array))).toEqual([2, 3]);
   expect(toArray(drop(2)(array))).toEqual([3]);
 
+  expect(toArray(take(1)(drop(1)(array)))).toEqual([2]);
   expect(toArray(drop(1)(take(2)(array)))).toEqual([2]);
   expect(toArray(take(1)(drop(2)(array)))).toEqual([3]);
+
+  expect(
+    compose(
+      toArray,
+      drop(1),
+      filter(x => x % 2 === 0),
+      drop(2),
+    )([1, 2, 3, 4, 5, 6])
+  ).toEqual([6]);
+
+  expect(
+    compose(
+      toArray,
+      take(1),
+      drop(2),
+      take(4),
+    )([1, 2, 3, 4, 5])
+  ).toEqual([3]);
+
+  expect(
+    compose(
+      toArray,
+      drop(1),
+      take(2),
+      drop(1),
+    )([1, 2, 3, 4, 5])
+  ).toEqual([3]);
 
   const nested = [[1, 2, 3], [4]];
   expect(toArray(concat(drop(1)(nested)))).toEqual([4]);

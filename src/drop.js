@@ -5,64 +5,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import {DONE} from './constants';
-import Terable from './Terable';
+import makeTerable, {DROP} from './Terable';
 
-function DropIterable(count, source) {
-  this.count = count;
-  this.source = source;
-}
-
-DropIterable.prototype[Symbol.iterator] = function () {
-  return new DropIterator(this);
-};
-
-function DropIterator(parent) {
-  this.parent = parent;
-  this.source = null;
-  this.dropped = 0;
-  this.done = false;
-}
-
-DropIterator.prototype[Symbol.iterator] = function () {
-  return this;
-};
-
-DropIterator.prototype.next = function () {
-  const parent = this.parent;
-
-  if (this.done) {
-    this.source = null;
-    return DONE;
-  }
-
-  let source = this.source;
-  if (!source) {
-    source = (this.source = parent.source[Symbol.iterator]());
-  }
-
-  let cursor;
-  while (!this.done) {
-    this.done = (cursor = source.next()).done;
-
-    if (this.dropped < parent.count) {
-      this.dropped++;
-    } else {
-      break;
-    }
-  }
-
-  return cursor;
-};
-
-DropIterator.prototype.return = function () {
-  const source = this.source;
-  if (source.return) {
-    source.return();
-  }
-  return {};
-};
-
-const drop = count => iterable => new DropIterable(count, iterable);
+const drop = count => iterable => makeTerable(DROP, count, iterable);
 
 export default drop;

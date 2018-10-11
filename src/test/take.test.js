@@ -3,10 +3,13 @@
 import {
   compose,
   concat,
+  filter,
   head,
   map,
   take,
   toArray,
+  uniq,
+  uniqBy,
 } from '../';
 import {
   badMap,
@@ -19,6 +22,21 @@ test('take', () => {
   const iterable = take(2)([1, 2, 3]);
   expect(toArray(iterable)).toEqual([1, 2]);
 
+  expect(toArray(take(0)([1]))).toEqual([]);
+  expect(toArray(take(-1)([1]))).toEqual([]);
+
+  expect(
+    toArray(filter(x => x % 2 === 0)(take(2)([1, 2, 3, 4])))
+  ).toEqual([2]);
+
+  expect(
+    toArray(uniq(take(2)([1, 1, 2])))
+  ).toEqual([1]);
+
+  expect(
+    toArray(uniqBy(x => x % 2)(take(2)([1, 1, 2])))
+  ).toEqual([1]);
+
   // Iterator is done
   // $FlowFixMe
   const iterator = iterable[Symbol.iterator]();
@@ -29,6 +47,15 @@ test('take', () => {
   // $FlowFixMe
   badMap(lazySpy([{}]))[Symbol.iterator]();
   expect(lazySpy.calls).toBe(0);
+
+  expect(
+    compose(
+      toArray,
+      take(3),
+      filter(x => x % 2 === 0),
+      take(6),
+    )([1, 2, 3, 4, 5, 6])
+  ).toEqual([2, 4, 6]);
 
   expect(
     compose(
