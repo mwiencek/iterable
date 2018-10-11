@@ -6,7 +6,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import makeTerable, {DROP} from './Terable';
+import {DROP} from './constants';
+import makeTerable from './Terable';
 
 export default function drop(count: number) {
   return function <T>(iterable: Iterable<T>): Iterator<T> {

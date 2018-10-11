@@ -6,7 +6,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import makeTerable, {TAKE} from './Terable';
+import {TAKE} from './constants';
+import makeTerable from './Terable';
 
 export default function take(count: number) {
   return function <T>(iterable: Iterable<T>): Iterator<T> {

@@ -6,7 +6,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import makeTerable, {FILTER} from './Terable';
+import {FILTER} from './constants';
+import makeTerable from './Terable';
 
 export default function compact<T>(iterable: Iterable<T>): Iterator<$NonMaybeType<T>> {
   return makeTerable({type: FILTER, arg: Boolean, source: iterable});

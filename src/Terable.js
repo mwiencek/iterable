@@ -5,21 +5,17 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import {DONE} from './constants';
-
-export const DROP = 3;
-export const FILTER = 2;
-export const MAP = 6;
-export const TAKE = 1;
-export const UNIQ = 7;
-export const UNIQBY = 8;
-
-const NO_VALUE = Symbol();
-
-const EMPTY_ITERATOR = Object.freeze({
-  [Symbol.iterator]: () => EMPTY_ITERATOR,
-  next: () => DONE,
-});
+import {
+  DONE,
+  EMPTY_ITERATOR,
+  NO_VALUE,
+  DROP,
+  FILTER,
+  MAP,
+  TAKE,
+  UNIQ,
+  UNIQBY,
+} from './constants';
 
 /*
  * Pipe example:

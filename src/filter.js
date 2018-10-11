@@ -6,7 +6,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import makeTerable, {FILTER} from './Terable';
+import {FILTER} from './constants';
+import makeTerable from './Terable';
 
 export default function filter<T, U>(test: (T | U) => mixed): Iterable<T | U> => Iterator<U> {
   return function (iterable: Iterable<T | U>): Iterator<U> {

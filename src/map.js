@@ -6,7 +6,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import makeTerable, {MAP} from './Terable';
+import {MAP} from './constants';
+import makeTerable from './Terable';
 
 export default function map<T, U>(func: (T) => U): (Iterable<T>) => Iterator<U> {
   return function (iterable: Iterable<T>): Iterator<U> {
