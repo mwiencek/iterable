@@ -8,8 +8,8 @@
 
 import makeTerable, {DROP} from './Terable';
 
-export default function drop<T>(count: number): (Iterable<T>) => Iterator<T> {
-  return function (iterable: Iterable<T>): Iterator<T> {
+export default function drop(count: number) {
+  return function <T>(iterable: Iterable<T>): Iterator<T> {
     return makeTerable(DROP, count, iterable);
   };
 }
