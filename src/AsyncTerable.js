@@ -59,18 +59,20 @@ AsyncTerable.prototype.next = async function () {
       }
     } finally {
       if (iteratorError !== NO_VALUE) {
+        this._destroy();
         throw iteratorError;
       }
     }
   }
 
+  this._destroy();
   return DONE;
 };
 
 AsyncTerable.prototype.return = async function () {
   if (!this.done) {
-    this.done = true;
     const iterator = this.iterator;
+    this._destroy();
     if (iterator && iterator.return) {
       await iterator.return();
     }

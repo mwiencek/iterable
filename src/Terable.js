@@ -140,18 +140,27 @@ Terable.prototype.next = function () {
       }
     } finally {
       if (iteratorError !== NO_VALUE) {
+        this._destroy();
         throw iteratorError;
       }
     }
   }
 
+  this._destroy();
   return DONE;
+};
+
+Terable.prototype._destroy = function () {
+  this.pipe = null;
+  this.action = null;
+  this.done = true;
+  this.iterator = null;
 };
 
 Terable.prototype.return = function () {
   if (!this.done) {
-    this.done = true;
     const iterator = this.iterator;
+    this._destroy();
     if (iterator && iterator.return) {
       iterator.return();
     }
