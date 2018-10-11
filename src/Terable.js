@@ -52,15 +52,12 @@ export default function makeTerable(type, arg, source) {
     return EMPTY_ITERATOR;
   }
 
-  let ret;
   if (source instanceof Terable) {
-    ret = source;
-    ret.pipe.push({arg, type});
-  } else {
-    ret = new Terable(type, arg, source);
+    source.pipe.push({arg, type});
+    return source;
   }
 
-  return ret;
+  return new Terable(type, arg, source);
 }
 
 function Terable(type, arg, source) {
