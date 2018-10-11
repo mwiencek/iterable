@@ -47,7 +47,6 @@ export function Terable(action) {
   this.pipe = [action];
   this.action = action;
   this.iterator = null;
-  this.step = 0;
   this.done = false;
   this.didTakeMax = false;
 }
@@ -60,7 +59,7 @@ Terable.prototype.pipeValue = function (value) {
   const pipe = this.pipe;
   const pipeLength = pipe.length;
 
-  for (let step = this.step; step < pipeLength; step++) {
+  for (let step = 0; step < pipeLength; step++) {
     const action = pipe[step];
     const arg = action.arg;
 
