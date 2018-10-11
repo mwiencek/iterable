@@ -48,7 +48,6 @@ export function Terable(action) {
   this.action = action;
   this.iterator = null;
   this.done = false;
-  this.didTakeMax = false;
 }
 
 Terable.prototype[Symbol.iterator] = function () {
@@ -76,7 +75,7 @@ Terable.prototype.pipeValue = function (value) {
 
       case TAKE:
         // Note: action.arg can't be <= 0, due to the check in makeTerable.
-        this.didTakeMax = (--action.arg === 0) || this.didTakeMax;
+        this.done = (--action.arg === 0) || this.done;
         break;
 
       case DROP:
@@ -121,7 +120,7 @@ Terable.prototype.next = function () {
 
     let cursor;
     while ((iteratorNormalCompletion = true) &&
-            !this.didTakeMax &&
+            !this.done &&
             (!(iteratorNormalCompletion = (cursor = this.iterator.next()).done))) {
       const value = this.pipeValue(cursor.value);
       if (value === NO_VALUE) {
@@ -134,7 +133,7 @@ Terable.prototype.next = function () {
     iteratorError = err;
   } finally {
     try {
-      if (!iteratorNormalCompletion || this.didTakeMax) {
+      if (!iteratorNormalCompletion || this.done) {
         this.return();
       }
     } finally {
@@ -157,12 +156,10 @@ Terable.prototype._destroy = function () {
 };
 
 Terable.prototype.return = function () {
-  if (!this.done) {
-    const iterator = this.iterator;
-    this._destroy();
-    if (iterator && iterator.return) {
-      iterator.return();
-    }
+  const iterator = this.iterator;
+  this._destroy();
+  if (iterator && iterator.return) {
+    iterator.return();
   }
   return {};
 };

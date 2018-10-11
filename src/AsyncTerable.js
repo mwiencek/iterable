@@ -41,7 +41,7 @@ AsyncTerable.prototype.next = async function () {
 
     let cursor;
     while ((iteratorNormalCompletion = true) &&
-            !this.didTakeMax &&
+            !this.done &&
             (!(iteratorNormalCompletion = (cursor = await this.iterator.next()).done))) {
       const value = this.pipeValue(cursor.value);
       if (value === NO_VALUE) {
@@ -54,7 +54,7 @@ AsyncTerable.prototype.next = async function () {
     iteratorError = err;
   } finally {
     try {
-      if (!iteratorNormalCompletion || this.didTakeMax) {
+      if (!iteratorNormalCompletion || this.done) {
         await this.return();
       }
     } finally {
@@ -70,12 +70,10 @@ AsyncTerable.prototype.next = async function () {
 };
 
 AsyncTerable.prototype.return = async function () {
-  if (!this.done) {
-    const iterator = this.iterator;
-    this._destroy();
-    if (iterator && iterator.return) {
-      await iterator.return();
-    }
+  const iterator = this.iterator;
+  this._destroy();
+  if (iterator && iterator.return) {
+    await iterator.return();
   }
   return {};
 };
