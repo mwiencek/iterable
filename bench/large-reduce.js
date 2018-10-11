@@ -14,16 +14,34 @@ const double = x => x * 2;
 const doubleIt = it.map(double);
 const doubleLodash = _map(double);
 const doubleRamda = R.map(double);
+const composeIt = it.compose(
+  doubleIt,
+  doubleIt,
+  doubleIt,
+  doubleIt,
+  doubleIt,
+);
+const composeLodash = _flowRight(
+  doubleLodash,
+  doubleLodash,
+  doubleLodash,
+  doubleLodash,
+  doubleLodash,
+);
+const composeRamda = R.compose(
+  doubleRamda,
+  doubleRamda,
+  doubleRamda,
+  doubleRamda,
+  doubleRamda,
+);
+const foldIt = it.foldl(sum)(0);
+const foldLodash = _reduce(sum, 0);
+const foldRamda = R.reduce(sum, 0);
 
 (new Benchmark.Suite)
   .add('terable (large reduce)', function () {
-    it.foldl(sum, 0)(it.compose(
-      doubleIt,
-      doubleIt,
-      doubleIt,
-      doubleIt,
-      doubleIt,
-    )(largeList));
+    foldIt(composeIt(largeList));
   })
   .add('iterare (large reduce)', function () {
     iterare.iterate(largeList)
@@ -35,22 +53,10 @@ const doubleRamda = R.map(double);
       .reduce(sum, 0);
   })
   .add('lodash/fp (large reduce)', function () {
-    _reduce(sum, 0)(_flowRight(
-      doubleLodash,
-      doubleLodash,
-      doubleLodash,
-      doubleLodash,
-      doubleLodash,
-    )(largeList));
+    foldLodash(composeLodash(largeList));
   })
   .add('ramda (large reduce)', function () {
-    R.reduce(sum, 0)(R.compose(
-      doubleRamda,
-      doubleRamda,
-      doubleRamda,
-      doubleRamda,
-      doubleRamda,
-    )(largeList));
+    foldRamda(composeRamda(largeList));
   })
   .on('cycle', function (event) {
     console.log(String(event.target));
