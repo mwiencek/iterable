@@ -1,5 +1,7 @@
 // @flow
 
+import asyncMap from '../async/map';
+
 function makeIterator() {
   let counter = 3;
   return {
@@ -20,12 +22,12 @@ function makeIterator() {
     return: function () {
       counter = 0;
       asyncIterable.closeCalls++;
+      return Promise.resolve({});
     },
   };
 }
 
 const asyncIterable = {
-  // $FlowFixMe
   [Symbol.iterator]: makeIterator,
   '@@asyncIterator': makeIterator,
   closeCalls: 0,
@@ -33,8 +35,8 @@ const asyncIterable = {
 
 test('async', async () => {
   let counter = 3;
-  for await (const x of asyncIterable) {
-    expect(x).toBe(counter--);
+  for await (const x of asyncMap(x => x * 2)(asyncIterable)) {
+    expect(x).toBe((counter--) * 2);
   }
   expect(asyncIterable.closeCalls).toBe(0);
   for await (const x of asyncIterable) {

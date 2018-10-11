@@ -43,21 +43,7 @@ import {
  * )(iterable);
  */
 
-export default function makeTerable(action) {
-  if (action.type === TAKE && action.arg <= 0) {
-    return EMPTY_ITERATOR;
-  }
-
-  const source = action.source;
-  if (source instanceof Terable) {
-    source.pipe.push(action);
-    return source;
-  }
-
-  return new Terable(action);
-}
-
-function Terable(action) {
+export function Terable(action) {
   this.pipe = [action];
   this.action = action;
   this.iterator = null;
@@ -116,6 +102,9 @@ Terable.prototype.pipeValue = function (value) {
   return value;
 };
 
+// Modifications to the functions `next`, `return`, or `makeTerable`
+// below should also be carried over to AsyncTerable.js!
+
 Terable.prototype.next = function () {
   if (this.done) {
     return DONE;
@@ -169,3 +158,17 @@ Terable.prototype.return = function () {
   }
   return {};
 };
+
+export default function makeTerable(action) {
+  if (action.type === TAKE && action.arg <= 0) {
+    return EMPTY_ITERATOR;
+  }
+
+  const source = action.source;
+  if (source instanceof Terable) {
+    source.pipe.push(action);
+    return source;
+  }
+
+  return new Terable(action);
+}
