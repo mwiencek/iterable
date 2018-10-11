@@ -63,6 +63,7 @@ export default function makeTerable(type, arg, source) {
 function Terable(type, arg, source) {
   this.pipe = [{arg, type}];
   this.source = source;
+  this.iterator = null;
   this.step = 0;
   this.done = false;
 }
@@ -161,7 +162,7 @@ Terable.prototype.return = function () {
   if (!this.done) {
     this.done = true;
     const iterator = this.iterator;
-    if (iterator.return) {
+    if (iterator && iterator.return) {
       iterator.return();
     }
   }
