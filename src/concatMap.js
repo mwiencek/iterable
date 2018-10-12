@@ -6,10 +6,10 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function concatMap<T, U>(func: (T) => Iterable<U>): (Iterable<T>) => Generator<U, void, void> {
-  return function* (iterable: Iterable<T>): Generator<U, void, void> {
-    for (const value of iterable) {
-      yield* func(value);
-    }
+import {Concat} from './concat';
+
+export default function concatMap<T, U>(func: (T) => Iterable<U>): (Iterable<T>) => Iterator<U> {
+  return function (iterable: Iterable<T>): Iterator<U> {
+    return (((new Concat<T, U>(iterable, func)): any): Iterator<U>);
   }
 }
