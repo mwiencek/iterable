@@ -7,7 +7,6 @@
 
 import {
   DONE,
-  EMPTY_ITERATOR,
   NO_VALUE,
   DROP,
   FILTER,
@@ -73,7 +72,6 @@ Terable.prototype.pipeValue = function (value) {
         break;
 
       case TAKE:
-        // Note: action.arg can't be <= 0, due to the check in makeTerable.
         this.done = (--action.arg === 0) || this.done;
         break;
 
@@ -164,10 +162,6 @@ Terable.prototype.return = function () {
 };
 
 export default function makeTerable(action) {
-  if (action.type === TAKE && action.arg <= 0) {
-    return EMPTY_ITERATOR;
-  }
-
   const source = action.source;
   if (source instanceof Terable) {
     source.pipe.push(action);

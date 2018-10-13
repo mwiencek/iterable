@@ -7,7 +7,6 @@
 
 import {
   DONE,
-  EMPTY_ITERATOR,
   NO_VALUE,
   DROP,
   FILTER,
@@ -80,10 +79,6 @@ AsyncTerable.prototype.return = async function () {
 };
 
 export default function makeAsyncTerable(action) {
-  if (action.type === TAKE && action.arg <= 0) {
-    return EMPTY_ITERATOR;
-  }
-
   const source = action.source;
   if (source instanceof AsyncTerable || source instanceof Terable) {
     source.pipe.push(action);
