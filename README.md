@@ -13,11 +13,93 @@ While lodash is an incredible library for what it does, it's not inteded to supp
 
 As an alternative, you may also want to look into [iterare](https://github.com/felixfbecker/iterare) if you prefer method chaining and TypeScript support (though the functionality doesn't overlap completely).
 
+## Setup
+
+```sh
+yarn add terable
+```
+
+Flow types are kept in the published source code for ease of use, but if you don't use Flow and don't want to use Babel to strip the types, you can import from `terable/js` instead.
+
+```JavaScript
+// These have Flow types in the source
+import * as it from 'terable';
+
+// These have no Flow types
+import * as it from 'terable/js';
+// You probably want require + terable/js in Node unless using esm + @babel/register
+const it = require('terable/js');
+
+// You can also import only the function you need
+import map from 'terable/map';
+import map from 'terable/js/map';
+// Node example
+const map = require('terable/js/map').default;
+```
+
+Other than stripping Flow types under `terable/js`, no other transformations are made to the published source code. This means that if you're targeting older browsers, it's up to you to transpile Terable into something usable. (But you should already be doing that for other libraries anyway.)
+
+Note however that generators aren't used in the implementation of Terable, so you don't need the regenerator runtime to use this library.
+
 ## API
 
-TODO
+All functions are curried.
 
-In the meantime, you can [look at the tests for examples](https://github.com/mwiencek/terable/blob/master/src/test).
+Most return values are iterables which *can't be reused* (i.e. iterated more than once), though some functions return a `Set` or `Map` which can of course be reused.
+
+For usage examples, [have a look at the tests](https://github.com/mwiencek/terable/blob/master/src/test).
+
+```
+all : <T>(test: (T) => mixed) => (Iterable<T>) => boolean
+
+any : <T>(test: (T) => mixed) => (Iterable<T>) => boolean
+
+compact : <T>(Iterable<T>) => Iterator<$NonMaybeType<T>>
+
+concat : <T>(Iterable <Iterable<T>>) => Iterator<T>
+
+concatMap : <T, U>(func: (T) => Iterable<U>) => (Iterable<T>) => Iterator<U>
+
+countBy : <T, K>(func: (T) => K) => (Iterable<T>) => Map<K, number>
+
+difference : <T>(sets: Iterable<Iterable<T>>) => Set<T>
+
+drop : (count: number) => <T>(Iterable<T>) => Iterator<T>
+
+each : <T>(func: (T) => mixed) => (Iterable<T>) => void
+
+filter : <T, U>(test: ((T | U)) => mixed) => (Iterable<(T | U)>) => Iterator<U>
+
+find : <T>(func: (T) => mixed) => (Iterable<T>) => T
+
+foldl : <T, U>(func: (U, T) => U) => (U) => (Iterable<T>) => U
+
+groupBy : <T, K>(func: (T) => K) => (Iterable<T>) => Map<K, Array<T>>
+
+head : <T>(Iterable<T>) => T
+
+intersect : <T>(sets: Iterable<Iterable<T>>) => Set<T>
+
+join : (sep: string) => (Iterable<string>) => string
+
+keyBy : <T, K>(func: (T) => K) => (Iterable<T>) => Map<K, T>
+
+map : <T, U>(func: (T) => U) => (Iterable<T>) => Iterator<U>
+
+sort : <T>(Iterable<T>) => Iterator<T>
+
+sortBy : <T, K>(func: (T) => K) => (Iterable<T>) => Iterator<T>
+
+take : (count: number) => <T>(Iterable<T>) => Iterator<T>
+
+toArray : <T>(Iterable<T>) => Array<T>
+
+toObject : <K, T>(entries: Iterable<[K, T]>) => {[K]: T}
+
+union : <T>(sets: Iterable<Iterable<T>>) => Set<T>
+
+uniqBy : <T, U>(func: (T) => U) => (Iterable<T>) => Iterator<T>
+```
 
 ## Benchmarks
 
