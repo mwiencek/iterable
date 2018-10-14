@@ -9,8 +9,8 @@
 import {MAP} from './constants';
 import makeTerable from './Terable';
 
-export default function map<T, U>(func: (T) => U): (Iterable<T>) => Iterator<U> {
-  return function (iterable: Iterable<T>): Iterator<U> {
+export default function map<T, U>(func: (T) => U): (Iterable<T>) => Iterable<U> {
+  return function (iterable: Iterable<T>): Iterable<U> {
     return makeTerable({type: MAP, arg: func, source: iterable});
   };
 }

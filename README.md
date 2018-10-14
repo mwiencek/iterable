@@ -54,21 +54,21 @@ all : <T>(test: (T) => mixed) => (Iterable<T>) => boolean
 
 any : <T>(test: (T) => mixed) => (Iterable<T>) => boolean
 
-compact : <T>(Iterable<T>) => Iterator<$NonMaybeType<T>>
+compact : <T>(Iterable<T>) => Iterable<$NonMaybeType<T>>
 
-concat : <T>(Iterable <Iterable<T>>) => Iterator<T>
+concat : <T>(Iterable <Iterable<T>>) => Iterable<T>
 
-concatMap : <T, U>(func: (T) => Iterable<U>) => (Iterable<T>) => Iterator<U>
+concatMap : <T, U>(func: (T) => Iterable<U>) => (Iterable<T>) => Iterable<U>
 
 countBy : <T, K>(func: (T) => K) => (Iterable<T>) => Map<K, number>
 
 difference : <T>(sets: Iterable<Iterable<T>>) => Set<T>
 
-drop : (count: number) => <T>(Iterable<T>) => Iterator<T>
+drop : (count: number) => <T>(Iterable<T>) => Iterable<T>
 
 each : <T>(func: (T) => mixed) => (Iterable<T>) => void
 
-filter : <T, U>(test: ((T | U)) => mixed) => (Iterable<(T | U)>) => Iterator<U>
+filter : <T, U>(test: ((T | U)) => mixed) => (Iterable<(T | U)>) => Iterable<U>
 
 find : <T>(func: (T) => mixed) => (Iterable<T>) => T
 
@@ -84,13 +84,13 @@ join : (sep: string) => (Iterable<string>) => string
 
 keyBy : <T, K>(func: (T) => K) => (Iterable<T>) => Map<K, T>
 
-map : <T, U>(func: (T) => U) => (Iterable<T>) => Iterator<U>
+map : <T, U>(func: (T) => U) => (Iterable<T>) => Iterable<U>
 
-sort : <T>(Iterable<T>) => Iterator<T>
+sort : <T>(Iterable<T>) => Iterable<T>
 
-sortBy : <T, K>(func: (T) => K) => (Iterable<T>) => Iterator<T>
+sortBy : <T, K>(func: (T) => K) => (Iterable<T>) => Iterable<T>
 
-take : (count: number) => <T>(Iterable<T>) => Iterator<T>
+take : (count: number) => <T>(Iterable<T>) => Iterable<T>
 
 toArray : <T>(Iterable<T>) => Array<T>
 
@@ -98,7 +98,7 @@ toObject : <K, T>(entries: Iterable<[K, T]>) => {[K]: T}
 
 union : <T>(sets: Iterable<Iterable<T>>) => Set<T>
 
-uniqBy : <T, U>(func: (T) => U) => (Iterable<T>) => Iterator<T>
+uniqBy : <T, U>(func: (T) => U) => (Iterable<T>) => Iterable<T>
 ```
 
 ## Benchmarks

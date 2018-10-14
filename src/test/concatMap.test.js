@@ -81,12 +81,10 @@ test('IteratorClose', () => {
   }
   expect(c.closeCalls).toBe(2);
 
-  /* FIXME: What should `closeCalls` be here?
   for (const x of concatMap(x => compact([x, x * 2]))(c)) {
     break;
   }
   expect(c.closeCalls).toBe(3);
-  */
 });
 
 test('iterator is an iterable', () => {

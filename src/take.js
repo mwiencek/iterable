@@ -10,7 +10,7 @@ import {EMPTY_ITERATOR, TAKE} from './constants';
 import makeTerable from './Terable';
 
 export default function take(count: number) {
-  return function <T>(iterable: Iterable<T>): Iterator<T> {
+  return function <T>(iterable: Iterable<T>): Iterable<T> {
     if (count <= 0) {
       return EMPTY_ITERATOR;
     }

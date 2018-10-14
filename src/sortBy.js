@@ -15,7 +15,7 @@ const cmp = (a, b) => {
   return result ? result : (a[0] - b[0]);
 };
 
-function doSortBy<T, K>(func: (T) => K, iterable: Iterable<T>): Iterator<T> {
+function doSortBy<T, K>(func: (T) => K, iterable: Iterable<T>): Iterable<T> {
   const array = Array.isArray(iterable) ? iterable : toArray(iterable);
   const size = array.length;
 
@@ -31,8 +31,8 @@ function doSortBy<T, K>(func: (T) => K, iterable: Iterable<T>): Iterator<T> {
   return map<KP, T>((x: KP) => array[x[0]])(keys);
 }
 
-export default function sortBy<T, K>(func: (T) => K): (Iterable<T>) => Iterator<T> {
-  return function (iterable: Iterable<T>): Iterator<T> {
+export default function sortBy<T, K>(func: (T) => K): (Iterable<T>) => Iterable<T> {
+  return function (iterable: Iterable<T>): Iterable<T> {
     return doSortBy<T, K>(func, iterable);
   };
 }

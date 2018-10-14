@@ -10,7 +10,7 @@ import {DROP} from './constants';
 import makeTerable from './Terable';
 
 export default function drop(count: number) {
-  return function <T>(iterable: Iterable<T>): Iterator<T> {
+  return function <T>(iterable: Iterable<T>): Iterable<T> {
     return makeTerable({type: DROP, arg: count, source: iterable});
   };
 }
