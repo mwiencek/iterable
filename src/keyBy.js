@@ -6,7 +6,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function keyBy<T, K>(func: (T) => K) {
+export default function keyBy<T, K>(func: (T) => K): (Iterable<T>) => Map<K, T> {
   return function (iterable: Iterable<T>): Map<K, T> {
     let keyed = new Map();
     for (const value of iterable) {

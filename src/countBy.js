@@ -6,7 +6,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function countBy<T, K>(func: (T) => K) {
+export default function countBy<T, K>(func: (T) => K): (Iterable<T>) => Map<K, number> {
   return function (iterable: Iterable<T>): Map<K, number> {
     let groups = new Map();
     for (const value of iterable) {

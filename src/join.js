@@ -6,7 +6,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function join(sep: string) {
+export default function join(sep: string): (Iterable<string>) => string {
   return function (iterable: Iterable<string>) {
     let joined = '';
     for (const value of iterable) {
