@@ -6,7 +6,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-const intersect = <T>(sets: Iterable<Iterable<T>>): Set<T> => {
+export default function intersect<T>(sets: Iterable<Iterable<T>>): Set<T> {
   let valueSets = new Map();
   let setCount = 0;
   for (const subset of sets) {
@@ -29,6 +29,4 @@ const intersect = <T>(sets: Iterable<Iterable<T>>): Set<T> => {
     }
   }
   return result;
-};
-
-export default intersect;
+}
