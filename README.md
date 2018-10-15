@@ -91,6 +91,8 @@ toObject : <K, T>(entries: Iterable<[K, T]>) => {[K]: T}
 
 union : <T>(sets: Iterable<Iterable<T>>) => Set<T>
 
+uniq : <T>(Iterable<T>) => Iterable<T>
+
 uniqBy : <T, U>(func: (T) => U) => (Iterable<T>) => Iterable<T>
 ```
 
