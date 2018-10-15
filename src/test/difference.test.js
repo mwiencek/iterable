@@ -4,6 +4,7 @@ import {
   difference,
   toArray,
 } from '../';
+import {closeable, throws} from './util';
 
 test('difference', () => {
   const setA = [0, 1, 2, 3, 4];
@@ -32,4 +33,32 @@ test('difference', () => {
 
   expect(toArray(difference([]))).toEqual([]);
   expect(toArray(difference([[], []]))).toEqual([]);
+});
+
+test('IteratorClose', () => {
+  let closeCalls = 0;
+  const c = {
+    [Symbol.iterator]: function () {
+      return c;
+    },
+    next: function () {
+      const d = {
+        [Symbol.iterator]: function () {
+          return d;
+        },
+        next: function () {
+          throw new Error();
+        },
+      };
+      return d;
+    },
+    return: function () {
+      closeCalls++;
+      return {done: true};
+    },
+  };
+  expect(() => {
+    difference((c: any));
+  }).toThrow();
+  expect(closeCalls).toBe(1);
 });
