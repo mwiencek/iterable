@@ -98,7 +98,7 @@ Terable.prototype.pipeValue = function (value) {
 };
 
 // Modifications to the functions `next`, `return`, or `makeTerable`
-// below should also be carried over to AsyncTerable.js!
+// below should also be carried over to AsyncTerable.js, if applicable.
 
 Terable.prototype.next = function () {
   if (this.done) {

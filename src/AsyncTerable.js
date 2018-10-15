@@ -17,8 +17,35 @@ import {
 } from './constants';
 import {Terable} from './Terable';
 
+const PROMISE_DONE = Promise.resolve(DONE);
+
+function handleNext(cursor) {
+  if (cursor.done) {
+    this._destroy();
+    return PROMISE_DONE;
+  }
+  const value = this.pipeValue(cursor.value);
+  if (value === NO_VALUE) {
+    return getNext();
+  }
+  return {value: value, done: false};
+}
+
+function handleError(err) {
+  const rejection = Promise.reject(err);
+  const reject = () => rejection;
+  try {
+    return this.return().then(reject, reject);
+  } catch (err2) {
+    return rejection;
+  }
+}
+
 export function AsyncTerable(action) {
   Terable.call(this, action);
+
+  this._handleNext = handleNext.bind(this);
+  this._handleError = handleError.bind(this);
 }
 
 AsyncTerable.prototype = Object.assign({}, Terable.prototype);
@@ -29,14 +56,10 @@ AsyncTerable.prototype[Symbol.asyncIterator] = function () {
 
 delete AsyncTerable.prototype[Symbol.iterator];
 
-AsyncTerable.prototype.next = async function () {
+AsyncTerable.prototype.next = function ()  {
   if (this.done) {
-    return DONE;
+    return PROMISE_DONE;
   }
-
-  // Reproduce Babel's for...of semantics.
-  let iteratorNormalCompletion = true;
-  let iteratorError = NO_VALUE;
 
   try {
     if (!this.iterator) {
@@ -45,43 +68,22 @@ AsyncTerable.prototype.next = async function () {
       head.source = null;
     }
 
-    let cursor;
-    while ((iteratorNormalCompletion = true) &&
-            !this.done &&
-            (!(iteratorNormalCompletion = (cursor = await this.iterator.next()).done))) {
-      const value = this.pipeValue(cursor.value);
-      if (value === NO_VALUE) {
-        continue;
-      }
-      iteratorNormalCompletion = true;
-      return {value: value, done: false};
-    }
+    return this.iterator.next().then(
+      this._handleNext,
+      this._handleError,
+    );
   } catch (err) {
-    iteratorError = err;
-  } finally {
-    try {
-      if (!iteratorNormalCompletion || this.done) {
-        await this.return();
-      }
-    } finally {
-      if (iteratorError !== NO_VALUE) {
-        this._destroy();
-        throw iteratorError;
-      }
-    }
+    return this._handleError(err);
   }
-
-  this._destroy();
-  return DONE;
 };
 
-AsyncTerable.prototype.return = async function () {
+AsyncTerable.prototype.return = function () {
   const iterator = this.iterator;
   this._destroy();
   if (iterator && iterator.return) {
-    await iterator.return();
+    return iterator.return();
   }
-  return DONE;
+  return PROMISE_DONE;
 };
 
 export default function makeAsyncTerable(action) {
