@@ -2,18 +2,22 @@
 
 import asyncMap from '../async/map';
 
-function makeIterator() {
-  let counter = 3;
+function makeAsyncIterator(array) {
+  let index = 0;
   return {
+    closeCalls: 0,
     // $FlowFixMe
     [Symbol.asyncIterator]: function () { return this },
     next: function () {
-      const _counter = counter;
-      counter--;
+      const thisIndex = index++;
       return new Promise((resolve, reject) => {
         setTimeout(function () {
-          if (_counter) {
-            resolve({value: _counter, done: false});
+          if (thisIndex < array.length) {
+            let value = array[thisIndex];
+            if (typeof value === 'function') {
+              value = value();
+            }
+            resolve({value, done: false});
           } else {
             resolve({done: true});
           }
@@ -21,29 +25,25 @@ function makeIterator() {
       });
     },
     return: function () {
-      counter = 0;
-      asyncIterable.closeCalls++;
-      return Promise.resolve({});
+      this.closeCalls++;
+      return Promise.resolve({done: true});
     },
   };
 }
 
-const asyncIterable = {
-  // $FlowFixMe
-  [Symbol.asyncIterator]: makeIterator,
-  closeCalls: 0,
-};
-
 test('async', async () => {
   let counter = 3;
+  let it = makeAsyncIterator([3, 2, 1]);
   // $FlowFixMe
-  for await (const x of asyncMap(x => x * 2)(asyncIterable)) {
+  for await (const x of asyncMap(x => x * 2)(it)) {
     expect(x).toBe((counter--) * 2);
   }
-  expect(asyncIterable.closeCalls).toBe(0);
+  expect(it.closeCalls).toBe(0);
+
+  it = makeAsyncIterator([1, 2]);
   // $FlowFixMe
-  for await (const x of asyncIterable) {
+  for await (const x of it) {
     break;
   }
-  expect(asyncIterable.closeCalls).toBe(1);
+  expect(it.closeCalls).toBe(1);
 });
