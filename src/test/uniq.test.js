@@ -15,7 +15,7 @@ test('uniq', () => {
   expect(toArray(_uniq)).toEqual([1, 2, 3]);
   source.push(4, 4);
   // Iterator is done
-  expect(_uniq.next()).toEqual({done: true});
+  expect((_uniq: any).next()).toEqual({done: true});
   expect(toArray(uniq(source))).toEqual([1, 2, 3, 4]);
 
   // Lazy iterator creation

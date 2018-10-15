@@ -104,6 +104,6 @@ Concat.prototype.return = function () {
   return {};
 };
 
-export default function concat<T>(iterable: Iterable<Iterable<T>>): Iterator<T> {
-  return (((new Concat<Iterable<T>, empty>(iterable, null)): any): Iterator<T>);
+export default function concat<T>(iterable: Iterable<Iterable<T>>): Iterable<T> {
+  return (((new Concat<Iterable<T>, empty>(iterable, null)): any): Iterable<T>);
 }

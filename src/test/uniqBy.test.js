@@ -44,7 +44,7 @@ test('uniqBy', () => {
     {key: 'd', value: 7},
   );
   // Iterator is done
-  expect(iterable.next()).toEqual({done: true});
+  expect((iterable: any).next()).toEqual({done: true});
   expect(toArray(_uniqBy(items))).toEqual([
     {key: 'a', value: 3},
     {key: 'c', value: 5},
