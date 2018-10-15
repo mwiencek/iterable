@@ -12,6 +12,8 @@ import mediums from './mediums';
 import {closeable, throws} from './util';
 
 test('compose', () => {
+  expect(toArray(compose(map(x => x))([5]))).toEqual([5]);
+
   const newIds = compose(
     uniq,
     compact,
