@@ -23,6 +23,12 @@ export function AsyncTerable(action) {
 
 AsyncTerable.prototype = Object.assign({}, Terable.prototype);
 
+AsyncTerable.prototype[Symbol.asyncIterator] = function () {
+  return this;
+};
+
+delete AsyncTerable.prototype[Symbol.iterator];
+
 AsyncTerable.prototype.next = async function () {
   if (this.done) {
     return DONE;
@@ -35,7 +41,7 @@ AsyncTerable.prototype.next = async function () {
   try {
     if (!this.iterator) {
       const head = this.pipe[0];
-      this.iterator = head.source[Symbol.iterator]();
+      this.iterator = head.source[Symbol.asyncIterator]();
       head.source = null;
     }
 
@@ -80,7 +86,7 @@ AsyncTerable.prototype.return = async function () {
 
 export default function makeAsyncTerable(action) {
   const source = action.source;
-  if (source instanceof AsyncTerable || source instanceof Terable) {
+  if (source instanceof AsyncTerable) {
     source.pipe.push(action);
     return source;
   }
