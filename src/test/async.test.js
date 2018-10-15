@@ -34,7 +34,7 @@ const asyncIterable = {
   closeCalls: 0,
 };
 
-test.skip('async', async () => {
+test('async', async () => {
   let counter = 3;
   // $FlowFixMe
   for await (const x of asyncMap(x => x * 2)(asyncIterable)) {
