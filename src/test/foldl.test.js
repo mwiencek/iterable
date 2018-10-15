@@ -54,7 +54,7 @@ test('foldl', () => {
 test('IteratorClose', () => {
   const c = closeable();
   expect(() => {
-    for (const x of (foldl(throws)(null)(c): any)) {}
+    foldl(throws)(null)(c);
   }).toThrow();
   expect(c.closeCalls).toBe(1);
 });

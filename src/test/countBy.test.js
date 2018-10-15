@@ -56,7 +56,7 @@ test('countBy', () => {
 test('IteratorClose', () => {
   const c = closeable();
   expect(() => {
-    for (const x of countBy(throws)(c)) {}
+    countBy(throws)(c);
   }).toThrow();
   expect(c.closeCalls).toBe(1);
 });
