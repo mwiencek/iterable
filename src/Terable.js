@@ -158,7 +158,7 @@ Terable.prototype.return = function () {
   if (iterator && iterator.return) {
     iterator.return();
   }
-  return {};
+  return DONE;
 };
 
 export default function makeTerable(action) {

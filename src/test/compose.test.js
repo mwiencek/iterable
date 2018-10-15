@@ -38,4 +38,6 @@ test('IteratorClose', () => {
     break;
   }
   expect(c.closeCalls).toBe(2);
+
+  expect((compose(map(x => x))([]): any).return()).toEqual({done: true});
 });

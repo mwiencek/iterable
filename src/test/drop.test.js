@@ -94,6 +94,8 @@ test('IteratorClose', () => {
     break;
   }
   expect(c.closeCalls).toBe(1);
+
+  expect((drop(1)([]): any).return()).toEqual({done: true});
 });
 
 test('iterator is an iterable', () => {

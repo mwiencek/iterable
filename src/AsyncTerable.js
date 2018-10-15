@@ -81,7 +81,7 @@ AsyncTerable.prototype.return = async function () {
   if (iterator && iterator.return) {
     await iterator.return();
   }
-  return {};
+  return DONE;
 };
 
 export default function makeAsyncTerable(action) {

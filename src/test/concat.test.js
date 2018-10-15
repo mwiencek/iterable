@@ -78,4 +78,6 @@ test('iterator is an iterable', () => {
   for (const x of it) {
     expect(x).toBe(2);
   }
+
+  expect((concat([]): any).return()).toEqual({done: true});
 });

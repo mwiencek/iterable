@@ -43,6 +43,8 @@ test('IteratorClose', () => {
     break;
   }
   expect(c.closeCalls).toBe(2);
+
+  expect((map(x => x)([]): any).return()).toEqual({done: true});
 });
 
 test('iterator is an iterable', () => {

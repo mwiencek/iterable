@@ -163,6 +163,8 @@ test('IteratorClose', () => {
 
   for (const x of take(2)(c)) {}
   expect(c.closeCalls).toBe(1);
+
+  expect((take(1)([]): any).return()).toEqual({done: true});
 });
 
 test('iterator is an iterable', () => {

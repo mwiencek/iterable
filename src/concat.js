@@ -101,7 +101,7 @@ Concat.prototype.return = function () {
     }
   }
 
-  return {};
+  return DONE;
 };
 
 export default function concat<T>(iterable: Iterable<Iterable<T>>): Iterable<T> {
