@@ -1,0 +1,4 @@
+// @flow
+
+declare export default function each<T>(func: (T) => any):
+  (iterable: Iterable<T>) => void;

@@ -6,12 +6,12 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 yarn install
 
-mkdir -p dist/{js/async,js/util,async,util}
+mkdir -p dist/{async,util}
 
 pushd src
-../node_modules/.bin/babel *.js --out-dir ../dist/js/
-../node_modules/.bin/babel async/*.js --out-dir ../dist/js/async/
-../node_modules/.bin/babel util/*.js --out-dir ../dist/js/util/
+../node_modules/.bin/babel *.js --out-dir ../dist/
+../node_modules/.bin/babel async/*.js --out-dir ../dist/async/
+../node_modules/.bin/babel util/*.js --out-dir ../dist/util/
 popd
 
 cp \
@@ -19,7 +19,6 @@ cp \
     LICENSE \
     package.json \
     README.md \
-    src/*.js \
+    src/flow/*.js.flow \
     dist/
-cp src/async/*.js dist/async/
-cp src/util/*.js dist/util/
+cp src/flow/async/*.js.flow dist/async/

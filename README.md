@@ -19,27 +19,20 @@ As an alternative, you may also want to look into [iterare](https://github.com/f
 yarn add terable
 ```
 
-Flow types are kept in the published source code for ease of use, but if you don't use Flow and don't want to use Babel to strip the types, you can import from `terable/js` instead.
-
 ```JavaScript
-// These have Flow types in the source
 import * as it from 'terable';
+// In Node
+const it = require('terable');
 
-// These have no Flow types
-import * as it from 'terable/js';
-// You probably want require + terable/js in Node unless using esm + @babel/register
-const it = require('terable/js');
-
-// You can also import only the function you need
+// You can also import only the functions you need
 import map from 'terable/map';
-import map from 'terable/js/map';
-// Node example
-const map = require('terable/js/map').default;
+// In Node (note it's the .default export)
+const map = require('terable/map').default;
 ```
 
-Other than stripping Flow types under `terable/js`, no other transformations are made to the published source code. This means that if you're targeting older browsers, it's up to you to transpile Terable into something usable. (But you should already be doing that for other libraries anyway.)
+The published source is transpiled to support Node 6 and IE11. Generators aren't used, so you don't need the regenerator runtime to use this library.
 
-Note however that generators aren't used in the implementation of Terable, so you don't need the regenerator runtime to use this library.
+Flow types are included with the package as separate `*.js.flow` files which are picked up by Flow automatically.
 
 ## API
 

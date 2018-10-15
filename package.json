@@ -21,6 +21,7 @@
     "babel-core": "^7.0.0-bridge",
     "babel-jest": "23.6.0",
     "benchmark": "2.1.4",
+    "fast-async": "7",
     "flow-bin": "0.83.0",
     "immutable": "4.0.0-rc.10",
     "iterare": "1.1.1",

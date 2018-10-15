@@ -1,0 +1,5 @@
+// @flow
+
+declare export default function union<T>(
+  sets: Iterable<Iterable<T>>,
+): Set<T>;

@@ -5,9 +5,19 @@
   "presets": [
     ["@babel/preset-env", {
       "targets": {
-        "node": "10"
-      }
+        "ie": "11",
+        "node": "6"
+      },
+      "exclude": [
+        "transform-async-to-generator",
+        "transform-regenerator"
+      ]
     }],
     "@babel/preset-flow"
+  ],
+  "plugins": [
+    ["module:fast-async", {
+      "spec": true
+    }]
   ]
 }

@@ -1,0 +1,4 @@
+// @flow
+
+declare export default function countBy<T, K>(func: (T) => K):
+  (iterable: Iterable<T>) => Map<K, number>;

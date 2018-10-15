@@ -1,0 +1,5 @@
+// @flow
+
+declare export default function intersect<T>(
+  sets: Iterable<Iterable<T>>,
+): Set<T>;
