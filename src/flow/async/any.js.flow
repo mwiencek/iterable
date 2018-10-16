@@ -1,0 +1,4 @@
+// @flow
+
+declare export default function any<T>(test: (T) => mixed):
+  (iterable: AsyncIterable<T>) => Promise<boolean>;
