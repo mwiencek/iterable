@@ -5,7 +5,7 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export const DONE = Object.freeze({done: true});
+export const DONE = Object.freeze({done: true, value: undefined});
 
 export const EMPTY_ITERATOR = Object.freeze({
   [Symbol.iterator]: () => EMPTY_ITERATOR,
