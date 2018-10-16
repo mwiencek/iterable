@@ -11,6 +11,7 @@ module.exports = function (api) {
         ie: '11',
         node: '6',
       },
+      useBuiltIns: process.env.NODE_ENV === 'test' ? 'usage' : false,
     }],
     '@babel/preset-flow',
   ];
