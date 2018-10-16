@@ -27,8 +27,7 @@ test('compose', () => {
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
 
   // Iterator is done
-  // $FlowFixMe
-  const iterator: any = newIds[SYMBOL_ITERATOR]();
+  const iterator = newIds[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
 });
 
@@ -43,5 +42,5 @@ test('IteratorClose', () => {
   }
   expect(c.closeCalls).toBe(2);
 
-  expect((compose(map(x => x))([]): any).return()).toEqual({done: true});
+  expect(compose(map(x => x))([]).return()).toEqual({done: true});
 });

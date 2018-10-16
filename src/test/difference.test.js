@@ -51,7 +51,7 @@ test('IteratorClose', () => {
           throw new Error();
         },
       };
-      return d;
+      return (d: any);
     },
     return: function () {
       closeCalls++;
@@ -59,7 +59,7 @@ test('IteratorClose', () => {
     },
   };
   expect(() => {
-    difference((c: any));
+    difference(c);
   }).toThrow();
   expect(closeCalls).toBe(1);
 });

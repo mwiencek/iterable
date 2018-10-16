@@ -70,7 +70,6 @@ test('drop', () => {
 
   // Manual iteration
   const iterable = drop(2)(array);
-  // $FlowFixMe
   const iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({value: 3, done: false});
   expect(iterator.next()).toEqual({done: true});
@@ -78,7 +77,6 @@ test('drop', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(drop(2));
-  // $FlowFixMe
   badMap(lazySpy(array))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -96,11 +94,10 @@ test('IteratorClose', () => {
   }
   expect(c.closeCalls).toBe(1);
 
-  expect((drop(1)([]): any).return()).toEqual({done: true});
+  expect(drop(1)([]).return()).toEqual({done: true});
 });
 
 test('iterator is an iterable', () => {
-  // $FlowFixMe
   const it = drop(1)([1, 2, 3])[SYMBOL_ITERATOR]();
 
   expect(it[SYMBOL_ITERATOR]()).toBe(it);

@@ -7,9 +7,10 @@
  */
 
 import {Concat} from './concat';
+import type {Terable} from './types';
 
-export default function concatMap<T, U>(func: (T) => Iterable<U>): (Iterable<T>) => Iterable<U> {
-  return function (iterable: Iterable<T>): Iterable<U> {
-    return (((new Concat<T, U>(iterable, func)): any): Iterable<U>);
+export default function concatMap<T, U>(func: (T) => Iterable<U>): (Iterable<T>) => Terable<U> {
+  return function (iterable: Iterable<T>): Terable<U> {
+    return (((new Concat<T, U>(iterable, func)): any): Terable<U>);
   }
 }

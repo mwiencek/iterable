@@ -39,13 +39,11 @@ test('take', () => {
   ).toEqual([1]);
 
   // Iterator is done
-  // $FlowFixMe
   const iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
   const lazySpy = spyFactory(take(1));
-  // $FlowFixMe
   badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 
@@ -165,11 +163,10 @@ test('IteratorClose', () => {
   for (const x of take(2)(c)) {}
   expect(c.closeCalls).toBe(1);
 
-  expect((take(1)([]): any).return()).toEqual({done: true});
+  expect(take(1)([]).return()).toEqual({done: true});
 });
 
 test('iterator is an iterable', () => {
-  // $FlowFixMe
   const it = take(2)([1, 2, 3])[SYMBOL_ITERATOR]();
 
   expect(it[SYMBOL_ITERATOR]()).toBe(it);

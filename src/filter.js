@@ -8,9 +8,10 @@
 
 import {FILTER} from './constants';
 import makeTerable from './Terable';
+import type {Terable} from './types';
 
-export default function filter<T, U>(test: (T | U) => mixed): Iterable<T | U> => Iterable<U> {
-  return function (iterable: Iterable<T | U>): Iterable<U> {
+export default function filter<T, U>(test: (T | U) => mixed): Iterable<T | U> => Terable<U> {
+  return function (iterable: Iterable<T | U>): Terable<U> {
     return makeTerable({type: FILTER, arg: test, source: iterable});
   };
 }

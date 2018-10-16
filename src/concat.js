@@ -11,6 +11,7 @@ import {
   NO_VALUE,
   SYMBOL_ITERATOR,
 } from './constants';
+import type {Terable} from './types';
 
 export function Concat<T, U>(
   source: Iterable<T>,
@@ -107,6 +108,6 @@ Concat.prototype.return = function () {
   return DONE;
 };
 
-export default function concat<T>(iterable: Iterable<Iterable<T>>): Iterable<T> {
-  return (((new Concat<Iterable<T>, empty>(iterable, null)): any): Iterable<T>);
+export default function concat<T>(iterable: Iterable<Iterable<T>>): Terable<T> {
+  return (((new Concat<Iterable<T>, empty>(iterable, null)): any): Terable<T>);
 }

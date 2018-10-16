@@ -14,6 +14,7 @@ export const SYMBOL_ASYNC_ITERATOR = ((Symbol: any).asyncIterator: '@@asyncItera
 export const EMPTY_ITERATOR = Object.freeze({
   [SYMBOL_ITERATOR]: () => EMPTY_ITERATOR,
   next: () => DONE,
+  return: () => DONE,
 });
 
 export const NO_VALUE = Symbol();

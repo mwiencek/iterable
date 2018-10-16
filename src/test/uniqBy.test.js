@@ -45,7 +45,7 @@ test('uniqBy', () => {
     {key: 'd', value: 7},
   );
   // Iterator is done
-  expect((iterable: any).next()).toEqual({done: true});
+  expect(iterable.next()).toEqual({done: true});
   expect(toArray(_uniqBy(items))).toEqual([
     {key: 'a', value: 3},
     {key: 'c', value: 5},
@@ -54,7 +54,6 @@ test('uniqBy', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(uniqBy(badProp));
-  // $FlowFixMe
   badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -72,7 +71,6 @@ test('IteratorClose', () => {
 });
 
 test('iterator is an iterable', () => {
-  // $FlowFixMe
   const it = uniqBy(x => x)([1, 1, 2, 2])[SYMBOL_ITERATOR]();
 
   expect(it[SYMBOL_ITERATOR]()).toBe(it);

@@ -56,7 +56,6 @@ test('sortBy', () => {
 });
 
 test('iterator is an iterable', () => {
-  // $FlowFixMe
   const it = sortBy(x => x)([2, 1])[SYMBOL_ITERATOR]();
 
   expect(it[SYMBOL_ITERATOR]()).toBe(it);

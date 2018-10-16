@@ -8,7 +8,8 @@
 
 import {FILTER} from './constants';
 import makeTerable from './Terable';
+import type {Terable} from './types';
 
-export default function compact<T>(iterable: Iterable<T>): Iterable<$NonMaybeType<T>> {
+export default function compact<T>(iterable: Iterable<T>): Terable<$NonMaybeType<T>> {
   return makeTerable({type: FILTER, arg: Boolean, source: iterable});
 }

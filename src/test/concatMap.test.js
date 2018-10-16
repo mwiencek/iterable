@@ -65,7 +65,6 @@ test('concatMap', () => {
 
   // Lazy iterator creation
   const lazySpy = spyFactory(concatMap(badProp));
-  // $FlowFixMe
   badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -87,13 +86,12 @@ test('IteratorClose', () => {
   }
   expect(c.closeCalls).toBe(3);
 
-  expect((concatMap(x => [])([]): any).return()).toEqual({done: true});
+  expect(concatMap(x => [])([]).return()).toEqual({done: true});
 });
 
 test('iterator is an iterable', () => {
   const it = concatMap(x => [x + 1])([1, 2]);
 
-  // $FlowFixMe
   expect(it[SYMBOL_ITERATOR]()).toBe(it);
 
   for (const x of it) {

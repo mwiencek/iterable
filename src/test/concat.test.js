@@ -33,13 +33,11 @@ test('concat', () => {
   expect(toArray(iterable)).toEqual([[0], [], 1]);
 
   // Iterator is done
-  // $FlowFixMe
   const iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
   const lazySpy = spyFactory(concat);
-  // $FlowFixMe
   badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 
@@ -66,7 +64,6 @@ test('IteratorClose', () => {
 });
 
 test('iterator is an iterable', () => {
-  // $FlowFixMe
   const it = concat([[1], [2]])[SYMBOL_ITERATOR]();
 
   expect(it[SYMBOL_ITERATOR]()).toBe(it);
@@ -80,5 +77,5 @@ test('iterator is an iterable', () => {
     expect(x).toBe(2);
   }
 
-  expect((concat([]): any).return()).toEqual({done: true});
+  expect(concat([]).return()).toEqual({done: true});
 });

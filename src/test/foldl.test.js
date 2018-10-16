@@ -47,7 +47,6 @@ test('foldl', () => {
   const lazySpy = spyFactory(
     foldl((accum: any, value: any) => accum + value)('')
   );
-  // $FlowFixMe
   badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });

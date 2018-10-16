@@ -53,7 +53,6 @@ test('filter', () => {
   expect(toArray(iterable)).toEqual([1, 3, 7]);
 
   // Iterator is done
-  // $FlowFixMe
   let iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
 
@@ -61,14 +60,12 @@ test('filter', () => {
   expect(toArray(iterable)).toEqual([]);
 
   // Manual iteration
-  // $FlowFixMe
   iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
   const lazySpy = spyFactory(filter(badProp));
-  // $FlowFixMe
   badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -85,11 +82,10 @@ test('IteratorClose', () => {
   }
   expect(c.closeCalls).toBe(2);
 
-  expect((filter(x => true)([]): any).return()).toEqual({done: true});
+  expect(filter(x => true)([]).return()).toEqual({done: true});
 });
 
 test('iterator is an iterable', () => {
-  // $FlowFixMe
   const it = filter(x => true)([1, 2])[SYMBOL_ITERATOR]();
 
   expect(it[SYMBOL_ITERATOR]()).toBe(it);

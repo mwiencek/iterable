@@ -23,13 +23,11 @@ test('map', () => {
   expect(toArray(iterable)).toEqual([9, 4, 1]);
 
   // Iterator is done
-  // $FlowFixMe
   const iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
   const lazySpy = spyFactory(map(badProp));
-  // $FlowFixMe
   badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
@@ -45,11 +43,10 @@ test('IteratorClose', () => {
   }
   expect(c.closeCalls).toBe(2);
 
-  expect((map(x => x)([]): any).return()).toEqual({done: true});
+  expect(map(x => x)([]).return()).toEqual({done: true});
 });
 
 test('iterator is an iterable', () => {
-  // $FlowFixMe
   const it = map(x => x + 1)([1, 2])[SYMBOL_ITERATOR]();
 
   expect(it[SYMBOL_ITERATOR]()).toBe(it);

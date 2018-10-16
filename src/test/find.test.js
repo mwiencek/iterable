@@ -24,7 +24,7 @@ test('find', () => {
 test('IteratorClose', () => {
   const c = closeable(1);
   expect(() => {
-    for (const x of (find(throws)(c): any)) {}
+    find(throws)(c);
   }).toThrow();
   expect(c.closeCalls).toBe(1);
 

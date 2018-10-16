@@ -16,12 +16,11 @@ test('uniq', () => {
   expect(toArray(_uniq)).toEqual([1, 2, 3]);
   source.push(4, 4);
   // Iterator is done
-  expect((_uniq: any).next()).toEqual({done: true});
+  expect(_uniq.next()).toEqual({done: true});
   expect(toArray(uniq(source))).toEqual([1, 2, 3, 4]);
 
   // Lazy iterator creation
   const lazySpy = spyFactory(uniq);
-  // $FlowFixMe
   badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 
@@ -52,7 +51,6 @@ test('IteratorClose', () => {
 });
 
 test('iterator is an iterable', () => {
-  // $FlowFixMe
   const it = uniq([1, 1, 2, 2])[SYMBOL_ITERATOR]();
 
   expect(it[SYMBOL_ITERATOR]()).toBe(it);
