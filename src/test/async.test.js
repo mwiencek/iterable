@@ -1,35 +1,7 @@
 // @flow
 
 import asyncMap from '../async/map';
-
-function makeAsyncIterator(array) {
-  let index = 0;
-  return {
-    closeCalls: 0,
-    // $FlowFixMe
-    [Symbol.asyncIterator]: function () { return this },
-    next: function () {
-      const thisIndex = index++;
-      return new Promise((resolve, reject) => {
-        setTimeout(function () {
-          if (thisIndex < array.length) {
-            let value = array[thisIndex];
-            if (typeof value === 'function') {
-              value = value();
-            }
-            resolve({value, done: false});
-          } else {
-            resolve({done: true});
-          }
-        }, 100);
-      });
-    },
-    return: function () {
-      this.closeCalls++;
-      return Promise.resolve({done: true});
-    },
-  };
-}
+import {makeAsyncIterator} from './util';
 
 test('async', async () => {
   let counter = 3;

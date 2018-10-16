@@ -1,6 +1,7 @@
 // @flow
 
 import {map} from '../';
+import {DONE} from '../constants';
 
 export function spyFactory(util: (Iterable<any>) => any) {
   const spy = function (source: Iterable<any>) {
@@ -44,6 +45,41 @@ export function closeable<T>(
   };
   return ((iterable: any): Iterable<T> & {closeCalls: number});
 };
+
+interface TestAsyncIterator<T> extends AsyncIterator<T> {
+  closeCalls: number;
+  return: () => Promise<typeof DONE>;
+}
+
+export function makeAsyncIterator<T>(array: Array<T>): TestAsyncIterator<T> {
+  let index = 0;
+  return {
+    closeCalls: 0,
+    '@@asyncIterator': function () { return this },
+    // $FlowFixMe
+    [Symbol.asyncIterator]: function () { return this },
+    next: function () {
+      const thisIndex = index++;
+      return new Promise((resolve, reject) => {
+        setTimeout(function () {
+          if (thisIndex < array.length) {
+            let value = array[thisIndex];
+            if (typeof value === 'function') {
+              value = value();
+            }
+            resolve({value, done: false});
+          } else {
+            resolve(DONE);
+          }
+        }, 100);
+      });
+    },
+    return: function () {
+      this.closeCalls++;
+      return Promise.resolve(DONE);
+    },
+  };
+}
 
 export function throws() {
   throw new Error();
