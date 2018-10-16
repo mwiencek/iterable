@@ -21,7 +21,7 @@ test('objects', () => {
     })({a: 0, c: 0}),
     compact,
     map(([k, v]) => v ? k : null),
-    ((entries: any): typeof Object.entries),
+    entries,
   );
 
   expect(truth(object)).toEqual({a: 0, c: 1});
