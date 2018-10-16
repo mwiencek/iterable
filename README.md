@@ -30,7 +30,13 @@ import map from 'terable/map';
 const map = require('terable/map').default;
 ```
 
-The published source is transpiled to support Node 6 and IE11. Generators aren't used, so you don't need the regenerator runtime to use this library.
+The published source is transpiled to support Node 6 and IE11. However, you'll need some polyfills in IE11 and other browsers which don't support the following features:
+ * `Symbol.iterator`
+ * Iterator support for arrays and strings
+ * `Set` (only for `difference`, `intersect`, `union`, `uniq`, and `uniqBy`)
+ * `Map` (only for `countBy`, `groupBy`, `intersect`, and `keyBy`)
+
+Generators aren't used, so you don't need the regenerator runtime to use this library.
 
 Flow types are included with the package as separate `*.js.flow` files which are picked up by Flow automatically.
 
