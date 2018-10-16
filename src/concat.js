@@ -6,7 +6,11 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import {DONE, NO_VALUE} from './constants';
+import {
+  DONE,
+  NO_VALUE,
+  SYMBOL_ITERATOR,
+} from './constants';
 
 export function Concat<T, U>(
   source: Iterable<T>,
@@ -20,7 +24,7 @@ export function Concat<T, U>(
   this.done = false;
 }
 
-Concat.prototype[Symbol.iterator] = function () {
+Concat.prototype[SYMBOL_ITERATOR] = function () {
   return this;
 };
 
@@ -35,7 +39,7 @@ Concat.prototype.next = function () {
 
   try {
     if (!this.sourceIterator) {
-      this.sourceIterator = this.source[Symbol.iterator]();
+      this.sourceIterator = this.source[SYMBOL_ITERATOR]();
       this.iterator = this.sourceIterator;
       this.source = null;
     }
@@ -54,7 +58,7 @@ Concat.prototype.next = function () {
         let value = (cursor: any).value;
         const mapper = this.mapper;
         value = mapper ? mapper(value) : value;
-        this.iterator = value[Symbol.iterator]();
+        this.iterator = value[SYMBOL_ITERATOR]();
         this.iteratorIsNested = true;
       }
     }

@@ -8,6 +8,7 @@ import {
   take,
   toArray,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import {
   badMap,
   closeable,
@@ -70,7 +71,7 @@ test('drop', () => {
   // Manual iteration
   const iterable = drop(2)(array);
   // $FlowFixMe
-  const iterator = iterable[Symbol.iterator]();
+  const iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({value: 3, done: false});
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
@@ -78,7 +79,7 @@ test('drop', () => {
   // Lazy iterator creation
   const lazySpy = spyFactory(drop(2));
   // $FlowFixMe
-  badMap(lazySpy(array))[Symbol.iterator]();
+  badMap(lazySpy(array))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
 
@@ -100,9 +101,9 @@ test('IteratorClose', () => {
 
 test('iterator is an iterable', () => {
   // $FlowFixMe
-  const it = drop(1)([1, 2, 3])[Symbol.iterator]();
+  const it = drop(1)([1, 2, 3])[SYMBOL_ITERATOR]();
 
-  expect(it[Symbol.iterator]()).toBe(it);
+  expect(it[SYMBOL_ITERATOR]()).toBe(it);
 
   for (const x of it) {
     expect(x).toBe(2);

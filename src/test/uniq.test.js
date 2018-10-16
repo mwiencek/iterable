@@ -6,6 +6,7 @@ import {
   toArray,
   uniq,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import {closeable, badMap, spyFactory} from './util';
 
 test('uniq', () => {
@@ -21,7 +22,7 @@ test('uniq', () => {
   // Lazy iterator creation
   const lazySpy = spyFactory(uniq);
   // $FlowFixMe
-  badMap(lazySpy([{}]))[Symbol.iterator]();
+  badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 
   // Composed
@@ -52,9 +53,9 @@ test('IteratorClose', () => {
 
 test('iterator is an iterable', () => {
   // $FlowFixMe
-  const it = uniq([1, 1, 2, 2])[Symbol.iterator]();
+  const it = uniq([1, 1, 2, 2])[SYMBOL_ITERATOR]();
 
-  expect(it[Symbol.iterator]()).toBe(it);
+  expect(it[SYMBOL_ITERATOR]()).toBe(it);
 
   for (const x of it) {
     expect(x).toBe(1);

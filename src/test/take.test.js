@@ -11,6 +11,7 @@ import {
   uniq,
   uniqBy,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import {
   badMap,
   closeable,
@@ -39,13 +40,13 @@ test('take', () => {
 
   // Iterator is done
   // $FlowFixMe
-  const iterator = iterable[Symbol.iterator]();
+  const iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
   const lazySpy = spyFactory(take(1));
   // $FlowFixMe
-  badMap(lazySpy([{}]))[Symbol.iterator]();
+  badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 
   expect(
@@ -169,9 +170,9 @@ test('IteratorClose', () => {
 
 test('iterator is an iterable', () => {
   // $FlowFixMe
-  const it = take(2)([1, 2, 3])[Symbol.iterator]();
+  const it = take(2)([1, 2, 3])[SYMBOL_ITERATOR]();
 
-  expect(it[Symbol.iterator]()).toBe(it);
+  expect(it[SYMBOL_ITERATOR]()).toBe(it);
 
   for (const x of it) {
     expect(x).toBe(1);

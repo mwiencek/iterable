@@ -8,6 +8,7 @@ import {
   toArray,
   uniq,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import mediums from './mediums';
 import {
   badMap,
@@ -53,7 +54,7 @@ test('filter', () => {
 
   // Iterator is done
   // $FlowFixMe
-  let iterator = iterable[Symbol.iterator]();
+  let iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
 
   iterable = evens(concat([[1], [3], [7]]));
@@ -61,14 +62,14 @@ test('filter', () => {
 
   // Manual iteration
   // $FlowFixMe
-  iterator = iterable[Symbol.iterator]();
+  iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
   const lazySpy = spyFactory(filter(badProp));
   // $FlowFixMe
-  badMap(lazySpy([{}]))[Symbol.iterator]();
+  badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
 
@@ -89,9 +90,9 @@ test('IteratorClose', () => {
 
 test('iterator is an iterable', () => {
   // $FlowFixMe
-  const it = filter(x => true)([1, 2])[Symbol.iterator]();
+  const it = filter(x => true)([1, 2])[SYMBOL_ITERATOR]();
 
-  expect(it[Symbol.iterator]()).toBe(it);
+  expect(it[SYMBOL_ITERATOR]()).toBe(it);
 
   for (const x of it) {
     expect(x).toBe(1);

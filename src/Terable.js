@@ -8,6 +8,7 @@
 import {
   DONE,
   NO_VALUE,
+  SYMBOL_ITERATOR,
   DROP,
   FILTER,
   MAP,
@@ -48,7 +49,7 @@ export function Terable(action) {
   this.done = false;
 }
 
-Terable.prototype[Symbol.iterator] = function () {
+Terable.prototype[SYMBOL_ITERATOR] = function () {
   return this;
 };
 
@@ -112,7 +113,7 @@ Terable.prototype.next = function () {
   try {
     if (!this.iterator) {
       const head = this.pipe[0];
-      this.iterator = head.source[Symbol.iterator]();
+      this.iterator = head.source[SYMBOL_ITERATOR]();
       head.source = null;
     }
 

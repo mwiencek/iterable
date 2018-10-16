@@ -4,6 +4,7 @@ import {
   difference,
   toArray,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import {closeable, throws} from './util';
 
 test('difference', () => {
@@ -38,12 +39,12 @@ test('difference', () => {
 test('IteratorClose', () => {
   let closeCalls = 0;
   const c = {
-    [Symbol.iterator]: function () {
+    [SYMBOL_ITERATOR]: function () {
       return c;
     },
     next: function () {
       const d = {
-        [Symbol.iterator]: function () {
+        [SYMBOL_ITERATOR]: function () {
           return d;
         },
         next: function () {

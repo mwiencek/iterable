@@ -7,6 +7,7 @@ import {
   take,
   toArray,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 
 test('sort', () => {
   expect(toArray(sort([9, 1, 7, 2, 0]))).toEqual([0, 1, 2, 7, 9]);
@@ -22,9 +23,9 @@ test('sort', () => {
 
 test('iterator is an iterable', () => {
   // $FlowFixMe
-  const it = sort([2, 1])[Symbol.iterator]();
+  const it = sort([2, 1])[SYMBOL_ITERATOR]();
 
-  expect(it[Symbol.iterator]()).toBe(it);
+  expect(it[SYMBOL_ITERATOR]()).toBe(it);
 
   for (const x of it) {
     expect(x).toBe(1);

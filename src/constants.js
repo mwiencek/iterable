@@ -1,4 +1,5 @@
 /*
+ * @flow
  * Copyright (c) 2018 Michael Wiencek
  *
  * This source code is licensed under the MIT license. A copy can be found
@@ -7,8 +8,11 @@
 
 export const DONE = Object.freeze({done: true, value: undefined});
 
+export const SYMBOL_ITERATOR = ((Symbol: any).iterator: '@@iterator');
+export const SYMBOL_ASYNC_ITERATOR = ((Symbol: any).asyncIterator: '@@asyncIterator');
+
 export const EMPTY_ITERATOR = Object.freeze({
-  [Symbol.iterator]: () => EMPTY_ITERATOR,
+  [SYMBOL_ITERATOR]: () => EMPTY_ITERATOR,
   next: () => DONE,
 });
 

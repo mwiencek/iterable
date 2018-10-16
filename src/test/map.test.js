@@ -5,6 +5,7 @@ import {
   map,
   toArray,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import {
   badMap,
   badProp,
@@ -23,13 +24,13 @@ test('map', () => {
 
   // Iterator is done
   // $FlowFixMe
-  const iterator = iterable[Symbol.iterator]();
+  const iterator = iterable[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
 
   // Lazy iterator creation
   const lazySpy = spyFactory(map(badProp));
   // $FlowFixMe
-  badMap(lazySpy([{}]))[Symbol.iterator]();
+  badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
 
@@ -49,9 +50,9 @@ test('IteratorClose', () => {
 
 test('iterator is an iterable', () => {
   // $FlowFixMe
-  const it = map(x => x + 1)([1, 2])[Symbol.iterator]();
+  const it = map(x => x + 1)([1, 2])[SYMBOL_ITERATOR]();
 
-  expect(it[Symbol.iterator]()).toBe(it);
+  expect(it[SYMBOL_ITERATOR]()).toBe(it);
 
   for (const x of it) {
     expect(x).toBe(2);

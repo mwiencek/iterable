@@ -1,14 +1,18 @@
 // @flow
 
 import {map} from '../';
-import {DONE} from '../constants';
+import {
+  DONE,
+  SYMBOL_ITERATOR,
+  SYMBOL_ASYNC_ITERATOR,
+} from '../constants';
 
 export function spyFactory(util: (Iterable<any>) => any) {
   const spy = function (source: Iterable<any>) {
     const iterable: any = util(source);
-    const iterator: any = iterable[Symbol.iterator];
+    const iterator: any = iterable[SYMBOL_ITERATOR];
 
-    iterator[Symbol.iterator] = function () {
+    iterator[SYMBOL_ITERATOR] = function () {
       spy.calls++;
       return iterator.call(iterable);
     };
@@ -25,7 +29,7 @@ export function closeable<T>(
 ): Iterable<T> & {closeCalls: number} {
   let iterations = 0;
   const iterable = {
-    [Symbol.iterator]: function () {
+    [SYMBOL_ITERATOR]: function () {
       return {
         next: () => {
           if (iterations >= maxIterations) {
@@ -55,9 +59,7 @@ export function makeAsyncIterator<T>(array: Array<T>): TestAsyncIterator<T> {
   let index = 0;
   return {
     closeCalls: 0,
-    '@@asyncIterator': function () { return this },
-    // $FlowFixMe
-    [Symbol.asyncIterator]: function () { return this },
+    [SYMBOL_ASYNC_ITERATOR]: function () { return this },
     next: function () {
       const thisIndex = index++;
       return new Promise((resolve, reject) => {

@@ -6,6 +6,7 @@ import {
   foldl,
   map,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import {
   closeable,
   badMap,
@@ -47,7 +48,7 @@ test('foldl', () => {
     foldl((accum: any, value: any) => accum + value)('')
   );
   // $FlowFixMe
-  badMap(lazySpy([{}]))[Symbol.iterator]();
+  badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
 

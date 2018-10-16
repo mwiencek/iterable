@@ -10,6 +10,7 @@ import {
   toArray,
   uniq,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import mediums from './mediums';
 import type {
   ArtistCreditName,
@@ -65,7 +66,7 @@ test('concatMap', () => {
   // Lazy iterator creation
   const lazySpy = spyFactory(concatMap(badProp));
   // $FlowFixMe
-  badMap(lazySpy([{}]))[Symbol.iterator]();
+  badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
 
@@ -93,7 +94,7 @@ test('iterator is an iterable', () => {
   const it = concatMap(x => [x + 1])([1, 2]);
 
   // $FlowFixMe
-  expect(it[Symbol.iterator]()).toBe(it);
+  expect(it[SYMBOL_ITERATOR]()).toBe(it);
 
   for (const x of it) {
     expect(x).toBe(2);

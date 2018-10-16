@@ -8,6 +8,7 @@ import {
   toArray,
   uniq,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import mediums from './mediums';
 import {closeable, throws} from './util';
 
@@ -26,7 +27,8 @@ test('compose', () => {
   expect(toArray(newIds)).toEqual([1, 2, 3, 4, 5]);
 
   // Iterator is done
-  const iterator: any = (newIds: any)[Symbol.iterator]();
+  // $FlowFixMe
+  const iterator: any = newIds[SYMBOL_ITERATOR]();
   expect(iterator.next()).toEqual({done: true});
 });
 

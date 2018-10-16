@@ -8,6 +8,8 @@
 import {
   DONE,
   NO_VALUE,
+  SYMBOL_ITERATOR,
+  SYMBOL_ASYNC_ITERATOR,
   DROP,
   FILTER,
   MAP,
@@ -50,11 +52,11 @@ export function AsyncTerable(action) {
 
 AsyncTerable.prototype = Object.assign({}, Terable.prototype);
 
-AsyncTerable.prototype[Symbol.asyncIterator] = function () {
+AsyncTerable.prototype[SYMBOL_ASYNC_ITERATOR] = function () {
   return this;
 };
 
-delete AsyncTerable.prototype[Symbol.iterator];
+delete AsyncTerable.prototype[SYMBOL_ITERATOR];
 
 AsyncTerable.prototype.next = function ()  {
   if (this.done) {
@@ -64,7 +66,7 @@ AsyncTerable.prototype.next = function ()  {
   try {
     if (!this.iterator) {
       const head = this.pipe[0];
-      this.iterator = head.source[Symbol.asyncIterator]();
+      this.iterator = head.source[SYMBOL_ASYNC_ITERATOR]();
       head.source = null;
     }
 

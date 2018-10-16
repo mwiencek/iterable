@@ -4,6 +4,7 @@ import {
   uniqBy,
   toArray,
 } from '../';
+import {SYMBOL_ITERATOR} from '../constants';
 import {
   badMap,
   badProp,
@@ -54,7 +55,7 @@ test('uniqBy', () => {
   // Lazy iterator creation
   const lazySpy = spyFactory(uniqBy(badProp));
   // $FlowFixMe
-  badMap(lazySpy([{}]))[Symbol.iterator]();
+  badMap(lazySpy([{}]))[SYMBOL_ITERATOR]();
   expect(lazySpy.calls).toBe(0);
 });
 
@@ -72,9 +73,9 @@ test('IteratorClose', () => {
 
 test('iterator is an iterable', () => {
   // $FlowFixMe
-  const it = uniqBy(x => x)([1, 1, 2, 2])[Symbol.iterator]();
+  const it = uniqBy(x => x)([1, 1, 2, 2])[SYMBOL_ITERATOR]();
 
-  expect(it[Symbol.iterator]()).toBe(it);
+  expect(it[SYMBOL_ITERATOR]()).toBe(it);
 
   for (const x of it) {
     expect(x).toBe(1);
