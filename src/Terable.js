@@ -117,8 +117,7 @@ Terable.prototype.next = function () {
     }
 
     let cursor;
-    while ((iteratorNormalCompletion = true) &&
-            !this.done &&
+    while (!this.done &&
             (!(iteratorNormalCompletion = (cursor = this.iterator.next()).done))) {
       const value = this.pipeValue(cursor.value);
       if (value === NO_VALUE) {

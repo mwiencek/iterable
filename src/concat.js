@@ -41,8 +41,7 @@ Concat.prototype.next = function () {
     }
 
     let cursor;
-    while ((iteratorNormalCompletion = true) &&
-            (!(iteratorNormalCompletion = (cursor = this.iterator.next()).done) || this.iteratorIsNested)) {
+    while (!(iteratorNormalCompletion = (cursor = this.iterator.next()).done) || this.iteratorIsNested) {
       if (this.iteratorIsNested) {
         if (iteratorNormalCompletion) {
           this.iterator = this.sourceIterator;
