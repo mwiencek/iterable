@@ -1,4 +1,0 @@
-// @flow
-
-declare export default function find<T>(func: (T) => mixed):
-  (iterable: Iterable<T>) => T;

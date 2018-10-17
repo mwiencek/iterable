@@ -1,4 +1,0 @@
-// @flow
-
-declare export default function take(count: number):
-  <T>(iterable: Iterable<T>) => Iterable<T>;

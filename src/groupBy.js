@@ -6,8 +6,10 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function groupBy<T, K>(func: (T) => K): (Iterable<T>) => Map<K, Array<T>> {
-  return function (iterable: Iterable<T>): Map<K, Array<T>> {
+import type {IterableExt} from './types';
+
+export default function groupBy<T, K>(func: (T) => K): (IterableExt<T>) => Map<K, Array<T>> {
+  return function (iterable: IterableExt<T>): Map<K, Array<T>> {
     let groups = new Map();
     for (const value of iterable) {
       const key = func(value);

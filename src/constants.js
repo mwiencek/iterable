@@ -6,6 +6,8 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
+import type {Terable} from './types';
+
 export const DONE = Object.freeze({done: true, value: undefined});
 
 export const SYMBOL_ITERATOR = ((Symbol: any).iterator: '@@iterator');

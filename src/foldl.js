@@ -6,8 +6,10 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-function makeFold<T, U>(func: (U, T) => U, initial: U): (Iterable<T>) => U {
-  return function (iterable: Iterable<T>): U {
+import type {IterableExt} from './types';
+
+function makeFold<T, U>(func: (U, T) => U, initial: U): (IterableExt<T>) => U {
+  return function (iterable: IterableExt<T>): U {
     let accum = initial;
     for (const value of iterable) {
       accum = func(accum, value);
@@ -16,8 +18,8 @@ function makeFold<T, U>(func: (U, T) => U, initial: U): (Iterable<T>) => U {
   };
 }
 
-export default function foldl<T, U>(func: (U, T) => U): (U) => (Iterable<T>) => U {
-  return function (initial: U): (Iterable<T>) => U {
+export default function foldl<T, U>(func: (U, T) => U): (U) => (IterableExt<T>) => U {
+  return function (initial: U): (IterableExt<T>) => U {
     return makeFold<T, U>(func, initial);
   };
 }

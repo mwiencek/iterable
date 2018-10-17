@@ -6,10 +6,10 @@ import {
   SYMBOL_ITERATOR,
   SYMBOL_ASYNC_ITERATOR,
 } from '../constants';
-import type {Terable} from '../types';
+import type {IteratorExt, IterableExt, Terable} from '../types';
 
-export function spyFactory(util: (Iterable<any>) => Iterable<any>) {
-  const spy = function (source: Iterable<any>): Iterator<any> {
+export function spyFactory<T, U>(util: (IterableExt<T>) => IterableExt<U>) {
+  const spy = function (source: IterableExt<T>): IterableExt<U> {
     const iterable = util(source);
     const iterator = (iterable: any)[SYMBOL_ITERATOR];
 
@@ -27,7 +27,7 @@ export function spyFactory(util: (Iterable<any>) => Iterable<any>) {
 export function closeable<T>(
   value: T,
   maxIterations: number = Infinity,
-): Iterable<T> & {closeCalls: number} {
+): IterableExt<T> & {closeCalls: number} {
   let iterations = 0;
   const iterable = {
     [SYMBOL_ITERATOR]: function () {
@@ -45,7 +45,7 @@ export function closeable<T>(
         return: () => {
           iterations = 0;
           iterable.closeCalls++;
-          return {};
+          return {done: true};
         },
       };
     },

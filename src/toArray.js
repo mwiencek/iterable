@@ -6,7 +6,9 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function toArray<T>(iterable: Iterable<T>): Array<T> {
+import type {IterableExt} from './types';
+
+export default function toArray<T>(iterable: IterableExt<T>): Array<T> {
   const array = [];
   for (const value of iterable) {
     array.push(value);

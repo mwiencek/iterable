@@ -1,4 +1,0 @@
-// @flow
-
-declare export default function compact<T>(iterable: Iterable<T>):
-  Iterable<$NonMaybeType<T>>;

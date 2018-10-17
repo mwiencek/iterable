@@ -6,7 +6,9 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function intersect<T>(sets: Iterable<Iterable<T>>): Set<T> {
+import type {IterableExt} from './types';
+
+export default function intersect<T>(sets: IterableExt<IterableExt<T>>): Set<T> {
   let valueSets = new Map();
   let setCount = 0;
   for (const subset of sets) {

@@ -8,9 +8,10 @@
 
 import {MAP} from '../constants';
 import makeAsyncTerable from '../AsyncTerable';
+import type {AsyncIterableExt} from '../types';
 
-export default function map<T, U>(func: (T) => U): (AsyncIterable<T>) => AsyncIterable<U> {
-  return function (iterable: AsyncIterable<T>): AsyncIterable<U> {
+export default function map<T, U>(func: (T) => U): (AsyncIterableExt<T>) => AsyncIterableExt<U> {
+  return function (iterable: AsyncIterableExt<T>): AsyncIterableExt<U> {
     return makeAsyncTerable({type: MAP, arg: func, source: iterable});
   };
 }

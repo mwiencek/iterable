@@ -6,8 +6,10 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function join(sep: string): (Iterable<string>) => string {
-  return function (iterable: Iterable<string>) {
+import type {IterableExt} from './types';
+
+export default function join(sep: string): (IterableExt<string>) => string {
+  return function (iterable: IterableExt<string>) {
     let joined = '';
     for (const value of iterable) {
       if (joined) {

@@ -8,12 +8,12 @@
 
 import {EMPTY_ITERATOR, TAKE} from './constants';
 import makeTerable from './Terable';
-import type {Terable} from './types';
+import type {IterableExt, Terable} from './types';
 
 export default function take(count: number) {
-  return function <T>(iterable: Iterable<T>): Terable<T> | typeof EMPTY_ITERATOR {
+  return function <T>(iterable: IterableExt<T>): Terable<T> {
     if (count <= 0) {
-      return EMPTY_ITERATOR;
+      return (EMPTY_ITERATOR: Terable<T>);
     }
     return makeTerable({type: TAKE, arg: count, source: iterable});
   };

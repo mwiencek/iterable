@@ -6,7 +6,9 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function difference<T>(sets: Iterable<Iterable<T>>): Set<T> {
+import type {IterableExt} from './types';
+
+export default function difference<T>(sets: IterableExt<IterableExt<T>>): Set<T> {
   let result;
   for (const subset of sets) {
     if (result) {

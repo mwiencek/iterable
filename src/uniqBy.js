@@ -8,10 +8,10 @@
 
 import {UNIQBY} from './constants';
 import makeTerable from './Terable';
-import type {Terable} from './types';
+import type {IterableExt, Terable} from './types';
 
-export default function uniqBy<T, U>(func: (T) => U): (Iterable<T>) => Terable<T> {
-  return function (iterable: Iterable<T>): Terable<T> {
+export default function uniqBy<T, U>(func: (T) => U): (IterableExt<T>) => Terable<T> {
+  return function (iterable: IterableExt<T>): Terable<T> {
     return makeTerable({type: UNIQBY, arg: {mapper: func, set: new Set()}, source: iterable});
   };
 }

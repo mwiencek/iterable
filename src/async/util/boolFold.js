@@ -6,9 +6,11 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function boolFold<T>(truth: boolean): ((T) => mixed) => AsyncIterable<T> => Promise<boolean> {
-  return function (test: (T) => mixed): AsyncIterable<T> => Promise<boolean> {
-    return async function (iterable: AsyncIterable<T>): Promise<boolean> {
+import type {AsyncIterableExt} from '../../types';
+
+export default function boolFold<T>(truth: boolean): ((T) => mixed) => AsyncIterableExt<T> => Promise<boolean> {
+  return function (test: (T) => mixed): AsyncIterableExt<T> => Promise<boolean> {
+    return async function (iterable: AsyncIterableExt<T>): Promise<boolean> {
       for await (const value of iterable) {
         if (!!test(value) === truth) {
           return truth;

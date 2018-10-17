@@ -6,11 +6,11 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-import {Concat} from './concat';
-import type {Terable} from './types';
+import Concatable from './Concatable';
+import type {IterableExt, Terable} from './types';
 
-export default function concatMap<T, U>(func: (T) => Iterable<U>): (Iterable<T>) => Terable<U> {
-  return function (iterable: Iterable<T>): Terable<U> {
-    return (((new Concat<T, U>(iterable, func)): any): Terable<U>);
+export default function concatMap<T, U>(func: (T) => IterableExt<U>): (IterableExt<T>) => Terable<U> {
+  return function (iterable: IterableExt<T>): Terable<U> {
+    return (new Concatable(iterable, func): Terable<U>);
   }
 }

@@ -8,10 +8,11 @@
 
 import filter from './filter';
 import head from './head';
+import type {IterableExt} from './types';
 
-export default function find<T>(func: (T) => mixed): (Iterable<T>) => T {
+export default function find<T>(func: (T) => mixed): (IterableExt<T>) => T {
   const filterFunc = filter<T, T>(func);
-  return function (iterable: Iterable<T>): T {
+  return function (iterable: IterableExt<T>): T {
     return head(filterFunc(iterable));
   };
 }

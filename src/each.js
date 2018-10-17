@@ -6,8 +6,10 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function each<T>(func: (T) => mixed): (Iterable<T>) => void {
-  return function (iterable: Iterable<T>) {
+import type {IterableExt} from './types';
+
+export default function each<T>(func: (T) => mixed): (IterableExt<T>) => void {
+  return function (iterable: IterableExt<T>) {
     for (const value of iterable) {
       func(value);
     }

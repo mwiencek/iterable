@@ -9,14 +9,14 @@
 import map from './map';
 import toArray from './toArray';
 import compareAscending from './util/compareAscending';
-import type {Terable} from './types';
+import type {IterableExt, Terable} from './types';
 
 const cmp = (a, b) => {
   const result = compareAscending(a[1], b[1]);
   return result ? result : (a[0] - b[0]);
 };
 
-function doSortBy<T, K>(func: (T) => K, iterable: Iterable<T>): Terable<T> {
+function doSortBy<T, K>(func: (T) => K, iterable: IterableExt<T>): Terable<T> {
   const array = Array.isArray(iterable) ? iterable : toArray(iterable);
   const size = array.length;
 
@@ -32,8 +32,8 @@ function doSortBy<T, K>(func: (T) => K, iterable: Iterable<T>): Terable<T> {
   return map<KP, T>((x: KP) => array[x[0]])(keys);
 }
 
-export default function sortBy<T, K>(func: (T) => K): (Iterable<T>) => Terable<T> {
-  return function (iterable: Iterable<T>): Terable<T> {
+export default function sortBy<T, K>(func: (T) => K): (IterableExt<T>) => Terable<T> {
+  return function (iterable: IterableExt<T>): Terable<T> {
     return doSortBy<T, K>(func, iterable);
   };
 }

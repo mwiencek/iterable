@@ -7,7 +7,8 @@
  */
 
 import concat from './concat';
+import type {IterableExt} from './types';
 
-export default function union<T>(sets: Iterable<Iterable<T>>): Set<T> {
+export default function union<T>(sets: IterableExt<IterableExt<T>>): Set<T> {
   return new Set(concat(sets))
 }

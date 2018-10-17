@@ -6,7 +6,9 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function head<T>(iterable: Iterable<T>): T {
+import type {IterableExt} from './types';
+
+export default function head<T>(iterable: IterableExt<T>): T {
   for (const value of iterable) {
     return value;
   }

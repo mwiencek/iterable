@@ -6,9 +6,11 @@
  * in the file named "LICENSE" at the root directory of this distribution.
  */
 
-export default function boolFold<T>(truth: boolean): ((T) => mixed) => Iterable<T> => boolean {
-  return function (test: (T) => mixed): Iterable<T> => boolean {
-    return function (iterable: Iterable<T>): boolean {
+import type {IterableExt} from '../types';
+
+export default function boolFold<T>(truth: boolean): ((T) => mixed) => IterableExt<T> => boolean {
+  return function (test: (T) => mixed): IterableExt<T> => boolean {
+    return function (iterable: IterableExt<T>): boolean {
       for (const value of iterable) {
         if (!!test(value) === truth) {
           return truth;

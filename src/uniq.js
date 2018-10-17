@@ -8,8 +8,8 @@
 
 import {UNIQ} from './constants';
 import makeTerable from './Terable';
-import type {Terable} from './types';
+import type {IterableExt, Terable} from './types';
 
-export default function uniq<T>(iterable: Iterable<T>): Terable<T> {
+export default function uniq<T>(iterable: IterableExt<T>): Terable<T> {
   return makeTerable({type: UNIQ, arg: {set: new Set()}, source: iterable});
 }

@@ -13,6 +13,7 @@ import {
   spyFactory,
   throws,
 } from './util';
+import type {IteratorExt} from '../types';
 
 test('concat', () => {
   expect(toArray(concat([[1], [2], [3]]))).toEqual([1, 2, 3]);
